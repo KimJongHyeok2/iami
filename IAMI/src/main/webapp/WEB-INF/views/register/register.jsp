@@ -13,10 +13,29 @@ function vaildCheckID() {
 	var $pattern = /^([a-zA-Z\d]{5,10})$/;
 	
 	if(new RegExp($pattern).test($id)) {
-		$("#mem_id").parent(".input-box").find("label").html("사용 가능한 아이디입니다.");
-		$("#mem_id").parent(".input-box").find("label").removeClass("invalid");
-		$("#mem_id").parent(".input-box").find("label").addClass("valid");
-		$idFlag = true;
+		$.ajax({
+			url: "${pageContext.request.contextPath}/register/idOverlap",
+			type: "POST",
+			cache: false,
+			data: {
+				"id" : $id
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data != "Fail") {
+						$("#mem_id").parent(".input-box").find("label").html("사용 가능한 아이디입니다.");
+						$("#mem_id").parent(".input-box").find("label").removeClass("invalid");
+						$("#mem_id").parent(".input-box").find("label").addClass("valid");
+						$idFlag = true;						
+					} else {
+						$("#mem_id").parent(".input-box").find("label").html("이미 사용 중인 아이디입니다.");
+						$("#mem_id").parent(".input-box").find("label").removeClass("valid");
+						$("#mem_id").parent(".input-box").find("label").addClass("invalid");
+						$idFlag = false;
+					}
+				}
+			}
+		});
 	} else {
 		$("#mem_id").parent(".input-box").find("label").html("영문, 숫자 5자 이상 10자 이하로 입력해주세요.");
 		$("#mem_id").parent(".input-box").find("label").removeClass("valid");
@@ -122,12 +141,32 @@ function vaildCheckEmail() {
 	var $pattern = /^(([a-zA-Z\d][-_]?){3,15})@([a-zA-z\d]{5,15})\.([a-z]{2,3})$/;
 
 	if(new RegExp($pattern).test($email)) {
-		$("#email-check-value").html("올바른 이메일입니다.");
-		$("#email-check-value").removeClass("invalid");
-		$("#email-check-value").addClass("valid");
-		$("#req-access").removeClass("w3-disabled");
-		$("#req-access").removeAttr("disabled");
-		$("#req-access").attr("onclick", "requestAccessKey('" + $email + "');");
+		$.ajax({
+			url: "${pageContext.request.contextPath}/register/emailOverlap",
+			type: "POST",
+			cache: false,
+			data: {
+				"email" : $email
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data != "Fail") {
+						$("#email-check-value").html("올바른 이메일입니다.");
+						$("#email-check-value").removeClass("invalid");
+						$("#email-check-value").addClass("valid");
+						$("#req-access").removeClass("w3-disabled");
+						$("#req-access").removeAttr("disabled");
+						$("#req-access").attr("onclick", "requestAccessKey('" + $email + "');");						
+					} else {
+						$("#email-check-value").html("이미 등록된 이메일입니다.");
+						$("#email-check-value").removeClass("valid");
+						$("#email-check-value").addClass("invalid");
+						$("#req-access").addClass("w3-disabled");
+						$("#req-access").attr("disabled", "disabled");
+					}
+				}
+			}
+		});
 	} else {
 		$("#email-check-value").html("올바른 이메일을 입력해주세요.");
 		$("#email-check-value").removeClass("valid");
@@ -191,9 +230,30 @@ function checkAccessKey() {
 }
 function register() {
 	vaildCheckID(); vaildCheckPW(); vaildCheckPW2(); vaildCheckName(); vaildCheckEmail();
-	
-	if($idFlag && $pwFlag && $pw2Flag && $nicknameFlag && $emailFlag) {
-	}
+ 	if($idFlag && $pwFlag && $pw2Flag && $nicknameFlag && $emailFlag) {
+		$.ajax({
+			url: "${pageContext.request.contextPath}/register/registerOk",
+			type: "POST",
+			cache: false,
+			data: {
+				"mem_id" : $("#mem_id").val(),
+				"mem_pw" : $("#mem_pw2").val(),
+				"mem_nickname" : $("#mem_nickname").val(),
+				"mem_gender" : $("#mem_gender").val(),
+				"mem_birth" : $("#birth-year").val() + "-" + $("#birth-month").val() + "-" + $("#birth-day").val(),
+				"mem_email" : $("#mem_email").val()
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data != "Fail") {
+						location.href = "${pageContext.request.contextPath}/";
+					} else {
+						return false;
+					}
+				}
+			}
+		});
+ 	} 
 }
 </script>
 <style type="text/css">
@@ -365,7 +425,7 @@ html, body {
 		</div>
 		<div class="input-box">
 			<h5>성별</h5>
-			<select class="w3-select w3-border select-height" name="option">
+			<select id="mem_gender" class="w3-select w3-border select-height" name="option">
 				<option value="1">남자</option>
 				<option value="2">여자</option>
 			</select>
