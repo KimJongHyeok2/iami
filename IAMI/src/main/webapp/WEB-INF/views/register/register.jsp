@@ -8,6 +8,9 @@
 <jsp:include page="/resources/common/common.jsp"/>
 <script type="text/javascript">
 var $idFlag = false, $pwFlag = false, $pwFlag = false, $nicknameFlag = false, $emailFlag = false;
+var header = '${_csrf.headerName}';
+var token = '${_csrf.token}';
+	
 function vaildCheckID() {
 	var $id = $("#mem_id").val();
 	var $pattern = /^([a-zA-Z\d]{5,10})$/;
@@ -19,6 +22,9 @@ function vaildCheckID() {
 			cache: false,
 			data: {
 				"id" : $id
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
 			},
 			success: function(data, status) {
 				if(status == "success") {
@@ -139,7 +145,7 @@ function daySet() {
 function vaildCheckEmail() {
 	var $email = $("#mem_email").val();
 	var $pattern = /^(([a-zA-Z\d][-_]?){3,15})@([a-zA-z\d]{5,15})\.([a-z]{2,3})$/;
-
+	
 	if(new RegExp($pattern).test($email)) {
 		$.ajax({
 			url: "${pageContext.request.contextPath}/register/emailOverlap",
@@ -147,6 +153,9 @@ function vaildCheckEmail() {
 			cache: false,
 			data: {
 				"email" : $email
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
 			},
 			success: function(data, status) {
 				if(status == "success") {
@@ -183,8 +192,9 @@ function requestAccessKey(email) {
 		data: {
 			"email" : email
 		},
-		beforeSend: function() {
+		beforeSend: function(xhr) {
 			$("#req-access").html("<div class='spinner-border text-light'></div>");
+			xhr.setRequestHeader(header, token);
 		},
 		success: function(data, status) {
 			if(status == "success") {
@@ -211,6 +221,9 @@ function checkAccessKey() {
 		data: {
 			"key_no" : $no,
 			"key_accessKey" : $key
+		},
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
 		},
 		success: function(data, status) {
 			if(status == "success") {
@@ -242,6 +255,9 @@ function register() {
 				"mem_gender" : $("#mem_gender").val(),
 				"mem_birth" : $("#birth-year").val() + "-" + $("#birth-month").val() + "-" + $("#birth-day").val(),
 				"mem_email" : $("#mem_email").val()
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
 			},
 			success: function(data, status) {
 				if(status == "success") {

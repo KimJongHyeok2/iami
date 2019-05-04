@@ -142,3 +142,10 @@ ALTER TABLE project
 	ADD FOREIGN KEY (mem_no)
 	REFERENCES members (mem_no)
 ;
+
+DELETE FROM members;
+
+SELECT * FROM members;
+
+
+UPDATE members SET enabled = 1 WHERE mem_id = 'test13587';

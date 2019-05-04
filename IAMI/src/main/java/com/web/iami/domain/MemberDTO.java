@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import com.web.iami.util.PasswordEncoding;
+
 public class MemberDTO {
 
 	private int mem_no; // 고유번호
@@ -20,7 +22,6 @@ public class MemberDTO {
 	
 	public MemberDTO() { }
 
-	// 비밀번호 SHA256 암호화
 	public MemberDTO(int mem_no, String mem_id, String mem_pw, String mem_nickname, int mem_gender, String mem_profile,
 			Date mem_birth, String mem_email, Timestamp mem_regdate, String mem_auth, int enabled, Exception e) {
 		this.mem_no = mem_no;
@@ -58,7 +59,7 @@ public class MemberDTO {
 
 	public void setMem_pw(String mem_pw) {
 		// 비밀번호 SHA 암호화
-		try {
+/*		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			md.update(mem_pw.getBytes());
 			byte byteData[] = md.digest();
@@ -78,7 +79,10 @@ public class MemberDTO {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException();
-		}
+		}*/
+		// BCrypt 암호화
+		PasswordEncoding passwordEncode = new PasswordEncoding();
+		this.mem_pw = passwordEncode.encode(mem_pw);
 	}
 
 	public String getMem_nickname() {

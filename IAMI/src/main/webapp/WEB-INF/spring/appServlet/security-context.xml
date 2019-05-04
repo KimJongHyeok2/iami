@@ -2,16 +2,62 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:security="http://www.springframework.org/schema/security"
-	xsi:schemaLocation="http://www.springframework.org/schema/security
-		http://www.springframework.org/schema/security/spring-security-4.2.xsd
-		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<context:annotation-config/>
+	<context:property-placeholder
+	location="classpath:db.properties"/>
 
 	<security:http auto-config="true" use-expressions="true">
+		<security:form-login login-page="/login"
+		username-parameter="mem_id"
+		password-parameter="mem_pw"
+		login-processing-url="/loginOk"
+		authentication-failure-url="/login?result=fail"
+		authentication-success-forward-url="/login/success"
+		default-target-url="/"
+		/>
+		<security:logout logout-url="/logout" logout-success-url="/login"/>
+		<security:session-management>
+			<security:concurrency-control max-sessions="1" expired-url="/"/>
+		</security:session-management>
 	</security:http>
 	
 	<security:authentication-manager>
-
+		<security:authentication-provider ref="customAuthenticationProvider"/>
+		<security:authentication-provider user-service-ref="customUserDetailService"/>
 	</security:authentication-manager>
+	
+	<bean name="customAuthenticationProvider" class="com.web.iami.security.CustomAuthenticationProvider"/>
+	<bean name="customUserDetailService" class="com.web.iami.security.CustomUserDetailService"/>
+	<bean name="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+	<!-- DataSource -->
+	<bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${db.driverclassname}"/>
+		<property name="url" value="${db.url}"/>
+		<property name="username" value="${db.username}"/>
+		<property name="password" value="${db.password}"/>
+	</bean>
+
+	<!-- JdbcTemplate -->
+	<bean name="template" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- SqlSession -->
+	<bean name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath:com/web/iami/security/*.xml"/>
+	</bean>
+	
+	<bean name="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"/>
+	</bean>
+
+	<context:component-scan base-package="com.web.iami.security"/>
 
 </beans>
