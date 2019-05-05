@@ -1,9 +1,0 @@
-host=smtp.gmail.com
-port=587
-username=test135857@gmail.com
-password=xptmxm123
-defaultEncoding=utf-8
-protocol=smtp
-auth=true
-enable=true
-debug=true

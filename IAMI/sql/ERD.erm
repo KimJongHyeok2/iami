@@ -135,7 +135,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2019-04-29 21:27:39</creation_date>
-			<updated_date>2019-05-05 08:02:59</updated_date>
+			<updated_date>2019-05-06 02:18:33</updated_date>
 			<model_property>
 				<name>프로젝트명</name>
 				<value></value>
@@ -406,7 +406,7 @@
 			<description></description>
 			<logical_name>failureCount</logical_name>
 			<physical_name>failureCount</physical_name>
-			<type></type>
+			<type>decimal</type>
 		</word>
 		<word>
 			<id>15</id>
@@ -554,7 +554,7 @@
 		</word>
 		<word>
 			<id>24</id>
-			<length>10</length>
+			<length>20</length>
 			<decimal>null</decimal>
 			<array>false</array>
 			<array_dimension>null</array_dimension>
@@ -602,7 +602,7 @@
 		</word>
 		<word>
 			<id>27</id>
-			<length>30</length>
+			<length>100</length>
 			<decimal>null</decimal>
 			<array>false</array>
 			<array_dimension>null</array_dimension>
@@ -1963,7 +1963,7 @@
 				<normal_column>
 					<id>25</id>
 					<referenced_column>38</referenced_column>
-					<relation>4</relation>
+					<relation>3</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name>mem_no_req</logical_name>
@@ -1997,7 +1997,7 @@
 				<normal_column>
 					<id>26</id>
 					<referenced_column>38</referenced_column>
-					<relation>3</relation>
+					<relation>4</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name>mem_no_res</logical_name>
@@ -2818,7 +2818,7 @@
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
 					<physical_name></physical_name>
-					<type></type>
+					<type>decimal</type>
 					<constraint>DEFAULT 0</constraint>
 					<default_value></default_value>
 					<auto_increment>false</auto_increment>

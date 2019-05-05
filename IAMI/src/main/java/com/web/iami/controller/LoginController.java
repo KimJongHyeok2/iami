@@ -14,7 +14,7 @@ import com.web.iami.security.CustomUserDetails;
 @RequestMapping("/login")
 public class LoginController {
 
-	@GetMapping("")
+	@RequestMapping("")
 	public String login() {
 		return "login/login";
 	}

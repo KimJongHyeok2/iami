@@ -26,7 +26,7 @@ public class LoggingAspect {
 		
 		logger.info("----------------------------------------------------------------------------------------------");
 	
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 		
 		String signature = jp.getSignature().getName();
 		logger.info("요청주소 : " + request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getRequestURI());

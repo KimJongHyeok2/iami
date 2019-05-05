@@ -4,4 +4,13 @@
 	<select id="selectMemberById" resultType="com.web.iami.security.CustomUserDetails">
 		SELECT mem_id, mem_pw, mem_auth, mem_nickname, enabled FROM members WHERE mem_id = #{param1}
 	</select>
+	<select id="selectMemberFailureCount" resultType="Integer">
+		SELECT failureCount FROM members WHERE mem_id = #{param1}
+	</select>
+	<update id="updateMemberFailureCount">
+		UPDATE members SET failureCount = failureCount + 1 WHERE mem_id = #{param1}
+	</update>
+	<update id="updateMemberEnabled">
+		UPDATE members SET enabled = 0 WHERE mem_id = #{param1}
+	</update>
 </mapper>

@@ -136,7 +136,7 @@ function resize() {
 <header class="headerWrapper">
 	<div class="headerInner">
 		<div class="logo">
-			<img src="${pageContext.request.contextPath}/resources/image/main/logo.png"/>
+			<a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/resources/image/main/logo.png"/></a>
 		</div>
 		<s:authorize access="!isAuthenticated()">
 			<div class="account">

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +28,7 @@ public class CustomUserDetailService implements UserDetailsService {
 		CustomUserDetails dto = dao.selectMemberById(id);
 		
 		if(dto == null) {
-			throw new UsernameNotFoundException("요청한 정보가 존재하지 않습니다.");
+			throw new InternalAuthenticationServiceException(id);
 		} else {
 			List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
 			roles.add(new SimpleGrantedAuthority(dto.getMem_auth()));

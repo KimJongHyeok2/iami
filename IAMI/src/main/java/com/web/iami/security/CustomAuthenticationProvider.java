@@ -2,8 +2,10 @@ package com.web.iami.security;
 
 import javax.inject.Inject;
 
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -23,8 +25,20 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String pw = (String)auth.getCredentials();
 		
 		CustomUserDetails user = null;
+				
+		user = (CustomUserDetails)service.loadUserByUsername(id);
 		
-		try {
+		PasswordEncoding encode = new PasswordEncoding();
+		
+		if(!encode.matches(pw, user.getPassword())) {
+			throw new BadCredentialsException(id);
+		}
+			
+		if(!user.isEnabled()) {
+			throw new AuthenticationCredentialsNotFoundException(id);
+		}
+
+/*		try {
 			user = (CustomUserDetails)service.loadUserByUsername(id);
 			
 			PasswordEncoding encode = new PasswordEncoding();
@@ -34,19 +48,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			}
 			
 			if(!user.isEnabled()) {
-				throw new BadCredentialsException("블락된 계정입니다.");
+				throw new LockedException("블락된 계정입니다.");
 			}
-		} catch (UsernameNotFoundException e) {
-			e.printStackTrace();
-			throw new UsernameNotFoundException(e.getMessage());
+		} catch (InternalAuthenticationServiceException e) {
+			throw new InternalAuthenticationServiceException(e.getMessage());
 		} catch (BadCredentialsException e) {
-			e.printStackTrace();
-			throw new BadCredentialsException("비밀번호가 올바르지 않습니다.");
+			throw new BadCredentialsException(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
 		}
-		
+*/
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(id, pw, user.getAuthorities());
 		token.setDetails(user);
 		

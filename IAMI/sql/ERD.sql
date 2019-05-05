@@ -62,7 +62,7 @@ CREATE TABLE friend
 CREATE TABLE members
 (
 	mem_no number NOT NULL,
-	mem_id varchar2(30) NOT NULL,
+	mem_id varchar2(30) NOT NULL UNIQUE,
 	mem_pw varchar2(30) NOT NULL,
 	mem_nickname varchar2(10) DEFAULT 'NONE',
 	mem_gender number(2) NOT NULL,
@@ -71,7 +71,8 @@ CREATE TABLE members
 	mem_email varchar2(100) NOT NULL,
 	mem_regdate timestamp DEFAULT SYSDATE,
 	mem_auth varchar2(20) DEFAULT 'ROLE_USER',
-	enabled number DEFAULT 0,
+	failureCount number DEFAULT 0,
+	enabled number DEFAULT 1,
 	PRIMARY KEY (mem_no)
 );
 
@@ -143,9 +144,7 @@ ALTER TABLE project
 	REFERENCES members (mem_no)
 ;
 
-DELETE FROM members;
 
 SELECT * FROM members;
 
-
-UPDATE members SET enabled = 1 WHERE mem_id = 'test13587';
+UPDATE members SET enabled = 1, failureCount = 0;

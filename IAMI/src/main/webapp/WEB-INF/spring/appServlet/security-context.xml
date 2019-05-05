@@ -16,7 +16,7 @@
 		username-parameter="mem_id"
 		password-parameter="mem_pw"
 		login-processing-url="/loginOk"
-		authentication-failure-url="/login?result=fail"
+		authentication-failure-handler-ref="customAuthenticationFailureHandler"
 		authentication-success-forward-url="/login/success"
 		default-target-url="/"
 		/>
@@ -34,6 +34,12 @@
 	<bean name="customAuthenticationProvider" class="com.web.iami.security.CustomAuthenticationProvider"/>
 	<bean name="customUserDetailService" class="com.web.iami.security.CustomUserDetailService"/>
 	<bean name="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	<bean name="customAuthenticationFailureHandler" class="com.web.iami.security.CustomAuthenticationFailureHandler">
+		<property name="mem_id" value="mem_id"/>
+		<property name="mem_pw" value="mem_pw"/>
+		<property name="errormsgname" value="errorMsg"/>
+		<property name="defaultFailUrl" value="/login"/>
+	</bean>
 
 	<!-- DataSource -->
 	<bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">

@@ -7,6 +7,21 @@
 <meta charset="UTF-8">
 <title>로그인</title>
 <jsp:include page="/resources/common/common.jsp"/>
+<script type="text/javascript">
+function validCheck(obj) {
+	var id = obj["mem_id"].value; 
+	var pw = obj["mem_pw"].value;
+	
+	if(id == "" || id.length == 0) {
+		alert("아이디를 입력해주세요.");
+		return false;
+	}
+	if(pw == "" || pw.length == 0) {
+		alert("비밀번호를 입력해주세요.");
+		return false;
+	}
+}
+</script>
 <style type="text/css">
 html, body {
 	background-color: #f4f5f7;
@@ -120,14 +135,14 @@ html, body {
 			<a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/resources/image/main/regLogo.png"/></a>
 		</div>
 		<div class="form">
-			<form action="<c:url value='/loginOk'/>" method="post">
-				<input id="mem_id" name="mem_id" type="text" class="input-id" placeholder="아이디"/>
-				<input id="mem_pw" name="mem_pw" type="password" class="input-pw" placeholder="비밀번호"/>
+			<form action="<c:url value='/loginOk'/>" method="post" onsubmit="return validCheck(this);">
+				<input id="mem_id" name="mem_id" type="text" class="input-id" value="${mem_id}" placeholder="아이디"/>
+				<input id="mem_pw" name="mem_pw" type="password" class="input-pw" value="${mem_pw}" placeholder="비밀번호"/>
 				<button class="w3-button btn-login" onclick="register();">로그인</button>
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			</form>
-			<c:if test="${param.result == 'fail'}">
-				<label class="check-valid">아이디 또는 비밀번호를 다시 한번 확인해주세요.</label>
+			<c:if test="${not empty errorMsg}">
+				<label class="check-valid">${errorMsg}</label>
 			</c:if>
 		</div>
 		<div class="func-box">
