@@ -137,7 +137,7 @@ html, body {
 		<div class="form">
 			<form action="<c:url value='/loginOk'/>" method="post" onsubmit="return validCheck(this);">
 				<input id="mem_id" name="mem_id" type="text" class="input-id" value="${mem_id}" placeholder="아이디"/>
-				<input id="mem_pw" name="mem_pw" type="password" class="input-pw" value="${mem_pw}" placeholder="비밀번호"/>
+				<input id="mem_pw" name="mem_pw" type="password" class="input-pw" placeholder="비밀번호"/>
 				<button class="w3-button btn-login" onclick="register();">로그인</button>
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			</form>

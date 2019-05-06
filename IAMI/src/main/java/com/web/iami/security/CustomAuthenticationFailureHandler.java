@@ -66,7 +66,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 		String errormsg = null;
 		
 		request.setAttribute(this.mem_id, id);
-		request.setAttribute(this.mem_pw, pw);
 		
 		if(exception instanceof InternalAuthenticationServiceException) {
 			errormsg = "아이디 또는 비밀번호를 다시 한번 확인해주세요.";
@@ -78,7 +77,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 				dao.updateMemberEnabled(id);
 				errormsg = "계정이 비활성화 처리되었습니다.";
 			} else {
-				errormsg = "아이디 또는 비밀번호를 다시 한번 확인해주세요.<br>5회 잘못 입력 시 계정이 비활성화됩니다.(" + count + "/5)";				
+				errormsg = "아이디 또는 비밀번호를 다시 한번 확인해주세요.<br>5회 실패 시 계정이 비활성화됩니다.(" + count + "/5)";				
 			}
 		} else if(exception instanceof DisabledException) {
 			errormsg = "비활성화되어 있는 계정입니다.";

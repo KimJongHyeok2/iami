@@ -13,4 +13,7 @@
 	<update id="updateMemberEnabled">
 		UPDATE members SET enabled = 0 WHERE mem_id = #{param1}
 	</update>
+	<update id="updateMemberFailureCount_Init">
+		UPDATE members SET failureCount = 0 WHERE mem_id = #{param1}
+	</update>
 </mapper>

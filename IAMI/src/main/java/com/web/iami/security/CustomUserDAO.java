@@ -5,4 +5,5 @@ public interface CustomUserDAO {
 	public int selectMemberFailureCount(String id);
 	public int updateMemberFailureCount(String id);
 	public int updateMemberEnabled(String id);
+	public int updateMemberFailureCount_Init(String id);
 }

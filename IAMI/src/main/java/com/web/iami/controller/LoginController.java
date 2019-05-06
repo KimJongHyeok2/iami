@@ -19,7 +19,7 @@ public class LoginController {
 		return "login/login";
 	}
 	
-	@PostMapping("/success")
+	@RequestMapping("/success")
 	public String success(HttpServletRequest request) {
 		
 		CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails();

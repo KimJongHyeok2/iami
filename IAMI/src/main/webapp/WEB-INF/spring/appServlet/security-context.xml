@@ -17,12 +17,13 @@
 		password-parameter="mem_pw"
 		login-processing-url="/loginOk"
 		authentication-failure-handler-ref="customAuthenticationFailureHandler"
-		authentication-success-forward-url="/login/success"
+		authentication-success-handler-ref="customAuthenticationSuccessHandler"
 		default-target-url="/"
 		/>
 		<security:logout logout-url="/logout" logout-success-url="/login"/>
-		<security:session-management>
-			<security:concurrency-control max-sessions="1" expired-url="/"/>
+		<security:access-denied-handler error-page="/access-denied"/>
+		<security:session-management invalid-session-url="/login">
+			<security:concurrency-control max-sessions="1" expired-url="/expired-login"/>
 		</security:session-management>
 	</security:http>
 	
@@ -39,6 +40,10 @@
 		<property name="mem_pw" value="mem_pw"/>
 		<property name="errormsgname" value="errorMsg"/>
 		<property name="defaultFailUrl" value="/login"/>
+	</bean>
+	<bean name="customAuthenticationSuccessHandler" class="com.web.iami.security.CustomAuthenticationSuccesHandler">
+		<property name="mem_id" value="mem_id"/>
+		<property name="defaultUrl" value="/login/success"/>
 	</bean>
 
 	<!-- DataSource -->
