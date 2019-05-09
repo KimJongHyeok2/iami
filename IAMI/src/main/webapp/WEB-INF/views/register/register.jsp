@@ -282,22 +282,22 @@ function register() {
 	<div class="middle">
 		<div class="input-box">
 			<h5>아이디</h5>
-			<input id="mem_id" class="w3-input input" type="text" onkeyup="vaildCheckID();">
+			<input id="mem_id" class="w3-input input" type="text" onkeyup="vaildCheckID();"/>
 			<label class="check-value"></label>
 		</div> 
 		<div class="input-box">
 			<h5>비밀번호</h5>
-			<input id="mem_pw" class="w3-input input" type="password" onkeyup="vaildCheckPW();">
+			<input id="mem_pw" class="w3-input input" type="password" onkeyup="vaildCheckPW();"/>
 			<label class="check-value"></label>
 		</div> 
 		<div class="input-box">
 			<h5>비밀번호 재확인</h5>
-			<input id="mem_pw2" class="w3-input input" type="password" onkeyup="vaildCheckPW2();">
+			<input id="mem_pw2" class="w3-input input" type="password" onkeyup="vaildCheckPW2();"/>
 			<label class="check-value"></label>
 		</div> 
 		<div class="input-box">
 			<h5>닉네임</h5>
-			<input id="mem_nickname" class="w3-input input" type="text" onkeyup="vaildCheckName();">
+			<input id="mem_nickname" class="w3-input input" type="text" onkeyup="vaildCheckName();"/>
 			<label class="check-value"></label>
 		</div>
 		<div class="input-box">
@@ -331,7 +331,7 @@ function register() {
 				<div class="circle"><i class="far fa-envelope"></i></div><div class="title-text">이메일 인증</div>
 			</div>
 			<div class="w3-row-padding padding-box flex">
-				<input id="mem_email" class="w3-input input" type="text" onkeyup="vaildCheckEmail(this);"><button id="req-access" class="w3-button w3-disabled" disabled>요청</button>
+				<input id="mem_email" class="w3-input input" type="text" onkeyup="vaildCheckEmail(this);"/><button id="req-access" class="w3-button w3-disabled" disabled>요청</button>
 			</div>
 			<label id="email-check-value" class="check-value"></label>
 		</div>
@@ -342,7 +342,7 @@ function register() {
 	      <div class="w3-container">
 	        <div class="w3-section">
 	          <label><b>이메일 인증키 입력</b></label>
-	          <input class="w3-input w3-border w3-margin-bottom" id="key_accessKey" type="text" placeholder="인증키를 입력하세요." name="usrname">
+	          <input class="w3-input w3-border w3-margin-bottom" id="key_accessKey" type="text" placeholder="인증키를 입력하세요." name="usrname"/>
 	          <input type="hidden" id="key_no"/>
 	          <label id="email-check-accessKey" class="check-value off"></label>
 	          <button class="w3-button w3-block w3-section w3-padding" type="submit" onclick="checkAccessKey();">인증</button>

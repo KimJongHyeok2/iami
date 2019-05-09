@@ -20,9 +20,10 @@
 		authentication-success-handler-ref="customAuthenticationSuccessHandler"
 		default-target-url="/"
 		/>
+		<security:intercept-url pattern="/" access="permitAll"/>
 		<security:logout logout-url="/logout" logout-success-url="/login"/>
 		<security:access-denied-handler error-page="/access-denied"/>
-		<security:session-management invalid-session-url="/login">
+		<security:session-management>
 			<security:concurrency-control max-sessions="1" expired-url="/expired-login"/>
 		</security:session-management>
 	</security:http>

@@ -14,6 +14,27 @@ $(document).ready(function() {
 	$(".user").click(function() {
 		$("#user-drop").toggle();
 	});
+	$(".find-tab li").click(function() {
+		var type = $(this).attr("value"); 
+		
+		if(type == "id") {
+			$("#find-pw").removeClass("active");
+			$("#find-id").removeClass("none-id");
+			$("#find-id").addClass("active");
+			$("#find-pw").addClass("none-pw");
+			$("#find-pw-form").removeClass("on");
+			$("#find-id-form").addClass("on");
+			$(".find-title h2").html("아이디 찾기");
+		} else {
+			$("#find-id").removeClass("active");
+			$("#find-pw").removeClass("none-pw");
+			$("#find-pw").addClass("active");
+			$("#find-id").addClass("none-id");
+			$("#find-id-form").removeClass("on");
+			$("#find-pw-form").addClass("on");
+			$(".find-title h2").html("비밀번호 찾기");
+		}
+	});
 });
 $(window).resize(resize);
 function resize() {
@@ -23,6 +44,7 @@ function resize() {
 	$footerHeight = $(".footerWrapper").height();
 	
 	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 42 + "px");
+	$(".container-fluid .findWrapper").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 43 + "px");
 }
 </script>
 <style type="text/css">
@@ -103,7 +125,7 @@ function resize() {
 	background-color: rgba(17, 135, 207, 0.4);
 }
 .navWrapper .navInner {
-	width: 1200px;
+	max-width: 1200px;
 	margin: auto;
 	color: white;
 }
@@ -121,6 +143,12 @@ function resize() {
 .navWrapper .navInner ul li span:hover {
 	border-bottom: 3px solid white;
 }
+.contentWrapper .container-fluid {
+	position: relative;
+	max-width: 1200px;
+	margin: auto;
+	padding: 0;
+}
 .footerWrapper {
 	padding: 20px;
 	font-size: 10pt;
@@ -133,7 +161,7 @@ function resize() {
 </style>
 </head>
 <body>
-<header class="headerWrapper">
+<div class="headerWrapper">
 	<div class="headerInner">
 		<div class="logo">
 			<a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/resources/image/main/logo.png"/></a>
@@ -181,21 +209,28 @@ function resize() {
 			</div>
 		</s:authorize>
 	</div>
-</header>
-<nav class="navWrapper">
+</div>
+<div class="navWrapper">
 	<div class="navInner">
 		<ul>
 			<li><span>전체</span></li>
 		</ul>
 	</div>
-</nav>
-<section class="contentWrapper">
+</div>
+<div class="contentWrapper">
 	<div class="container-fluid">
-		컨테이너
+		<c:choose>
+			<c:when test="${param.type == 'findInfo'}">
+				<jsp:include page="find/findInfo.jsp"/>
+			</c:when>
+			<c:otherwise>
+				메인
+			</c:otherwise>
+		</c:choose>
 	</div>
-</section>
-<footer class="footerWrapper">
+</div>
+<div class="footerWrapper">
 Copyright <span>KimJongHyeok.</span> All Rights Reserved.
-</footer>
+</div>
 </body>
 </html>

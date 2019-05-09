@@ -9,7 +9,6 @@ public class LoginDTO {
 	public LoginDTO() { }
 	
 	public LoginDTO(String mem_id, String mem_pw, String mem_auth) {
-		super();
 		this.mem_id = mem_id;
 		this.mem_pw = mem_pw;
 		this.mem_auth = mem_auth;

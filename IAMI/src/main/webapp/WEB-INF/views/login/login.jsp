@@ -62,14 +62,9 @@ html, body {
 	text-align: center;
 }
 .loginInner .func-box span {
-	font-size: 8pt;
+	font-size: 10pt;
 	color: gray;
 	cursor: pointer;
-}
-.loginInner .func-box .find-id {
-	margin-right: 5px;
-	padding-right: 5px;
-	border-right: 1px solid #D5D5D5;
 }
 .loginInner .social-box {
 	margin-top: 20px;
@@ -146,7 +141,7 @@ html, body {
 			</c:if>
 		</div>
 		<div class="func-box">
-			<span class="find-id">아이디 찾기</span><span class="find-pw">비밀번호 찾기</span>
+			<span onclick="location.href='${pageContext.request.contextPath}/login/findInfo?type=findInfo'">아이디/비밀번호 찾기</span>
 		</div>
 		<div class="social-box">
 			<div class="naver">N</div>
