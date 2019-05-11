@@ -14,27 +14,6 @@ $(document).ready(function() {
 	$(".user").click(function() {
 		$("#user-drop").toggle();
 	});
-	$(".find-tab li").click(function() {
-		var type = $(this).attr("value"); 
-		
-		if(type == "id") {
-			$("#find-pw").removeClass("active");
-			$("#find-id").removeClass("none-id");
-			$("#find-id").addClass("active");
-			$("#find-pw").addClass("none-pw");
-			$("#find-pw-form").removeClass("on");
-			$("#find-id-form").addClass("on");
-			$(".find-title h2").html("아이디 찾기");
-		} else {
-			$("#find-id").removeClass("active");
-			$("#find-pw").removeClass("none-pw");
-			$("#find-pw").addClass("active");
-			$("#find-id").addClass("none-id");
-			$("#find-id-form").removeClass("on");
-			$("#find-pw-form").addClass("on");
-			$(".find-title h2").html("비밀번호 찾기");
-		}
-	});
 });
 $(window).resize(resize);
 function resize() {
@@ -45,6 +24,11 @@ function resize() {
 	
 	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 42 + "px");
 	$(".container-fluid .findWrapper").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 43 + "px");
+}
+function userList(type) {
+	if(type == "write") {
+		location.href = "${pageContext.request.contextPath}/portfolio/write";
+	}
 }
 </script>
 <style type="text/css">
@@ -65,13 +49,23 @@ function resize() {
 	width: 35px;
 	height: 35px;
 	border-radius: 50px;
+	margin-right: 5px;
 	cursor: pointer;
 }
 .headerWrapper .headerInner .account {
 	float: right;
 	margin-right: 5px;
 }
+.headerWrapper .headerInner .account-399 {
+	position: relative;
+	display: none;
+	margin-right: 5px;
+}
 .headerWrapper .headerInner .account button {
+	border-color: rgba(17, 135, 207, 0.4) !important;
+	color: rgba(17, 135, 207, 0.8) !important;
+}
+.headerWrapper .headerInner .account-399 button {
 	border-color: rgba(17, 135, 207, 0.4) !important;
 	color: rgba(17, 135, 207, 0.8) !important;
 }
@@ -158,6 +152,14 @@ function resize() {
 .footerWrapper span {
 	color: gray;
 }
+@media (max-width:399px) {
+	.account {
+		display: none;
+	}
+	#account-399 {
+		display: block;
+	}
+}
 </style>
 </head>
 <body>
@@ -170,6 +172,9 @@ function resize() {
 			<div class="account">
 				<button class="w3-button w3-white w3-border" onclick="location.href='${pageContext.request.contextPath}/login'">로그인</button>
 				<button class="w3-button w3-white w3-border" onclick="location.href='${pageContext.request.contextPath}/register'">회원가입</button>
+			</div>
+			<div id="account-399" class="account-399">
+				<button class="w3-button w3-white w3-border" onclick="location.href='${pageContext.request.contextPath}/login'"><i class="fas fa-sign-in-alt"></i></button>		
 			</div>
 		</s:authorize>
 		<s:authorize access="isAuthenticated()">
@@ -193,7 +198,7 @@ function resize() {
 					<li class="user-list">
 						<i class="fas fa-user-friends"></i> 친구목록
 					</li>
-					<li class="user-list">
+					<li class="user-list" onclick="userList('write');">
 						<i class="fas fa-edit"></i> 포트폴리오 작성
 					</li>
 					<li class="user-list">

@@ -1,6 +1,55 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <script>
+$(document).ready(function() {
+	$(".find-tab li").click(function() {
+		var type = $(this).attr("value"); 
+		
+		if(type == "id") {
+			$("#find-pw").removeClass("active");
+			$("#find-id").removeClass("none-id");
+			$("#find-id").addClass("active");
+			$("#find-pw").addClass("none-pw");
+			$("#find-pw-form").removeClass("on");
+			$("#find-id-form").addClass("on");
+			$(".find-title h2").html("아이디 찾기");
+			$("#find-span").attr("onclick", "findPW()");
+			$("#find-span").html("비밀번호를 잊으셨나요?");
+		} else {
+			$("#find-id").removeClass("active");
+			$("#find-pw").removeClass("none-pw");
+			$("#find-pw").addClass("active");
+			$("#find-id").addClass("none-id");
+			$("#find-id-form").removeClass("on");
+			$("#find-pw-form").addClass("on");
+			$(".find-title h2").html("비밀번호 찾기");
+			$("#find-span").attr("onclick", "findID()");
+			$("#find-span").html("아이디를 잊으셨나요?");
+		}
+	});
+});
+function findID() {
+	$("#find-pw").removeClass("active");
+	$("#find-id").removeClass("none-id");
+	$("#find-id").addClass("active");
+	$("#find-pw").addClass("none-pw");
+	$("#find-pw-form").removeClass("on");
+	$("#find-id-form").addClass("on");
+	$(".find-title h2").html("아이디 찾기");
+	$("#find-span").attr("onclick", "findPW()");
+	$("#find-span").html("비밀번호를 잊으셨나요?");
+}
+function findPW() {
+	$("#find-id").removeClass("active");
+	$("#find-pw").removeClass("none-pw");
+	$("#find-pw").addClass("active");
+	$("#find-id").addClass("none-id");
+	$("#find-id-form").removeClass("on");
+	$("#find-pw-form").addClass("on");
+	$(".find-title h2").html("비밀번호 찾기");
+	$("#find-span").attr("onclick", "findID()");
+	$("#find-span").html("아이디를 잊으셨나요?");
+}
 function validCheck1(obj) {
 	var $nickname = obj["mem_nickname"].value;
 	var $email = obj["mem_email"].value;
@@ -48,6 +97,7 @@ function validCheck2(obj) {
 	margin: auto;
 }
 .contentWrapper .container-fluid .findWrapper .findInner .find-title {
+	padding: 10px 0;
 }
 .contentWrapper .container-fluid .findWrapper .findInner .find-tab {
 	list-style-type: none;
@@ -101,6 +151,24 @@ function validCheck2(obj) {
 .contentWrapper .container-fluid .findWrapper .findInner .find-content form.on {
 	display: block;
 }
+.contentWrapper .container-fluid .findWrapper .findInner .find-399 {
+	display: none;
+	padding: 5px 0;
+	text-align: center;
+	font-size: 10pt;
+	color: gray;
+}
+.contentWrapper .container-fluid .findWrapper .findInner .find-399 span {
+	cursor: pointer;
+}
+@media (max-width:399px) {
+	.find-tab {
+		display: none;
+	}
+	#find-399 {
+		display: block;
+	}
+}
 </style>
 <div class="findWrapper">
 	<div class="findInner">
@@ -125,6 +193,9 @@ function validCheck2(obj) {
 				<button type="submit" class="w3-button">확인</button>
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			</form>
+		</div>
+		<div id="find-399" class="find-399">
+			<span id="find-span" onclick="findPW();">비밀번호를 잊으셨나요?</span>
 		</div>
 	</div>
 </div>
