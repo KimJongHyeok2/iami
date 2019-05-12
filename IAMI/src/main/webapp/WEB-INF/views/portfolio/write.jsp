@@ -11,6 +11,12 @@ var $currContent = 1;
 var $width = 20;
 $(document).ready(function() {
 	resize();
+	$(".dateSelector").flatpickr({ 
+		dateFormat: "Y-m-d",
+	});
+	$(".ck-editor__editable[role='textbox']").on("keyup", function() {
+		myEditor.setData("");
+	});
 });
 $(window).resize(resize_next_res);
 function resize() {
@@ -268,41 +274,138 @@ function prevProgress() {
 	}
 }
 function openModal(type) {
-	if(type == "war") {
-		$("#war-modal").css("display", "block");
-	}
+	$("#" + type + "-modal").css("display", "block");
 }
 function cardSelected(card) {
+	var $isSelected = $(card).parent(".card-box");
 	$(card).find(".fa-check").toggle();
-	if($(card).attr("class").indexOf("select") == -1) {
-		$(card).addClass("select");
+	if($isSelected.attr("class").indexOf("select") == -1) {
+		$isSelected.addClass("select");
 	} else {
-		$(card).removeClass("select");
+		$isSelected.removeClass("select");
 	}
 }
 function addEnvironment(obj, type) {
-	var $parentHTML = $(obj).parent("div").parent("div").find(".container-inner");
-	var $findObject = $parentHTML.find(".dev-card");
-	var $count = $parentHTML.find(".dev-card").length;
+	var $parentObject = $(obj).parent("div").parent("div").find(".container-inner");
+	var $findObject = $parentObject.find(".dev-card").parent(".card-box.select").find(".dev-card");
+	var $selectCount = $parentObject.find(".dev-card").parent(".card-box.select").length;
 	var $emptyFlag = false;
-	
+	var $addCount = 1;
 	$("#" + type + "-environment .container .row").html("");
 	
 	$($findObject).each(function(index) {
-		if($(this).attr("class").indexOf("select") != -1) {
+		var $isSelected = $(this).parent(".card-box");
+		var $column = $(this).parent(".card-box").attr("class").replace("card-box ", "").replace("margin-card ", "").replace(" select", "").replace("margin-top", "");
+		if($isSelected.attr("class").indexOf("select") != -1) {
 			$emptyFlag = true;
-			if(index > 0) {
-				$(this).addClass("margin-card");
-			}
-			$("#" + type + "-environment .container .row").append($(this).parent(".row").html());
+			
+ 			if($selectCount > 1) {
+ 				if((index+1)%$selectCount != 0) {
+					$(this).addClass("margin-card");
+				} else {
+					$(this).addClass("last");
+				}
+ 				if($addCount > 3) {
+					$(this).addClass("margin-top");
+				}
+ 			}
+ 			
+			$(this).addClass($column);
+			$(this).removeAttr("onclick");
+  			if(type == "dem" || type == "git") {
+ 				$(this).attr("onclick", "location.href='" + $(this).find('input[type=hidden]').val() + "'");
+ 			}
+			$("#" + type + "-environment .container .row").append($isSelected.html());
+			$(this).attr("onclick", "cardSelected(this);"); 
+			$(this).removeClass($column);
 			$(this).removeClass("margin-card");
+			$addCount += 1;
 		}
+		
 	});
 	if(!$emptyFlag) {
 		$("#" + type + "-environment .container .row").html("<div class='empty col-12'>등록이 필요합니다.</div>");
 	}
 	resize_next_res();
 	$("#" + type + "-modal").css("display", "none");
+}
+function addApiName(obj) {
+	var $value = obj.val();
+	var $html = "";
+	var $count = $(obj).parent("div").parent("div").find(".row").find(".card-box").length;
+	
+	if($count >= 8) {
+		alert("더 이상 등록할 수 없습니다.");
+		return false;
+	}
+	if($value == null || $value.length == 0 || $value.length > 15) {
+		alert("3자 이상 15자 이하로 입력해주세요.");
+		return false;
+	} else {
+		$html += "<div class='card-box margin-card " + ($count >= 3? 'margin-top':'') + " col-sm-12 col-md-3'>";
+			$html += "<div class='dev-card' onclick='cardSelected(this);'>";
+				$html += "<div class='dev-card-text api'>";
+					$html += $value;
+				$html += "</div>";
+				$html += "<i class='fas fa-check'></i>";
+			$html += "</div>";
+		$html += "</div>";
+		$(obj).parent("div").parent("div").find(".row").append($html);
+	}
+}
+function addDemoUrl(obj) {
+	var $value = obj.val();
+	var $html = "";
+	var $pattern = /(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,4}/gi
+	var $count = $(obj).parent("div").parent("div").find(".row").find(".card-box").length;
+	
+	if($count >= 1) {
+		alert("더 이상 등록할 수 없습니다.");
+		return false;
+	}
+	if(!new RegExp($pattern).test($value)) {
+		alert("입력하신 URL을 다시 한번 확인해주세요.");
+		return false;
+	} else {
+		$html += "<div class='card-box margin-card " + ($count >= 3? 'margin-top':'') + " col-sm-12 col-md-3'>";
+			$html += "<div class='dev-card' onclick='cardSelected(this);'>";
+				$html += "<div class='dev-card-text api'>";
+					$html += "<i class='fas fa-link'></i>";
+					$html += " Demo";
+				$html += "<input type='hidden' value='" + $value + "' />";
+				$html += "</div>";
+				$html += "<i class='fas fa-check'></i>";
+			$html += "</div>";
+		$html += "</div>";
+		$(obj).parent("div").parent("div").find(".row").append($html);
+	}
+}
+function addGitUrl(obj) {
+	var $value = obj.val();
+	var $html = "";
+	var $pattern = /(http(s)?:\/\/)([a-z0-9\w]+\.*)+[a-z0-9]{2,4}/gi
+	var $count = $(obj).parent("div").parent("div").find(".row").find(".card-box").length;
+	
+	if($count >= 1) {
+		alert("더 이상 등록할 수 없습니다.");
+		return false;
+	}
+	if(!new RegExp($pattern).test($value) || $value.indexOf("github.com") == -1) {
+		alert("GitHub URL을 입력해주세요.");
+		return false;
+	} else {
+		$html += "<div class='card-box margin-card " + ($count >= 3? 'margin-top':'') + " col-sm-12 col-md-3'>";
+			$html += "<div class='dev-card' onclick='cardSelected(this);'>";
+				$html += "<div class='dev-card-text api'>";
+					$html += "<i class='fab fa-github-square'></i>";
+					$html += " GitHub";
+				$html += "<input type='hidden' value='" + $value + "' />";
+				$html += "</div>";
+				$html += "<i class='fas fa-check'></i>";
+			$html += "</div>";
+		$html += "</div>";
+		$(obj).parent("div").parent("div").find(".row").append($html);
+	}
 }
 </script>
 <style type="text/css">
@@ -382,6 +485,12 @@ function addEnvironment(obj, type) {
 	padding: 5px;
 	border: 1px solid #D5D5D5;
 }
+.contentWrapper .contentInner .content .margin-top {
+	margin-top: 5px;
+}
+.contentWrapper .contentInner .content .margin-title {
+	margin-top: 5px;
+}
 .contentWrapper .contentInner .content .description {
 	margin-top: 7.5px;
 }
@@ -397,6 +506,16 @@ function addEnvironment(obj, type) {
 	background-color: rgba(17, 135, 207, 0.4) !important;
 	color: white !important;
 	cursor: pointer;
+}
+.contentWrapper .contentInner .content .summary-input .container {
+	max-width: 100% !important;
+	padding: 0 !important;
+}
+.contentWrapper .contentInner .content .summary-input .container .row {
+	margin: 0 !important;
+}
+.contentWrapper .contentInner .content .summary-input .container .row .start {
+	border-right: none;
 }
 .contentWrapper .contentInner .content .environment-input {
 	margin-top: 7.5px;
@@ -414,13 +533,17 @@ function addEnvironment(obj, type) {
 	border: 1px solid #D5D5D5;
 }
 .contentWrapper .contentInner .content .environment-input .container .row .margin-card {
-	margin-left: 5px;
+	margin-right: 5px;
+}
+.contentWrapper .contentInner .content .environment-input .container .row .dev-card {
+	border: 1px solid rgba(17, 135, 207, 0.4);
 }
 .contentWrapper .contentInner .content:not(#one) {
 	display: none;
 }
 .functionWrapper {
 	margin-top: 15px;
+	margin-bottom: 15px; 
 }
 .functionWrapper .functionInner {
 	max-width: 800px;
@@ -438,11 +561,17 @@ function addEnvironment(obj, type) {
 	background-color: rgba(17, 135, 207, 0.4); 
 	color: white;
 }
+.w3-modal .margin-top {
+	margin-top: 5px;
+}
 .w3-modal .margin-left {
 	margin-left: 5px;
 }
 .w3-modal .margin-card {
-	margin-left: 5px;
+	margin-right: 5px;
+}
+.w3-modal .margin-card-api {
+	
 }
 .w3-modal .w3-container h2 {
 	margin-top: 7.5px;
@@ -454,9 +583,25 @@ function addEnvironment(obj, type) {
 .w3-modal .container .container-inner {
 	margin: 10px;
 }
-.w3-modal .container .row {
+.w3-modal .container .container-inner .api-input {
+	display: flex;
+}
+.w3-modal .container .container-inner .api-input input {
+	flex-grow: 1;
+	padding: 5px;
+	border: 1px solid #D5D5D5;
+}
+.w3-modal .container .container-inner .api-input button {
+	border: 1px solid #D5D5D5 !important;
+	border-left: none !important;
+}
+.w3-modal .container .container-inner .row {
 	max-width: 100% !important;
 	margin: 0 !important;
+	box-sizing: border-box !important;
+}
+.w3-modal .container .container-inner .row .card-box {
+	padding: 0;
 }
 .container .dev-card {
 	position: relative;
@@ -464,7 +609,7 @@ function addEnvironment(obj, type) {
 	border: 1px solid #D5D5D5;
 	cursor: pointer;
 }
-.container .dev-card.select {
+.container .card-box.select .dev-card {
 	border: 1px solid rgba(17, 135, 207, 0.4);
 }
 .container .dev-card:hover {
@@ -474,6 +619,11 @@ function addEnvironment(obj, type) {
 	display: inline-block;
 	vertical-align: middle;
 }
+.container .dev-card div.api {
+	display: block;
+	vertical-align: inherit;
+	text-align: center;
+}
 .container .dev-card .dev-card-img {
 	width: 50px;
 	height: 50px;
@@ -482,6 +632,11 @@ function addEnvironment(obj, type) {
 	width: 100%;
 	height: 100%;
 }
+.container .dev-card .dev-card-text {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
 .container .dev-card .fa-check {
 	display: none;
 	position: absolute;
@@ -489,6 +644,12 @@ function addEnvironment(obj, type) {
 	right: 0;
 	padding: 0;
 	color: rgba(17, 135, 207, 0.4);
+}
+.container .dev-card .fa-link, .fa-github-square {
+	color: rgba(17, 135, 207, 0.4);
+}
+.ck-editor__editable[role='textbox'] {
+	height: 500px;
 }
 @media (max-width:801px) {
 	.progressWrapper-m {
@@ -500,12 +661,26 @@ function addEnvironment(obj, type) {
 	}
 }
 @media (max-width:767px) {
+	.margin-top {
+		margin-top: 0 !important;
+	}
 	.margin-card {
-		margin-top: 5px !important;
-		margin-left: 0 !important;
+		margin-right: 0 !important;
+		margin-bottom: 5px !important;
+	}
+	.last {
+		margin-bottom: 5px !important;
 	}
 }
-@media (max-width:397px) {
+@media (max-width:575px) {
+	.start {
+		border-right: 1px solid #D5D5D5 !important;
+	}
+	.end {
+		margin-top: 5px;
+	}
+}
+@media (max-width:414px) {
 	.progressWrapper {
 		display: none;
 	}
@@ -514,6 +689,9 @@ function addEnvironment(obj, type) {
 	}
 }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
 </head>
 <body>
 <div class="header w3-animate-top">
@@ -556,7 +734,7 @@ function addEnvironment(obj, type) {
 		</div>
 		<div id="two" class="content">
 			<div class="title">
-				<h5>개요를 입력해주세요.</h5>
+				<h5>개요 및 기간을 입력해주세요.</h5>
 			</div>
 			<div class="summary">
 				<div class="summary-title">
@@ -564,6 +742,18 @@ function addEnvironment(obj, type) {
 				</div>
 				<div class="summary-input">
 					<textarea id="pot-summary" name="pot-summary" placeholder="5자 이상 150자 이하"></textarea>
+				</div>
+			</div>
+			<div class="summary">
+				<div class="summary-title">
+					<h6>기간</h6>
+				</div>
+				<div class="summary-input">
+					<div class="container">
+						<div class="row">
+							<input type="text" class="dateSelector start col-sm-6" placeholder="시작일"/><input type="text" class="dateSelector end col-sm-6" placeholder="종료일"/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -584,13 +774,135 @@ function addEnvironment(obj, type) {
 						</div>
 					</div>
 				</div>
+				<div class="environment-title margin-title">
+					<div>개발환경</div><div class="btn-add" onclick="openModal('dev');"><i class="fas fa-plus"></i></div>
+				</div>
+				<div id="dev-environment" class="environment-input">
+					<div class="container">
+						<div class="row">
+							<div class="empty col-12">
+								등록이 필요합니다.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="environment-title margin-title">
+					<div>실행환경</div><div class="btn-add" onclick="openModal('run');"><i class="fas fa-plus"></i></div>
+				</div>
+				<div id="run-environment" class="environment-input">
+					<div class="container">
+						<div class="row">
+							<div class="empty col-12">
+								등록이 필요합니다.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="environment-title margin-title">
+					<div>언어</div><div class="btn-add" onclick="openModal('lan');"><i class="fas fa-plus"></i></div>
+				</div>
+				<div id="lan-environment" class="environment-input">
+					<div class="container">
+						<div class="row">
+							<div class="empty col-12">
+								등록이 필요합니다.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="environment-title margin-title">
+					<div>라이브러리</div><div class="btn-add" onclick="openModal('lib');"><i class="fas fa-plus"></i></div>
+				</div>
+				<div id="lib-environment" class="environment-input">
+					<div class="container">
+						<div class="row">
+							<div class="empty col-12">
+								등록이 필요합니다.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="environment-title margin-title">
+					<div>프레임워크</div><div class="btn-add" onclick="openModal('fra');"><i class="fas fa-plus"></i></div>
+				</div>
+				<div id="fra-environment" class="environment-input">
+					<div class="container">
+						<div class="row">
+							<div class="empty col-12">
+								등록이 필요합니다.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="environment-title margin-title">
+					<div>데이터베이스</div><div class="btn-add" onclick="openModal('dba');"><i class="fas fa-plus"></i></div>
+				</div>
+				<div id="dba-environment" class="environment-input">
+					<div class="container">
+						<div class="row">
+							<div class="empty col-12">
+								등록이 필요합니다.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="environment-title margin-title">
+					<div>사용기술 / API</div><div class="btn-add" onclick="openModal('api');"><i class="fas fa-plus"></i></div>
+				</div>
+				<div id="api-environment" class="environment-input">
+					<div class="container">
+						<div class="row">
+							<div class="empty col-12">
+								등록이 필요합니다.
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div id="four" class="content">
-			4
+			<div class="title">
+				<h5>동영상을 업로드해주세요.</h5>
+			</div>
+			<div class="environment">
+				<div class="environment-title">
+					<h6>동영상</h6>
+				</div>
+				<div class="environment-input">
+					<textarea id="media"></textarea>
+				</div>
+			</div>
 		</div>
 		<div id="five" class="content">
-			5
+			<div class="title">
+				<h5>Demo와 GitHub URL을 추가해주세요.</h5>
+			</div>
+			<div class="environment">
+				<div class="environment-title">
+					<div>Demo</div><div class="btn-add" onclick="openModal('dem');"><i class="fas fa-plus"></i></div>
+				</div>
+				<div id="dem-environment" class="environment-input">
+					<div class="container">
+						<div class="row">
+							<div class="empty col-12">
+								등록이 필요합니다.
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="environment-title margin-title">
+					<div>GitHub</div><div class="btn-add" onclick="openModal('git');"><i class="fas fa-plus"></i></div>
+				</div>
+				<div id="git-environment" class="environment-input">
+					<div class="container">
+						<div class="row">
+							<div class="empty col-12">
+								등록이 필요합니다.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -609,35 +921,393 @@ function addEnvironment(obj, type) {
 			<div class="container-inner">
 				<h5>운영체제</h5>
 				<div class="row">
-					<div class="dev-card col-sm-12 col-md-3" onclick="cardSelected(this);">
-						<div class="dev-card-img">
-							<img src="${pageContext.request.contextPath}/resources/image/write/window10_2.png"/>
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/window10_2.png"/>
+							</div>
+							<div class="dev-card-text">
+								Window10
+							</div>
+							<i class="fas fa-check"></i>
 						</div>
-						<div class="dev-card-text">
-							Window10
-						</div>
-						<i class="fas fa-check"></i>
 					</div>
 				</div>
 				<h5 class="w3-margin-top">서버</h5>
 				<div class="row">
-					<div class="dev-card col-sm-12 col-md-3" onclick="cardSelected(this);">
-						<div class="dev-card-img">
-							<img src="${pageContext.request.contextPath}/resources/image/write/tomcat.png"/>
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/tomcat.png"/>
+							</div>
+							<div class="dev-card-text">
+								Tomcat
+							</div>
+							<i class="fas fa-check"></i>
 						</div>
-						<div class="dev-card-text">
-							Tomcat
-						</div>
-						<i class="fas fa-check"></i>
 					</div>
 				</div>
 			</div>
-		<div class="w3-container w3-light-grey w3-padding">
-			<button class="w3-button w3-right w3-white w3-border margin-left" onclick="document.getElementById('war-modal').style.display='none'">닫기</button>
-			<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'war');">확인</button>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#war-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'war');">확인</button>
+			</div>
 		</div>
+	</div>
+</div>
+<div id="dev-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>개발환경</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<h5>운영체제</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/window10_2.png"/>
+							</div>
+							<div class="dev-card-text">
+								Window10
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+				<h5 class="w3-margin-top">서버</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/tomcat.png"/>
+							</div>
+							<div class="dev-card-text">
+								Tomcat
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+				<h5 class="w3-margin-top">개발툴</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/eclipse.png"/>
+							</div>
+							<div class="dev-card-text">
+								Eclipse
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#dev-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'dev');">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="run-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>실행환경</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<h5>브라우저</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/edge.png"/>
+							</div>
+							<div class="dev-card-text">
+								Edge
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/chrome.png"/>
+							</div>
+							<div class="dev-card-text">
+								Chrome
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#run-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'run');">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="lan-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>언어</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<h5>클라이언트</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/html5_css3.png"/>
+							</div>
+							<div class="dev-card-text">
+								HTML5<br>CSS3
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/javascript.png"/>
+							</div>
+							<div class="dev-card-text">
+								JavaScript
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+				<h5 class="w3-margin-top">서버</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/java.png"/>
+							</div>
+							<div class="dev-card-text">
+								Java
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#lan-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'lan');">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="lib-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>라이브러리</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<h5>라이브러리</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/jquery.png"/>
+							</div>
+							<div class="dev-card-text">
+								JQuery
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#lib-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'lib');">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="fra-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>프레임워크</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<h5>클라이언트</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/bootstrap.png"/>
+							</div>
+							<div class="dev-card-text">
+								Bootstrap4
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+				<h5 class="w3-margin-top">서버</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/spring.png"/>
+							</div>
+							<div class="dev-card-text">
+								Spring
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/mybatis.png"/>
+							</div>
+							<div class="dev-card-text">
+								Mybatis
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#fra-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'fra');">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="dba-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>데이터베이스</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<h5>데이터베이스</h5>
+				<div class="row">
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/oracle.png"/>
+							</div>
+							<div class="dev-card-text">
+								Oracle
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#dba-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'dba');">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="api-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>사용기술 / API</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<div class="api-input">
+					<input id="api-name" type="text" placeholder="API명 또는 기술명 입력하세요."/>
+					<button class="w3-button w3-right w3-white w3-border" onclick="addApiName($('#api-name'));">추가</button>
+				</div>
+				<hr>
+				<div class="row">
+<%-- 					<div class="card-box col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/oracle.png"/>
+							</div>
+							<div class="dev-card-text">
+								Oracle
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div> --%>
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#api-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'api');">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="dem-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>Demo</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<div class="api-input">
+					<input id="demo-url" type="text" placeholder="URL을 입력하세요."/>
+					<button class="w3-button w3-right w3-white w3-border" onclick="addDemoUrl($('#demo-url'));">추가</button>
+				</div>
+				<hr>
+				<div class="row">
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#dem-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'dem');">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="git-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>GitHub</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<div class="api-input">
+					<input id="git-url" type="text" placeholder="URL을 입력하세요."/>
+					<button class="w3-button w3-right w3-white w3-border" onclick="addGitUrl($('#git-url'));">추가</button>
+				</div>
+				<hr>
+				<div class="row">
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#git-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'git');">확인</button>
+			</div>
 		</div>
 	</div>
 </div>
 </body>
+<script type="text/javascript">
+ClassicEditor
+	.create( document.querySelector('#media'), {
+		placeholder: '상단 툴바를 클릭하여 업로드해주세요.',
+	    removePlugins: ['ImageUpload'],
+	    toolbar: ['MediaEmbed']
+	})
+	.then( editor => {
+	    myEditor = editor;
+	})
+	.catch( error => {
+		console.error( error );
+	})
+</script>
 </html>
