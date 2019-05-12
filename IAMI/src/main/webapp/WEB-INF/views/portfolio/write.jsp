@@ -118,12 +118,16 @@ function prev() {
 		$("#circle-4").addClass("spinner-grow spinner");
 		$("#hr-4").removeClass("clear");
 		$("#btn-next").css("display", "inline-block");
+		$("#btn-writeOk").css("display", "none");
 		prevProgress();
 	}
 }
 function next() {
 	/* button_delay(); */
 	if($currContent == 1) {
+		if(!step1Valid()) {
+			return false;
+		}
 		$("#one").removeClass("animated fadeInLeft");
 		$("#one").removeClass("animated fadeInRight");
 		$("#one").addClass("animated fadeOutLeft");
@@ -140,6 +144,9 @@ function next() {
 		$("#btn-prev").css("display", "inline-block");
 		nextProgress();
 	} else if($currContent == 2) {
+		if(!step2Valid()) {
+			return false;
+		}
 		$("#two").removeClass("animated fadeInLeft");
 		$("#two").removeClass("animated fadeInRight");
 		$("#two").addClass("animated fadeOutLeft");
@@ -155,6 +162,9 @@ function next() {
 		$("#hr-2").addClass("clear");
 		nextProgress();
 	} else if($currContent == 3) {
+		if(!step3Valid()) {
+			return false;
+		}
 		$("#three").removeClass("animated fadeInLeft");
 		$("#three").removeClass("animated fadeInRight");
 		$("#three").addClass("animated fadeOutLeft");
@@ -170,6 +180,9 @@ function next() {
 		$("#hr-3").addClass("clear");
 		nextProgress();
 	} else if($currContent == 4) {
+		if(!step4Valid()) {
+			return false;
+		}
 		$("#four").removeClass("animated fadeInLeft");
 		$("#four").removeClass("animated fadeInRight");
 		$("#four").addClass("animated fadeOutLeft");
@@ -184,6 +197,7 @@ function next() {
 		$("#circle-5").addClass("spinner-grow spinner");
 		$("#hr-4").addClass("clear");
 		$("#btn-next").css("display", "none");
+		$("#btn-writeOk").css("display", "inline-block");
 		nextProgress();
 	} else if($currContent == 5) {
 		return false;
@@ -407,6 +421,102 @@ function addGitUrl(obj) {
 		$(obj).parent("div").parent("div").find(".row").append($html);
 	}
 }
+function step1Valid() {
+	var $subject = $("#pot-subject").val();
+	var $description = $("#pot-description").val();
+	
+	if($subject.length < 5 || $subject.length > 20) {
+		alert("제목은 5자 이상 10자 이하로 입력해주세요.");
+		return false;
+	}
+	if($description.length < 5 || $description.length > 30) {
+		alert("설명은 5자 이상 30자 이하로 입력해주세요.");
+		return false;
+	}
+	
+	return true;
+}
+function step2Valid() {
+	var $summary = $("#pot-summary").val();
+	var $startDate = $("#pot-startDate").val();
+	var $endDate = $("#pot-endDate").val();
+
+	if($summary.length < 5 || $summary.length > 20) {
+		alert("개요는 5자 이상 150자 이하로 입력해주세요.");
+		return false;
+	}
+	if($startDate.length == 0 || $endDate.length == 0) {
+		alert("기간을 선택해주세요.");
+		return false;
+	}
+	
+	return true;
+}
+function step3Valid() {
+	var $warEnvCount = $("#war-environment").find(".empty").length;
+	var $devEnvCount = $("#dev-environment").find(".empty").length;
+	var $runEnvCount = $("#run-environment").find(".empty").length;
+	var $lanEnvCount = $("#lan-environment").find(".empty").length;
+	var $libEnvCount = $("#lib-environment").find(".empty").length;
+	var $fraEnvCount = $("#fra-environment").find(".empty").length;
+	var $dbaEnvCount = $("#fra-environment").find(".empty").length;
+
+	if($warEnvCount != 0) {
+		alert("배포환경 항목을 선택해주세요.");
+		return false;
+	} else if($devEnvCount != 0) {
+		alert("개발환경 항목을 선택해주세요.");
+		return false;
+	} else if($runEnvCount != 0) {
+		alert("실행환경 항목을 선택해주세요.");
+		return false;
+	} else if($lanEnvCount != 0) {
+		alert("언어 항목을 선택해주세요.");
+		return false;
+	} else if($libEnvCount != 0) {
+		alert("라이브러리 항목을 선택해주세요.");
+		return false;
+	} else if($fraEnvCount != 0) {
+		alert("프레임워크 항목을 선택해주세요.");
+		return false;
+	} else if($dbaEnvCount != 0) {
+		alert("데이터베이스 항목을 선택해주세요.");
+		return false;
+	}
+	
+	return true;
+}
+function step4Valid() {
+	var $media = myEditor.getData();
+
+	if($media.indexOf("oembed") == -1) {
+		alert("동영상을 업로드해주세요.");
+		return false;
+	}
+	
+	return true;
+}
+function step5Valid() {
+	var $demoEnvCount = $("#dem-environment").find(".empty").length;
+	var $gitEnvCount = $("#git-environment").find(".empty").length;
+
+	if($demoEnvCount != 0) {
+		alert("Demo URL을 입력해주세요.");
+		return false;
+	} else if($gitEnvCount != 0) {
+		alert("GitHub URL을 입력해주세요.");
+		return false;		
+	}
+	
+	return true;
+}
+function writeOk() {
+	if(step1Valid() && step2Valid() && step3Valid() && step4Valid() && step5Valid()) {
+		alert("성공");
+	} else {
+		alert("실패");
+	}
+}
 </script>
 <style type="text/css">
 .header {
@@ -555,6 +665,9 @@ function addGitUrl(obj) {
 	color: rgba(17, 135, 207, 0.8) !important;
 }
 .functionWrapper .functionInner #btn-prev {
+	display: none;
+}
+.functionWrapper .functionInner #btn-writeOk {
 	display: none;
 }
 .w3-modal .w3-container {
@@ -728,7 +841,7 @@ function addGitUrl(obj) {
 					<h6>설명</h6>
 				</div>
 				<div class="description-input">
-					<textarea id="pot-description" name="pot-description" placeholder="30자 이하"></textarea>
+					<textarea id="pot-description" name="pot-description" placeholder="5자 이상 30자 이하"></textarea>
 				</div>
 			</div>
 		</div>
@@ -751,7 +864,7 @@ function addGitUrl(obj) {
 				<div class="summary-input">
 					<div class="container">
 						<div class="row">
-							<input type="text" class="dateSelector start col-sm-6" placeholder="시작일"/><input type="text" class="dateSelector end col-sm-6" placeholder="종료일"/>
+							<input type="text" id="pot-startDate" name="pot-startDate" class="dateSelector start col-sm-6" placeholder="시작일"/><input type="text" id="pot-endDate" name="pot-endDate" class="dateSelector end col-sm-6" placeholder="종료일"/>
 						</div>
 					</div>
 				</div>
@@ -910,6 +1023,7 @@ function addGitUrl(obj) {
 	<div class="functionInner">
 		<button id="btn-prev" class="w3-button w3-white w3-border" onclick="prev();">이전</button>
 		<button id="btn-next" class="w3-button w3-white w3-border" onclick="next();">다음</button>
+		<button id="btn-writeOk" class="w3-button w3-white w3-border" onclick="writeOk();">완료</button>
 	</div>
 </div>
 <div id="war-modal" class="w3-modal">
