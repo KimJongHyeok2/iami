@@ -40,17 +40,6 @@ public class LoginController {
 		return "login/login";
 	}
 	
-	@RequestMapping("/success")
-	public String success(HttpServletRequest request) {
-		
-		CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails();
-
-		request.getSession().setAttribute("mem_id", userDetails.getMem_id());
-		request.getSession().setAttribute("nickname", userDetails.getMem_nickname());
-		
-		return "redirect:/";
-	}
-	
 	@GetMapping("/findInfo")
 	public String findInfo(String type) {
 		return "main";

@@ -6,7 +6,7 @@ import org.springframework.validation.Validator;
 
 import com.web.iami.domain.MemberDTO;
 
-public class MemberValidation implements Validator {
+public class MemberValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {

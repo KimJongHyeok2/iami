@@ -217,6 +217,16 @@
         	<artifactId>spring-context-support</artifactId>
         	<version>4.1.2.RELEASE</version>
         </dependency>
+        
+        <!-- COS -->
+        <dependency>
+        	<groupId>cos</groupId>
+        	<artifactId>cos</artifactId>
+        	<version>2.0</version>
+        	<scope>system</scope>
+        	<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/cos.jar</systemPath>
+        </dependency>        
+
 	</dependencies>
     <build>
         <plugins>

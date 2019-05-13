@@ -9,11 +9,14 @@
 <script type="text/javascript">
 var $currContent = 1;
 var $width = 20;
+var $thumb = "";
 $(document).ready(function() {
 	resize();
+	// 날짜 선택 오픈소스 flatpickr Set
 	$(".dateSelector").flatpickr({ 
 		dateFormat: "Y-m-d",
 	});
+	// CKEditor5 Set
 	$(".ck-editor__editable[role='textbox']").on("keyup", function() {
 		myEditor.setData("");
 	});
@@ -23,6 +26,7 @@ function resize() {
 	var contentHeight = $("#one").height();
 	$(".contentInner").css("height", contentHeight + 30 + "px");
 }
+// 이전/다음 버튼 클릭 시 3초 딜레이
 function button_delay() {
 	$("#btn-prev").attr("disabled", "disabled");
 	$("#btn-next").attr("disabled", "disabled");
@@ -31,6 +35,7 @@ function button_delay() {
 		$("#btn-next").removeAttr("disabled", "disabled");		
 	}, 3000);
 }
+//자식 div (position:absoulte) 높이에 따른 부모 div 크기 조정
 function resize_next_res() {
 	if($currContent == 2) {
 		var contentHeight = $("#two").height();
@@ -46,6 +51,7 @@ function resize_next_res() {
 		$(".contentInner").css("height", contentHeight + 30 + "px");		
 	}
 }
+// 자식 div (position:absoulte) 높이에 따른 부모 div 크기 조정  
 function resize_prev_res() {
 	if($currContent == 4) {
 		var contentHeight = $("#four").height();
@@ -61,6 +67,7 @@ function resize_prev_res() {
 		$(".contentInner").css("height", contentHeight + 30 + "px");		
 	}
 }
+// 이전 버튼 클릭 시
 function prev() {
 	button_delay();
 	if($currContent == 1) {
@@ -122,8 +129,9 @@ function prev() {
 		prevProgress();
 	}
 }
+// 다음 버튼 클릭 시
 function next() {
-	/* button_delay(); */
+	button_delay()
 	if($currContent == 1) {
 		if(!step1Valid()) {
 			return false;
@@ -203,6 +211,7 @@ function next() {
 		return false;
 	}
 }
+//모바일용 ProgressBar(다음 클릭 시)
 function nextProgress() {
 	var $start = setInterval(onProgress, 20);
 	function onProgress() {
@@ -245,6 +254,7 @@ function nextProgress() {
 		}
 	}
 }
+// 모바일용 ProgressBar(이전 클릭 시) 
 function prevProgress() {
 	var $start = setInterval(onProgress, 10);
 	function onProgress() {
@@ -287,9 +297,11 @@ function prevProgress() {
 		}
 	}
 }
+// 주요환경 모달 띄우기
 function openModal(type) {
 	$("#" + type + "-modal").css("display", "block");
 }
+// 주요환경 항목 카드 클릭 시
 function cardSelected(card) {
 	var $isSelected = $(card).parent(".card-box");
 	$(card).find(".fa-check").toggle();
@@ -299,13 +311,59 @@ function cardSelected(card) {
 		$isSelected.removeClass("select");
 	}
 }
+// 섬네일 업로드
+function addThumbnail(obj) {
+	var fileName = obj.files[0].name;
+	var fileSize = obj.files[0].size;
+	var maxSize = 10 * 1024 * 1024;
+	var ext = fileName.substr(fileName.lastIndexOf(".")+1, fileName.length);
+	
+	if(!($.inArray(ext.toLowerCase(), ["jpg", "jpeg", "jpe", "png", "git"]) >= 0)) {
+		alert("이미지 파일을 업로드해주세요.");
+		return false;
+	}
+	
+	if(fileSize > maxSize ){
+		alert("10MB 이하의 이미지 파일만 허용됩니다.");
+		return false;
+	}
+	
+	var formData = new FormData();
+	formData.append("thumbnail", obj.files[0]);
+	
+	var header = "${_csrf.headerName}";
+	var token = "${_csrf.token}";
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/upload/thumbnail",
+		type: "POST",
+		cache: false,
+		data: formData,
+		processData: false,
+		contentType: false,
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data.uploaded) {
+					$(".thumbnail").html("<img class='tempThumb' src='${pageContext.request.contextPath}/resources/upload/" + data.name + "' />");
+					$thumb = data.name;
+				} else {
+					alert("알 수 없는 오류입니다.");
+				}
+			}
+		}
+	});
+}
+// 주요환경 항목 추가
 function addEnvironment(obj, type) {
 	var $parentObject = $(obj).parent("div").parent("div").find(".container-inner");
 	var $findObject = $parentObject.find(".dev-card").parent(".card-box.select").find(".dev-card");
 	var $selectCount = $parentObject.find(".dev-card").parent(".card-box.select").length;
 	var $emptyFlag = false;
 	var $addCount = 1;
-	$("#" + type + "-environment .container .row").html("");
+	$("#" + type + "_environment .container .row").html("");
 	
 	$($findObject).each(function(index) {
 		var $isSelected = $(this).parent(".card-box");
@@ -329,7 +387,7 @@ function addEnvironment(obj, type) {
   			if(type == "dem" || type == "git") {
  				$(this).attr("onclick", "location.href='" + $(this).find('input[type=hidden]').val() + "'");
  			}
-			$("#" + type + "-environment .container .row").append($isSelected.html());
+			$("#" + type + "_environment .container .row").append($isSelected.html());
 			$(this).attr("onclick", "cardSelected(this);"); 
 			$(this).removeClass($column);
 			$(this).removeClass("margin-card");
@@ -338,11 +396,12 @@ function addEnvironment(obj, type) {
 		
 	});
 	if(!$emptyFlag) {
-		$("#" + type + "-environment .container .row").html("<div class='empty col-12'>등록이 필요합니다.</div>");
+		$("#" + type + "_environment .container .row").html("<div class='empty col-12'>등록이 필요합니다.</div>");
 	}
 	resize_next_res();
 	$("#" + type + "-modal").css("display", "none");
 }
+// 사용기술 / API명 추가
 function addApiName(obj) {
 	var $value = obj.val();
 	var $html = "";
@@ -367,6 +426,7 @@ function addApiName(obj) {
 		$(obj).parent("div").parent("div").find(".row").append($html);
 	}
 }
+// 데모 사이트 URL 추가
 function addDemoUrl(obj) {
 	var $value = obj.val();
 	var $html = "";
@@ -394,6 +454,7 @@ function addDemoUrl(obj) {
 		$(obj).parent("div").parent("div").find(".row").append($html);
 	}
 }
+// GitHub URL 추가
 function addGitUrl(obj) {
 	var $value = obj.val();
 	var $html = "";
@@ -421,9 +482,10 @@ function addGitUrl(obj) {
 		$(obj).parent("div").parent("div").find(".row").append($html);
 	}
 }
+//스텝1 유효성 검사
 function step1Valid() {
-	var $subject = $("#pot-subject").val();
-	var $description = $("#pot-description").val();
+	var $subject = $("#pot_subject").val();
+	var $description = $("#pot_description").val();
 	
 	if($subject.length < 5 || $subject.length > 20) {
 		alert("제목은 5자 이상 10자 이하로 입력해주세요.");
@@ -436,10 +498,11 @@ function step1Valid() {
 	
 	return true;
 }
+//스텝2 유효성 검사
 function step2Valid() {
-	var $summary = $("#pot-summary").val();
-	var $startDate = $("#pot-startDate").val();
-	var $endDate = $("#pot-endDate").val();
+	var $summary = $("#pot_summary").val();
+	var $startDate = $("#pot_startDate").val();
+	var $endDate = $("#pot_endDate").val();
 
 	if($summary.length < 5 || $summary.length > 20) {
 		alert("개요는 5자 이상 150자 이하로 입력해주세요.");
@@ -452,14 +515,15 @@ function step2Valid() {
 	
 	return true;
 }
+//스텝3 유효성 검사
 function step3Valid() {
-	var $warEnvCount = $("#war-environment").find(".empty").length;
-	var $devEnvCount = $("#dev-environment").find(".empty").length;
-	var $runEnvCount = $("#run-environment").find(".empty").length;
-	var $lanEnvCount = $("#lan-environment").find(".empty").length;
-	var $libEnvCount = $("#lib-environment").find(".empty").length;
-	var $fraEnvCount = $("#fra-environment").find(".empty").length;
-	var $dbaEnvCount = $("#fra-environment").find(".empty").length;
+	var $warEnvCount = $("#war_environment").find(".empty").length;
+	var $devEnvCount = $("#dev_environment").find(".empty").length;
+	var $runEnvCount = $("#run_environment").find(".empty").length;
+	var $lanEnvCount = $("#lan_environment").find(".empty").length;
+	var $libEnvCount = $("#lib_environment").find(".empty").length;
+	var $fraEnvCount = $("#fra_environment").find(".empty").length;
+	var $dbaEnvCount = $("#dba_environment").find(".empty").length;
 
 	if($warEnvCount != 0) {
 		alert("배포환경 항목을 선택해주세요.");
@@ -486,8 +550,15 @@ function step3Valid() {
 	
 	return true;
 }
+// 스텝4 유효성 검사
 function step4Valid() {
+	var $thumb2 = $(".thumbnail").find(".tempThumb").length;
 	var $media = myEditor.getData();
+	
+	if($thumb2 == 0) {
+		alert("섬네일을 업로드해주세요.");
+		return false;
+	}
 
 	if($media.indexOf("oembed") == -1) {
 		alert("동영상을 업로드해주세요.");
@@ -496,9 +567,10 @@ function step4Valid() {
 	
 	return true;
 }
+// 스텝5 유효성 검사
 function step5Valid() {
-	var $demoEnvCount = $("#dem-environment").find(".empty").length;
-	var $gitEnvCount = $("#git-environment").find(".empty").length;
+	var $demoEnvCount = $("#dem_environment").find(".empty").length;
+	var $gitEnvCount = $("#git_environment").find(".empty").length;
 
 	if($demoEnvCount != 0) {
 		alert("Demo URL을 입력해주세요.");
@@ -510,11 +582,50 @@ function step5Valid() {
 	
 	return true;
 }
+// 포트폴리오 업로드
 function writeOk() {
 	if(step1Valid() && step2Valid() && step3Valid() && step4Valid() && step5Valid()) {
-		alert("성공");
-	} else {
-		alert("실패");
+		var $subject = $("#pot_subject").val();
+		var $description = $("#pot_subject").val();
+		var $summary = $("#pot_summary").val();
+		var $startdate = $("#pot_startDate").val();
+		var $enddate = $("#pot_endDate").val();
+		var $environment = $("#pot_environment").html();
+		var $video = myEditor.getData();
+		var $source = $("#pot_source").html();
+		var header = "${_csrf.headerName}";
+		var token = "${_csrf.token}";
+		
+		$.ajax({
+			url: "${pageContext.request.contextPath}/portfolio/writeOk",
+			type: "POST",
+			cache: false,
+			data: {
+				"mem_no" : ${empty sessionScope.mem_no? 0:sessionScope.mem_no},
+				"pot_subject" : $subject,
+				"pot_description" : $description,
+				"pot_summary" : $summary,
+				"pot_startdate" : $startdate,
+				"pot_enddate" : $enddate,
+				"pot_environment" : $environment,
+				"pot_thumbnail" : $thumb,
+				"pot_video" : $video,
+				"pot_source" : $source
+			},
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data != "Fail") {
+						alert("업로드되었습니다.");
+						location.href = "${pageContext.request.contextPath}/";
+					} else {
+						alert("알 수 없는 오류입니다.");
+					}
+				}
+			}
+		});
 	}
 }
 </script>
@@ -629,6 +740,34 @@ function writeOk() {
 }
 .contentWrapper .contentInner .content .environment-input {
 	margin-top: 7.5px;
+}
+.contentWrapper .contentInner .content .environment-input input[type="file"] {
+	display: none;
+}
+.contentWrapper .contentInner .content .environment-input .thumbnail {
+	position: relative;
+	width: 100%;
+	height: 300px;
+	line-height: 300px;
+	margin: 0;
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+.contentWrapper .contentInner .content .environment-input .thumbnail:hover {
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.contentWrapper .contentInner .content .environment-input .thumbnail i {
+	color: rgba(17, 135, 207, 0.4);
+}
+.contentWrapper .contentInner .content .environment-input .thumbnail .tempThumb {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
 }
 .contentWrapper .contentInner .content .environment-input .container {
 	max-width: 100% !important;
@@ -762,7 +901,7 @@ function writeOk() {
 	color: rgba(17, 135, 207, 0.4);
 }
 .ck-editor__editable[role='textbox'] {
-	height: 500px;
+	height: 300px;
 }
 @media (max-width:801px) {
 	.progressWrapper-m {
@@ -833,7 +972,7 @@ function writeOk() {
 					<h6>제목</h6>
 				</div>
 				<div class="subject-input">
-					<input id="pot-subject" name="pot-subject" type="text" placeholder="5자 이상 20자 이하"/>
+					<input id="pot_subject" name="pot_subject" type="text" placeholder="5자 이상 20자 이하"/>
 				</div>
 			</div>
 			<div class="description">
@@ -841,7 +980,7 @@ function writeOk() {
 					<h6>설명</h6>
 				</div>
 				<div class="description-input">
-					<textarea id="pot-description" name="pot-description" placeholder="5자 이상 30자 이하"></textarea>
+					<textarea id="pot_description" name="pot_description" placeholder="5자 이상 30자 이하"></textarea>
 				</div>
 			</div>
 		</div>
@@ -854,7 +993,7 @@ function writeOk() {
 					<h6>개요</h6>
 				</div>
 				<div class="summary-input">
-					<textarea id="pot-summary" name="pot-summary" placeholder="5자 이상 150자 이하"></textarea>
+					<textarea id="pot_summary" name="pot_summary" placeholder="5자 이상 150자 이하"></textarea>
 				</div>
 			</div>
 			<div class="summary">
@@ -864,7 +1003,7 @@ function writeOk() {
 				<div class="summary-input">
 					<div class="container">
 						<div class="row">
-							<input type="text" id="pot-startDate" name="pot-startDate" class="dateSelector start col-sm-6" placeholder="시작일"/><input type="text" id="pot-endDate" name="pot-endDate" class="dateSelector end col-sm-6" placeholder="종료일"/>
+							<input type="text" id="pot_startDate" name="pot_startDate" class="dateSelector start col-sm-6" placeholder="시작일"/><input type="text" id="pot_endDate" name="pot_endDate" class="dateSelector end col-sm-6" placeholder="종료일"/>
 						</div>
 					</div>
 				</div>
@@ -874,11 +1013,11 @@ function writeOk() {
 			<div class="title">
 				<h5>주요환경을 선택해주세요.</h5>
 			</div>
-			<div class="environment">
+			<div id="pot_environment" class="environment">
 				<div class="environment-title">
 					<div>배포환경</div><div class="btn-add" onclick="openModal('war');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="war-environment" class="environment-input">
+				<div id="war_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">
@@ -890,7 +1029,7 @@ function writeOk() {
 				<div class="environment-title margin-title">
 					<div>개발환경</div><div class="btn-add" onclick="openModal('dev');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="dev-environment" class="environment-input">
+				<div id="dev_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">
@@ -902,7 +1041,7 @@ function writeOk() {
 				<div class="environment-title margin-title">
 					<div>실행환경</div><div class="btn-add" onclick="openModal('run');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="run-environment" class="environment-input">
+				<div id="run_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">
@@ -914,7 +1053,7 @@ function writeOk() {
 				<div class="environment-title margin-title">
 					<div>언어</div><div class="btn-add" onclick="openModal('lan');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="lan-environment" class="environment-input">
+				<div id="lan_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">
@@ -926,7 +1065,7 @@ function writeOk() {
 				<div class="environment-title margin-title">
 					<div>라이브러리</div><div class="btn-add" onclick="openModal('lib');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="lib-environment" class="environment-input">
+				<div id="lib_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">
@@ -938,7 +1077,7 @@ function writeOk() {
 				<div class="environment-title margin-title">
 					<div>프레임워크</div><div class="btn-add" onclick="openModal('fra');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="fra-environment" class="environment-input">
+				<div id="fra_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">
@@ -950,7 +1089,7 @@ function writeOk() {
 				<div class="environment-title margin-title">
 					<div>데이터베이스</div><div class="btn-add" onclick="openModal('dba');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="dba-environment" class="environment-input">
+				<div id="dba_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">
@@ -962,7 +1101,7 @@ function writeOk() {
 				<div class="environment-title margin-title">
 					<div>사용기술 / API</div><div class="btn-add" onclick="openModal('api');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="api-environment" class="environment-input">
+				<div id="api_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">
@@ -975,10 +1114,19 @@ function writeOk() {
 		</div>
 		<div id="four" class="content">
 			<div class="title">
-				<h5>동영상을 업로드해주세요.</h5>
+				<h5>섬네일과 동영상을 업로드해주세요.</h5>
 			</div>
 			<div class="environment">
 				<div class="environment-title">
+					<h6>섬네일</h6>
+				</div>
+				<div class="environment-input">
+					<label class="thumbnail" for="thumbnail"><i class="far fa-image fa-5x"></i></label>
+					<input type="file" id="thumbnail" onchange="addThumbnail(this);"/>
+				</div>
+			</div>
+			<div class="environment">
+				<div class="environment-title margin-title">
 					<h6>동영상</h6>
 				</div>
 				<div class="environment-input">
@@ -990,11 +1138,11 @@ function writeOk() {
 			<div class="title">
 				<h5>Demo와 GitHub URL을 추가해주세요.</h5>
 			</div>
-			<div class="environment">
+			<div id="pot_source" class="environment">
 				<div class="environment-title">
 					<div>Demo</div><div class="btn-add" onclick="openModal('dem');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="dem-environment" class="environment-input">
+				<div id="dem_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">
@@ -1006,7 +1154,7 @@ function writeOk() {
 				<div class="environment-title margin-title">
 					<div>GitHub</div><div class="btn-add" onclick="openModal('git');"><i class="fas fa-plus"></i></div>
 				</div>
-				<div id="git-environment" class="environment-input">
+				<div id="git_environment" class="environment-input">
 					<div class="container">
 						<div class="row">
 							<div class="empty col-12">

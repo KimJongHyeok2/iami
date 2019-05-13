@@ -12,11 +12,16 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("serial")
 public class CustomUserDetails implements UserDetails {
 
+	private int mem_no;
 	private String mem_id;
 	private String mem_pw;
 	private String mem_auth;
 	private String mem_nickname;
 	private boolean enabled;
+
+	public int getMem_no() {
+		return mem_no;
+	}
 
 	public String getMem_id() {
 		return mem_id;

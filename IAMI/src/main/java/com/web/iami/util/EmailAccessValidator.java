@@ -6,7 +6,7 @@ import org.springframework.validation.Validator;
 
 import com.web.iami.domain.EmailAccessDTO;
 
-public class EmailAccessValidation implements Validator {
+public class EmailAccessValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {

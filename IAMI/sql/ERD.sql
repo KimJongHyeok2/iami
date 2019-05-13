@@ -63,8 +63,8 @@ CREATE TABLE members
 (
 	mem_no number NOT NULL,
 	mem_id varchar2(30) NOT NULL UNIQUE,
-	mem_pw varchar2(30) NOT NULL,
-	mem_nickname varchar2(10) DEFAULT 'NONE',
+	mem_pw varchar2(100) NOT NULL,
+	mem_nickname varchar2(30) DEFAULT 'NONE',
 	mem_gender number(2) NOT NULL,
 	mem_profile varchar2(300),
 	mem_birth date NOT NULL,
@@ -84,9 +84,12 @@ CREATE TABLE portfolio
 	pot_subject varchar2(70) NOT NULL,
 	pot_description varchar2(100) NOT NULL,
 	pot_summary varchar2(500) NOT NULL,
+	pot_startdate date NOT NULL,
+	pot_enddate date NOT NULL,
 	pot_environment clob NOT NULL,
-	pot_video clob,
-	pot_source clob,
+	pot_thumbnail varchar2(300) NOT NULL,
+	pot_video clob NOT NULL,
+	pot_source clob NOT NULL,
 	pot_status number DEFAULT 1,
 	pot_regdate timestamp DEFAULT SYSDATE,
 	PRIMARY KEY (pot_no)
@@ -122,13 +125,13 @@ ALTER TABLE customerNotice
 
 
 ALTER TABLE friend
-	ADD FOREIGN KEY (mem_no_req)
+	ADD FOREIGN KEY (mem_no_res)
 	REFERENCES members (mem_no)
 ;
 
 
 ALTER TABLE friend
-	ADD FOREIGN KEY (mem_no_res)
+	ADD FOREIGN KEY (mem_no_req)
 	REFERENCES members (mem_no)
 ;
 
@@ -144,7 +147,4 @@ ALTER TABLE project
 	REFERENCES members (mem_no)
 ;
 
-
-SELECT * FROM members;
-
-UPDATE members SET enabled = 1, failureCount = 0;
+SELECT * FROM portfolio;

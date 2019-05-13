@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -47,6 +48,12 @@ public class CustomAuthenticationSuccesHandler implements AuthenticationSuccessH
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth)
 			throws IOException, ServletException {
 
+		CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+		request.getSession().setAttribute("mem_no", userDetails.getMem_no());
+		request.getSession().setAttribute("mem_id", userDetails.getMem_id());
+		request.getSession().setAttribute("nickname", userDetails.getMem_nickname());
+		
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 		
 		CustomUserDAO dao = sqlSession.getMapper(CustomUserDAO.class);

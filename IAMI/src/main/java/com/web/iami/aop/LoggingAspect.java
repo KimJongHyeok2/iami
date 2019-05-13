@@ -29,9 +29,9 @@ public class LoggingAspect {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 		
 		String signature = jp.getSignature().getName();
-		logger.info("요청주소 : " + request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getRequestURI());
-		logger.info("메소드명 : " + signature);
-		logger.info("파라미터 : " + Arrays.toString(jp.getArgs()));
+		logger.info("Request : " + request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getRequestURI());
+		logger.info("Method : " + signature);
+		logger.info("Parameter : " + Arrays.toString(jp.getArgs()));
 		long startTime = System.currentTimeMillis();
 		Calendar currCal = Calendar.getInstance();
 		
@@ -46,9 +46,9 @@ public class LoggingAspect {
 	            ip = request.getRemoteAddr();
 	        }
 			
-			logger.info("접속유저 : " + ip);
-			logger.info("실행시간 : " + (endTime - startTime) + "ms");
-			logger.info("실행일시 : " + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(currCal.getTime()));
+			logger.info("MemberIP : " + ip);
+			logger.info("Runtime : " + (endTime - startTime) + "ms");
+			logger.info("RunDate : " + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(currCal.getTime()));
 			
 			logger.info("----------------------------------------------------------------------------------------------");
 		}

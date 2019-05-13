@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.web.iami.domain.EmailAccessDTO;
 import com.web.iami.domain.MemberDTO;
 import com.web.iami.service.RegisterService;
-import com.web.iami.util.EmailAccessValidation;
-import com.web.iami.util.MemberValidation;
+import com.web.iami.util.EmailAccessValidator;
+import com.web.iami.util.MemberValidator;
 
 @RestController
 @RequestMapping("/register")
@@ -106,7 +106,7 @@ public class RestRegisterController {
 	@PostMapping("/accessOk")
 	public String accessOk(EmailAccessDTO dto, BindingResult result) {
 		
-		EmailAccessValidation validation = new EmailAccessValidation();
+		EmailAccessValidator validation = new EmailAccessValidator();
 		
 		// 이메일 유효성 검사
 		if(validation.supports(dto.getClass())) {
@@ -132,7 +132,7 @@ public class RestRegisterController {
 	@PostMapping("/registerOk")
 	public String registerOk(MemberDTO dto, BindingResult result) {
 		
-		MemberValidation validation = new MemberValidation();
+		MemberValidator validation = new MemberValidator();
 		
 		// 입력 정보 유효성 검사
 		if(validation.supports(dto.getClass())) {

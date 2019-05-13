@@ -21,6 +21,8 @@
 		default-target-url="/"
 		/>
 		<security:intercept-url pattern="/" access="permitAll"/>
+		<security:intercept-url pattern="/portfolio/write" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/upload/**" access="hasRole('ROLE_USER')" />
 		<security:logout logout-url="/logout" logout-success-url="/login"/>
 		<security:access-denied-handler error-page="/access-denied"/>
 		<security:session-management>
@@ -44,7 +46,7 @@
 	</bean>
 	<bean name="customAuthenticationSuccessHandler" class="com.web.iami.security.CustomAuthenticationSuccesHandler">
 		<property name="mem_id" value="mem_id"/>
-		<property name="defaultUrl" value="/login/success"/>
+		<property name="defaultUrl" value="/"/>
 	</bean>
 
 	<!-- DataSource -->
