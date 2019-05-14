@@ -21,50 +21,71 @@ $(document).ready(function() {
 		myEditor.setData("");
 	});
 });
-$(window).resize(resize_next_res);
+$(window).resize(function()	{
+	resize_html();
+	resize_next_res();
+});
 function resize() {
-	var contentHeight = $("#one").height();
-	$(".contentInner").css("height", contentHeight + 30 + "px");
+	var $htmlHeight = $("html").height();
+	var $headerHeight = $(".header").height();
+	var $footerHeight = $(".footerWrapper").height();
+	var $contentHeight = $("#one").height();
+	$(".allWrapper").css("min-height", $htmlHeight - $headerHeight - $footerHeight - 41 + "px");
+	$(".contentInner").css("min-height", $contentHeight + 30 + "px");
+}
+function resize_html() {
+	var $htmlHeight = $("html").height();
+	var $headerHeight = $(".header").height();
+	var $footerHeight = $(".footerWrapper").height();
+	$(".allWrapper").css("min-height", $htmlHeight - $headerHeight - $footerHeight - 41 + "px");
 }
 // 이전/다음 버튼 클릭 시 3초 딜레이
 function button_delay() {
 	$("#btn-prev").attr("disabled", "disabled");
 	$("#btn-next").attr("disabled", "disabled");
+	$("#btn-writeOk").attr("disabled", "disabled");
+	$("#btn-prev").html("<div class='spinner-border spinner-border-sm text-iami'></div>")
+	$("#btn-next").html("<div class='spinner-border spinner-border-sm text-iami'></div>")
+	$("#btn-writeOk").html("<div class='spinner-border spinner-border-sm text-iami'></div>")
 	setTimeout(function() {
 		$("#btn-prev").removeAttr("disabled", "disabled");
-		$("#btn-next").removeAttr("disabled", "disabled");		
+		$("#btn-next").removeAttr("disabled", "disabled");
+		$("#btn-writeOk").removeAttr("disabled", "disabled");
+		$("#btn-prev").html("이전");
+		$("#btn-next").html("다음");
+		$("#btn-writeOk").html("완료");
 	}, 3000);
 }
 //자식 div (position:absoulte) 높이에 따른 부모 div 크기 조정
 function resize_next_res() {
 	if($currContent == 2) {
 		var contentHeight = $("#two").height();
-		$(".contentInner").css("height", contentHeight + 30 + "px");
+		$(".contentInner").css("min-height", contentHeight + 30 + "px");
 	} else if($currContent == 3) {
 		var contentHeight = $("#three").height();
-		$(".contentInner").css("height", contentHeight + 30 + "px");		
+		$(".contentInner").css("min-height", contentHeight + 30 + "px");		
 	} else if($currContent == 4) {
 		var contentHeight = $("#four").height();
-		$(".contentInner").css("height", contentHeight + 30 + "px");		
+		$(".contentInner").css("min-height", contentHeight + 30 + "px");		
 	} else if($currContent == 5) {
 		var contentHeight = $("#five").height();
-		$(".contentInner").css("height", contentHeight + 30 + "px");		
+		$(".contentInner").css("min-height", contentHeight + 30 + "px");		
 	}
 }
 // 자식 div (position:absoulte) 높이에 따른 부모 div 크기 조정  
 function resize_prev_res() {
 	if($currContent == 4) {
 		var contentHeight = $("#four").height();
-		$(".contentInner").css("height", contentHeight + 30 + "px");
+		$(".contentInner").css("min-height", contentHeight + 30 + "px");
 	} else if($currContent == 3) {
 		var contentHeight = $("#three").height();
-		$(".contentInner").css("height", contentHeight + 30 + "px");		
+		$(".contentInner").css("min-height", contentHeight + 30 + "px");		
 	} else if($currContent == 2) {
 		var contentHeight = $("#two").height();
-		$(".contentInner").css("height", contentHeight + 30 + "px");		
+		$(".contentInner").css("min-height", contentHeight + 30 + "px");		
 	} else if($currContent == 1) {
 		var contentHeight = $("#one").height();
-		$(".contentInner").css("height", contentHeight + 30 + "px");		
+		$(".contentInner").css("min-height", contentHeight + 30 + "px");		
 	}
 }
 // 이전 버튼 클릭 시
@@ -73,12 +94,10 @@ function prev() {
 	if($currContent == 1) {
 		return false;
 	} else if($currContent == 2){
-		$("#two").removeClass("animated fadeInRight");
-		$("#two").addClass("animated fadeOutRight");
-/* 		$("#two").css("display", "none");
-		$("#one").css("display", "block"); */
-		$("#one").removeClass("animated fadeOutLeft");		
-		$("#one").addClass("animated fadeInLeft");
+		$("#two").removeClass("animated fadeInRightBig");
+		$("#two").addClass("animated fadeOutRightBig");
+		$("#one").removeClass("animated fadeOutLeftBig");		
+		$("#one").addClass("animated fadeInLeftBig");
 		$("#circle-2").removeClass("spinner-grow spinner");
 		$("#circle-2").addClass("normal-circle");
 		$("#circle-1").removeClass("normal-circle clear");
@@ -87,12 +106,10 @@ function prev() {
 		$("#btn-prev").css("display", "none");
 		prevProgress();
 	} else if($currContent == 3) {
-		$("#three").removeClass("animated fadeInRight");
-		$("#three").addClass("animated fadeOutRight");
-/* 		$("#three").css("display", "none");
-		$("#two").css("display", "block"); */
-		$("#two").removeClass("animated fadeOutLeft");		
-		$("#two").addClass("animated fadeInLeft");
+		$("#three").removeClass("animated fadeInRightBig");
+		$("#three").addClass("animated fadeOutRightBig");
+		$("#two").removeClass("animated fadeOutLeftBig");		
+		$("#two").addClass("animated fadeInLeftBig");
 		$("#circle-3").removeClass("spinner-grow spinner");
 		$("#circle-3").addClass("normal-circle");
 		$("#circle-2").removeClass("normal-circle clear");
@@ -100,12 +117,10 @@ function prev() {
 		$("#hr-2").removeClass("clear");
 		prevProgress();
 	} else if($currContent == 4) {
-		$("#four").removeClass("animated fadeInRight");
-		$("#four").addClass("animated fadeOutRight");
-/* 		$("#four").css("display", "none");
-		$("#three").css("display", "block"); */
-		$("#three").removeClass("animated fadeOutLeft");		
-		$("#three").addClass("animated fadeInLeft");
+		$("#four").removeClass("animated fadeInRightBig");
+		$("#four").addClass("animated fadeOutRightBig");
+		$("#three").removeClass("animated fadeOutLeftBig");		
+		$("#three").addClass("animated fadeInLeftBig");
 		$("#circle-4").removeClass("spinner-grow spinner");
 		$("#circle-4").addClass("normal-circle");
 		$("#circle-3").removeClass("normal-circle clear");
@@ -113,12 +128,10 @@ function prev() {
 		$("#hr-3").removeClass("clear");
 		prevProgress();
 	} else if($currContent == 5) {
-		$("#five").removeClass("animated fadeInRight");
-		$("#five").addClass("animated fadeOutRight");
-/* 		$("#five").css("display", "none");
-		$("#four").css("display", "block"); */
-		$("#four").removeClass("animated fadeOutLeft");		
-		$("#four").addClass("animated fadeInLeft");
+		$("#five").removeClass("animated fadeInRightBig");
+		$("#five").addClass("animated fadeOutRightBig");
+		$("#four").removeClass("animated fadeOutLeftBig");		
+		$("#four").addClass("animated fadeInLeftBig");
 		$("#circle-5").removeClass("spinner-grow spinner");
 		$("#circle-5").addClass("normal-circle");
 		$("#circle-4").removeClass("normal-circle clear");
@@ -136,14 +149,13 @@ function next() {
 		if(!step1Valid()) {
 			return false;
 		}
-		$("#one").removeClass("animated fadeInLeft");
-		$("#one").removeClass("animated fadeInRight");
-		$("#one").addClass("animated fadeOutLeft");
-		/* $("#one").css("display", "none"); */
+		$("#one").removeClass("animated fadeInLeftBig");
+		$("#one").removeClass("animated fadeInRightBig");
+		$("#one").addClass("animated fadeOutLeftBig");
 		$("#two").css("display", "block");
-		$("#two").removeClass("animated fadeOutRight");
-		$("#two").removeClass("animated fadeOutLeft");
-		$("#two").addClass("animated fadeInRight");
+		$("#two").removeClass("animated fadeOutRightBig");
+		$("#two").removeClass("animated fadeOutLeftBig");
+		$("#two").addClass("animated fadeInRightBig");
 		$("#circle-1").removeClass("spinner-grow spinner");
 		$("#circle-1").addClass("normal-circle clear");
 		$("#circle-2").removeClass("normal-circle");
@@ -155,14 +167,13 @@ function next() {
 		if(!step2Valid()) {
 			return false;
 		}
-		$("#two").removeClass("animated fadeInLeft");
-		$("#two").removeClass("animated fadeInRight");
-		$("#two").addClass("animated fadeOutLeft");
-		/* $("#two").css("display", "none"); */
+		$("#two").removeClass("animated fadeInLeftBig");
+		$("#two").removeClass("animated fadeInRightBig");
+		$("#two").addClass("animated fadeOutLeftBig");
 		$("#three").css("display", "block");
-		$("#three").removeClass("animated fadeOutRight");
-		$("#three").removeClass("animated fadeOutLeft");
-		$("#three").addClass("animated fadeInRight");
+		$("#three").removeClass("animated fadeOutRightBig");
+		$("#three").removeClass("animated fadeOutLeftBig");
+		$("#three").addClass("animated fadeInRightBig");
 		$("#circle-2").removeClass("spinner-grow spinner");
 		$("#circle-2").addClass("normal-circle clear");
 		$("#circle-3").removeClass("normal-circle");
@@ -173,14 +184,13 @@ function next() {
 		if(!step3Valid()) {
 			return false;
 		}
-		$("#three").removeClass("animated fadeInLeft");
-		$("#three").removeClass("animated fadeInRight");
-		$("#three").addClass("animated fadeOutLeft");
-		/* $("#three").css("display", "none"); */
+		$("#three").removeClass("animated fadeInLeftBig");
+		$("#three").removeClass("animated fadeInRightBig");
+		$("#three").addClass("animated fadeOutLeftBig");
 		$("#four").css("display", "block");
-		$("#four").removeClass("animated fadeOutRight");
-		$("#four").removeClass("animated fadeOutLeft");
-		$("#four").addClass("animated fadeInRight");
+		$("#four").removeClass("animated fadeOutRightBig");
+		$("#four").removeClass("animated fadeOutLeftBig");
+		$("#four").addClass("animated fadeInRightBig");
 		$("#circle-3").removeClass("spinner-grow spinner");
 		$("#circle-3").addClass("normal-circle clear");
 		$("#circle-4").removeClass("normal-circle");
@@ -191,14 +201,13 @@ function next() {
 		if(!step4Valid()) {
 			return false;
 		}
-		$("#four").removeClass("animated fadeInLeft");
-		$("#four").removeClass("animated fadeInRight");
-		$("#four").addClass("animated fadeOutLeft");
-		/* $("#four").css("display", "none"); */
+		$("#four").removeClass("animated fadeInLeftBig");
+		$("#four").removeClass("animated fadeInRightBig");
+		$("#four").addClass("animated fadeOutLeftBig");
 		$("#five").css("display", "block");
-		$("#five").removeClass("animated fadeOutRight");
-		$("#five").removeClass("animated fadeOutLeft");
-		$("#five").addClass("animated fadeInRight");
+		$("#five").removeClass("animated fadeOutRightBig");
+		$("#five").removeClass("animated fadeOutLeftBig");
+		$("#five").addClass("animated fadeInRightBig");
 		$("#circle-4").removeClass("spinner-grow spinner");
 		$("#circle-4").addClass("normal-circle clear");
 		$("#circle-5").removeClass("normal-circle");
@@ -220,6 +229,7 @@ function nextProgress() {
 				clearInterval($start);
 				$currContent += 1;
 				resize_next_res();
+				$("#one").css("display", "none");
 			} else {
 				$width++;
 				$("#bar").css("width", $width + "%");
@@ -229,6 +239,7 @@ function nextProgress() {
 				clearInterval($start);
 				$currContent += 1;
 				resize_next_res();
+				$("#two").css("display", "none");
 			} else {
 				$width++;
 				$("#bar").css("width", $width + "%");
@@ -238,6 +249,7 @@ function nextProgress() {
 				clearInterval($start);
 				$currContent += 1;
 				resize_next_res();
+				$("#three").css("display", "none");
 			} else {
 				$width++;
 				$("#bar").css("width", $width + "%");
@@ -247,6 +259,7 @@ function nextProgress() {
 				clearInterval($start);
 				$currContent += 1;
 				resize_next_res();
+				$("#four").css("display", "none");
 			} else {
 				$width++;
 				$("#bar").css("width", $width + "%");
@@ -263,6 +276,8 @@ function prevProgress() {
 				clearInterval($start);
 				$currContent -= 1;
 				resize_prev_res();
+				$("#five").css("display", "none");
+				$("#four").css("display", "block");
 			} else {
 				$width--;
 				$("#bar").css("width", $width + "%");
@@ -272,6 +287,8 @@ function prevProgress() {
 				clearInterval($start);
 				$currContent -= 1;
 				resize_prev_res();
+				$("#four").css("display", "none");
+				$("#three").css("display", "block");
 			} else {
 				$width--;
 				$("#bar").css("width", $width + "%");
@@ -281,6 +298,8 @@ function prevProgress() {
 				clearInterval($start);
 				$currContent -= 1;
 				resize_prev_res();
+				$("#three").css("display", "none");
+				$("#two").css("display", "block");
 			} else {
 				$width--;
 				$("#bar").css("width", $width + "%");
@@ -290,6 +309,8 @@ function prevProgress() {
 				clearInterval($start);
 				$currContent -= 1;
 				resize_prev_res();
+				$("#two").css("display", "none");
+				$("#one").css("display", "block");
 			} else {
 				$width--;
 				$("#bar").css("width", $width + "%");
@@ -634,6 +655,13 @@ function writeOk() {
 	text-align: center;
 	border-bottom: 1px solid #D5D5D5;
 }
+.allWrapper {
+	display: flex;
+	align-items: center;
+}
+.allWrapper .allWrapperInner {
+	flex-grow: 1;
+}
 .progressWrapper .progressInner {
 	max-width: 500px;
 	margin: auto;
@@ -715,6 +743,9 @@ function writeOk() {
 .contentWrapper .contentInner .content .description {
 	margin-top: 7.5px;
 }
+.contentWrapper .contentInner .content .date {
+	margin-top: 4.0px;
+}
 .contentWrapper .contentInner .content .environment-title div {
 	display: inline-block;
 	vertical-align: middle;
@@ -728,14 +759,14 @@ function writeOk() {
 	color: white !important;
 	cursor: pointer;
 }
-.contentWrapper .contentInner .content .summary-input .container {
+.contentWrapper .contentInner .content .date-input .container {
 	max-width: 100% !important;
 	padding: 0 !important;
 }
-.contentWrapper .contentInner .content .summary-input .container .row {
+.contentWrapper .contentInner .content .date-input .container .row {
 	margin: 0 !important;
 }
-.contentWrapper .contentInner .content .summary-input .container .row .start {
+.contentWrapper .contentInner .content .date-input .container .row .start {
 	border-right: none;
 }
 .contentWrapper .contentInner .content .environment-input {
@@ -791,8 +822,7 @@ function writeOk() {
 	display: none;
 }
 .functionWrapper {
-	margin-top: 15px;
-	margin-bottom: 15px; 
+	margin: 15px 0;
 }
 .functionWrapper .functionInner {
 	max-width: 800px;
@@ -823,7 +853,6 @@ function writeOk() {
 	margin-right: 5px;
 }
 .w3-modal .margin-card-api {
-	
 }
 .w3-modal .w3-container h2 {
 	margin-top: 7.5px;
@@ -903,6 +932,9 @@ function writeOk() {
 .ck-editor__editable[role='textbox'] {
 	height: 300px;
 }
+.spinner-border .text-iami {
+	color: rgba(17, 135, 207, 0.2) !important;
+}
 @media (max-width:801px) {
 	.progressWrapper-m {
 		margin: 0 10px;
@@ -949,231 +981,236 @@ function writeOk() {
 <div class="header w3-animate-top">
 	<a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/resources/image/main/logo.png"/></a>
 </div>
-<div class="progressWrapper">
-	<div class="progressInner">
-		<div id="circle-1" class="spinner-grow spinner"></div><div id="hr-1" class="hr"></div><div id="circle-2" class="normal-circle"></div><div id="hr-2" class="hr"></div><div id="circle-3" class="normal-circle"></div><div id="hr-3" class="hr"></div><div id="circle-4" class="normal-circle"></div><div id="hr-4" class="hr"></div><div id="circle-5" class="normal-circle"></div>
+<div class="allWrapper">
+	<div class="allWrapperInner">
+		<div class="progressWrapper">
+			<div class="progressInner">
+				<div id="circle-1" class="spinner-grow spinner"></div><div id="hr-1" class="hr"></div><div id="circle-2" class="normal-circle"></div><div id="hr-2" class="hr"></div><div id="circle-3" class="normal-circle"></div><div id="hr-3" class="hr"></div><div id="circle-4" class="normal-circle"></div><div id="hr-4" class="hr"></div><div id="circle-5" class="normal-circle"></div>
+			</div>
+		</div>
+		<div class="progressWrapper-m">
+			<div class="progressInner-m">
+			  <div class="w3-light-grey">
+			    <div id="bar" class="progressBar"></div>
+			  </div>
+			</div>
+		</div>
+		<div class="contentWrapper">
+			<div class="contentInner">
+				<div id="one" class="content">
+					<div class="title">
+						<h5>제목과 간단한 설명을 입력해주세요.</h5>
+					</div>
+					<div class="subject">
+						<div class="subject-title">
+							<h6>제목</h6>
+						</div>
+						<div class="subject-input">
+							<input id="pot_subject" name="pot_subject" type="text" placeholder="5자 이상 20자 이하"/>
+						</div>
+					</div>
+					<div class="description">
+						<div class="description-title">
+							<h6>설명</h6>
+						</div>
+						<div class="description-input">
+							<textarea id="pot_description" name="pot_description" placeholder="5자 이상 30자 이하"></textarea>
+						</div>
+					</div>
+				</div>
+				<div id="two" class="content">
+					<div class="title">
+						<h5>개요 및 기간을 입력해주세요.</h5>
+					</div>
+					<div class="summary">
+						<div class="summary-title">
+							<h6>개요</h6>
+						</div>
+						<div class="summary-input">
+							<textarea id="pot_summary" name="pot_summary" placeholder="5자 이상 150자 이하"></textarea>
+						</div>
+					</div>
+					<div class="date">
+						<div class="date-title">
+							<h6>기간</h6>
+						</div>
+						<div class="date-input">
+							<div class="container">
+								<div class="row">
+									<input type="text" id="pot_startDate" name="pot_startDate" class="dateSelector start col-sm-6" placeholder="시작일"/><input type="text" id="pot_endDate" name="pot_endDate" class="dateSelector end col-sm-6" placeholder="종료일"/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="three" class="content">
+					<div class="title">
+						<h5>주요환경을 선택해주세요.</h5>
+					</div>
+					<div id="pot_environment" class="environment">
+						<div class="environment-title">
+							<div>배포환경</div><div class="btn-add" onclick="openModal('war');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="war_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="environment-title margin-title">
+							<div>개발환경</div><div class="btn-add" onclick="openModal('dev');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="dev_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="environment-title margin-title">
+							<div>실행환경</div><div class="btn-add" onclick="openModal('run');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="run_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="environment-title margin-title">
+							<div>언어</div><div class="btn-add" onclick="openModal('lan');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="lan_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="environment-title margin-title">
+							<div>라이브러리</div><div class="btn-add" onclick="openModal('lib');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="lib_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="environment-title margin-title">
+							<div>프레임워크</div><div class="btn-add" onclick="openModal('fra');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="fra_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="environment-title margin-title">
+							<div>데이터베이스</div><div class="btn-add" onclick="openModal('dba');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="dba_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="environment-title margin-title">
+							<div>사용기술 / API</div><div class="btn-add" onclick="openModal('api');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="api_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="four" class="content">
+					<div class="title">
+						<h5>섬네일과 동영상을 업로드해주세요.</h5>
+					</div>
+					<div class="environment">
+						<div class="environment-title">
+							<h6>섬네일</h6>
+						</div>
+						<div class="environment-input">
+							<label class="thumbnail" for="thumbnail"><i class="far fa-image fa-5x"></i></label>
+							<input type="file" id="thumbnail" onchange="addThumbnail(this);"/>
+						</div>
+					</div>
+					<div class="environment">
+						<div class="environment-title margin-title">
+							<h6>동영상</h6>
+						</div>
+						<div class="environment-input">
+							<textarea id="media"></textarea>
+						</div>
+					</div>
+				</div>
+				<div id="five" class="content">
+					<div class="title">
+						<h5>Demo와 GitHub URL을 추가해주세요.</h5>
+					</div>
+					<div id="pot_source" class="environment">
+						<div class="environment-title">
+							<div>Demo</div><div class="btn-add" onclick="openModal('dem');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="dem_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="environment-title margin-title">
+							<div>GitHub</div><div class="btn-add" onclick="openModal('git');"><i class="fas fa-plus"></i></div>
+						</div>
+						<div id="git_environment" class="environment-input">
+							<div class="container">
+								<div class="row">
+									<div class="empty col-12">
+										등록이 필요합니다.
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="functionWrapper">
+			<div class="functionInner">
+				<button id="btn-prev" class="w3-button w3-white w3-border" onclick="prev();">이전</button>
+				<button id="btn-next" class="w3-button w3-white w3-border" onclick="next();">다음</button>
+				<button id="btn-writeOk" class="w3-button w3-white w3-border" onclick="writeOk();">완료</button>
+			</div>
+		</div>
 	</div>
 </div>
-<div class="progressWrapper-m">
-	<div class="progressInner-m">
-	  <div class="w3-light-grey">
-	    <div id="bar" class="progressBar"></div>
-	  </div>
-	</div>
-</div>
-<div class="contentWrapper">
-	<div class="contentInner">
-		<div id="one" class="content">
-			<div class="title">
-				<h5>제목과 간단한 설명을 입력해주세요.</h5>
-			</div>
-			<div class="subject">
-				<div class="subject-title">
-					<h6>제목</h6>
-				</div>
-				<div class="subject-input">
-					<input id="pot_subject" name="pot_subject" type="text" placeholder="5자 이상 20자 이하"/>
-				</div>
-			</div>
-			<div class="description">
-				<div class="description-title">
-					<h6>설명</h6>
-				</div>
-				<div class="description-input">
-					<textarea id="pot_description" name="pot_description" placeholder="5자 이상 30자 이하"></textarea>
-				</div>
-			</div>
-		</div>
-		<div id="two" class="content">
-			<div class="title">
-				<h5>개요 및 기간을 입력해주세요.</h5>
-			</div>
-			<div class="summary">
-				<div class="summary-title">
-					<h6>개요</h6>
-				</div>
-				<div class="summary-input">
-					<textarea id="pot_summary" name="pot_summary" placeholder="5자 이상 150자 이하"></textarea>
-				</div>
-			</div>
-			<div class="summary">
-				<div class="summary-title">
-					<h6>기간</h6>
-				</div>
-				<div class="summary-input">
-					<div class="container">
-						<div class="row">
-							<input type="text" id="pot_startDate" name="pot_startDate" class="dateSelector start col-sm-6" placeholder="시작일"/><input type="text" id="pot_endDate" name="pot_endDate" class="dateSelector end col-sm-6" placeholder="종료일"/>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="three" class="content">
-			<div class="title">
-				<h5>주요환경을 선택해주세요.</h5>
-			</div>
-			<div id="pot_environment" class="environment">
-				<div class="environment-title">
-					<div>배포환경</div><div class="btn-add" onclick="openModal('war');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="war_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="environment-title margin-title">
-					<div>개발환경</div><div class="btn-add" onclick="openModal('dev');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="dev_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="environment-title margin-title">
-					<div>실행환경</div><div class="btn-add" onclick="openModal('run');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="run_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="environment-title margin-title">
-					<div>언어</div><div class="btn-add" onclick="openModal('lan');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="lan_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="environment-title margin-title">
-					<div>라이브러리</div><div class="btn-add" onclick="openModal('lib');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="lib_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="environment-title margin-title">
-					<div>프레임워크</div><div class="btn-add" onclick="openModal('fra');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="fra_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="environment-title margin-title">
-					<div>데이터베이스</div><div class="btn-add" onclick="openModal('dba');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="dba_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="environment-title margin-title">
-					<div>사용기술 / API</div><div class="btn-add" onclick="openModal('api');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="api_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="four" class="content">
-			<div class="title">
-				<h5>섬네일과 동영상을 업로드해주세요.</h5>
-			</div>
-			<div class="environment">
-				<div class="environment-title">
-					<h6>섬네일</h6>
-				</div>
-				<div class="environment-input">
-					<label class="thumbnail" for="thumbnail"><i class="far fa-image fa-5x"></i></label>
-					<input type="file" id="thumbnail" onchange="addThumbnail(this);"/>
-				</div>
-			</div>
-			<div class="environment">
-				<div class="environment-title margin-title">
-					<h6>동영상</h6>
-				</div>
-				<div class="environment-input">
-					<textarea id="media"></textarea>
-				</div>
-			</div>
-		</div>
-		<div id="five" class="content">
-			<div class="title">
-				<h5>Demo와 GitHub URL을 추가해주세요.</h5>
-			</div>
-			<div id="pot_source" class="environment">
-				<div class="environment-title">
-					<div>Demo</div><div class="btn-add" onclick="openModal('dem');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="dem_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="environment-title margin-title">
-					<div>GitHub</div><div class="btn-add" onclick="openModal('git');"><i class="fas fa-plus"></i></div>
-				</div>
-				<div id="git_environment" class="environment-input">
-					<div class="container">
-						<div class="row">
-							<div class="empty col-12">
-								등록이 필요합니다.
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="functionWrapper">
-	<div class="functionInner">
-		<button id="btn-prev" class="w3-button w3-white w3-border" onclick="prev();">이전</button>
-		<button id="btn-next" class="w3-button w3-white w3-border" onclick="next();">다음</button>
-		<button id="btn-writeOk" class="w3-button w3-white w3-border" onclick="writeOk();">완료</button>
-	</div>
-</div>
+<jsp:include page="/resources/include/footer/footer.jsp"/>
 <div id="war-modal" class="w3-modal">
 	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
 		<div class="w3-container">
@@ -1493,17 +1530,6 @@ function writeOk() {
 				</div>
 				<hr>
 				<div class="row">
-<%-- 					<div class="card-box col-sm-12 col-md-3">
-						<div class="dev-card" onclick="cardSelected(this);">
-							<div class="dev-card-img">
-								<img src="${pageContext.request.contextPath}/resources/image/write/oracle.png"/>
-							</div>
-							<div class="dev-card-text">
-								Oracle
-							</div>
-							<i class="fas fa-check"></i>
-						</div>
-					</div> --%>
 				</div>
 			</div>
 			<div class="w3-container w3-light-grey w3-padding">

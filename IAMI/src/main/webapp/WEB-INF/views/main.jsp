@@ -22,13 +22,22 @@ function resize() {
 	$navHeight = $(".navWrapper").height();
 	$footerHeight = $(".footerWrapper").height();
 	
-	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 42 + "px");
-	$(".container-fluid .findWrapper").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 43 + "px");
+	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 62 + "px");
+	$(".container-fluid .findWrapper").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 63 + "px");
 }
 function userList(type) {
 	if(type == "write") {
 		location.href = "${pageContext.request.contextPath}/portfolio/write";
 	}
+}
+function list(type) {
+	var $form = $("<form>/<form>");
+	$form.attr("action", "");
+	$form.attr("method", "post");
+	$form.append("<input type='hidden' id='type' name='type' value='" + type + "'/>");
+	$form.append("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+	$form.appendTo("body");
+	$form.submit();
 }
 </script>
 <style type="text/css">
@@ -143,15 +152,6 @@ function userList(type) {
 	margin: auto;
 	padding: 0;
 }
-.footerWrapper {
-	padding: 20px;
-	font-size: 10pt;
-	text-align: center;
-	background-color: #f4f5f7;
-}
-.footerWrapper span {
-	color: gray;
-}
 @media (max-width:399px) {
 	.account {
 		display: none;
@@ -199,10 +199,10 @@ function userList(type) {
 						<i class="fas fa-user-friends"></i> 친구목록
 					</li>
 					<li class="user-list" onclick="userList('write');">
-						<i class="fas fa-edit"></i> 포트폴리오 작성
+						<i class="fas fa-edit"></i> 포트폴리오 업로드
 					</li>
 					<li class="user-list">
-						<i class="far fa-folder-open"></i> 포트폴리오 목록
+						<i class="far fa-folder-open"></i> 내 포트폴리오
 					</li>
 					<li class="user-list" onclick="$('#logout').submit();">
 						<i class="fas fa-sign-out-alt"></i> 로그아웃
@@ -218,7 +218,8 @@ function userList(type) {
 <div class="navWrapper">
 	<div class="navInner">
 		<ul>
-			<li><span>전체</span></li>
+			<li onclick="list('new');"><span>최신순</span></li>
+			<li onclick="list('popular');"><span>인기순</span></li>
 		</ul>
 	</div>
 </div>
@@ -229,13 +230,11 @@ function userList(type) {
 				<jsp:include page="find/findInfo.jsp"/>
 			</c:when>
 			<c:otherwise>
-				메인
+				<jsp:include page="list/list.jsp"/>
 			</c:otherwise>
 		</c:choose>
 	</div>
 </div>
-<div class="footerWrapper">
-Copyright <span>KimJongHyeok.</span> All Rights Reserved.
-</div>
+<jsp:include page="/resources/include/footer/footer.jsp"/>
 </body>
 </html>

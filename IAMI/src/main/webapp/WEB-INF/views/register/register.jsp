@@ -351,5 +351,6 @@ function register() {
 	    </div>
 	</div>
 </div>
+<jsp:include page="/resources/include/footer/footer.jsp"/>
 </body>
 </html>

@@ -15,6 +15,7 @@ public class PortfolioDTO {
 	private String pot_thumbnail; // 포트폴리오 섬네일
 	private String pot_video; // 포트폴리오 동영상
 	private String pot_source; // 포트폴리오 Demo, GitHub URL
+	private int pot_recommend; // 포트폴리오 추천 수
 	private int pot_status; // 포트폴리오 상태
 	private Timestamp pot_regdate; // 포트폴리오 업로드 일시
 	
@@ -22,7 +23,7 @@ public class PortfolioDTO {
 
 	public PortfolioDTO(int pot_no, int mem_no, String pot_subject, String pot_description, String pot_summary,
 			String pot_startdate, String pot_enddate, String pot_environment, String pot_thumbnail, String pot_video,
-			String pot_source, int pot_status, Timestamp pot_regdate) {
+			String pot_source, int pot_recommend, int pot_status, Timestamp pot_regdate) {
 		this.pot_no = pot_no;
 		this.mem_no = mem_no;
 		this.pot_subject = pot_subject;
@@ -34,6 +35,7 @@ public class PortfolioDTO {
 		this.pot_thumbnail = pot_thumbnail;
 		this.pot_video = pot_video;
 		this.pot_source = pot_source;
+		this.pot_recommend = pot_recommend;
 		this.pot_status = pot_status;
 		this.pot_regdate = pot_regdate;
 	}
@@ -126,6 +128,14 @@ public class PortfolioDTO {
 		this.pot_source = pot_source;
 	}
 
+	public int getPot_recommend() {
+		return pot_recommend;
+	}
+
+	public void setPot_recommend(int pot_recommend) {
+		this.pot_recommend = pot_recommend;
+	}
+
 	public int getPot_status() {
 		return pot_status;
 	}
@@ -140,15 +150,6 @@ public class PortfolioDTO {
 
 	public void setPot_regdate(Timestamp pot_regdate) {
 		this.pot_regdate = pot_regdate;
-	}
-
-	@Override
-	public String toString() {
-		return "PortfolioDTO [pot_no=" + pot_no + ", mem_no=" + mem_no + ", pot_subject=" + pot_subject
-				+ ", pot_description=" + pot_description + ", pot_summary=" + pot_summary + ", pot_startdate="
-				+ pot_startdate + ", pot_enddate=" + pot_enddate + ", pot_environment=" + pot_environment
-				+ ", pot_thumbnail=" + pot_thumbnail + ", pot_video=" + pot_video + ", pot_source=" + pot_source
-				+ ", pot_status=" + pot_status + ", pot_regdate=" + pot_regdate + "]";
 	}
 	
 }

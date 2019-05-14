@@ -90,6 +90,7 @@ CREATE TABLE portfolio
 	pot_thumbnail varchar2(300) NOT NULL,
 	pot_video clob NOT NULL,
 	pot_source clob NOT NULL,
+	pot_recommend number DEFAULT 0,
 	pot_status number DEFAULT 1,
 	pot_regdate timestamp DEFAULT SYSDATE,
 	PRIMARY KEY (pot_no)
@@ -147,4 +148,5 @@ ALTER TABLE project
 	REFERENCES members (mem_no)
 ;
 
-SELECT * FROM portfolio;
+
+SELECT * FROM (SELECT rownum rnum, p.* FROM (SELECT * FROM portfolio ORDER BY pot_regdate DESC) p) WHERE rnum >= 1 AND rnum < 11;

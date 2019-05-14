@@ -1,5 +1,8 @@
 package com.web.iami.persistent;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
@@ -18,4 +21,9 @@ public class PortfolioDAOImpl implements PortfolioDAO {
 		return sqlSession.insert("portfolio.insertPortfolio", dto);
 	}
 
+	@Override
+	public List<PortfolioDTO> selectNewPortfolio(Map<String, Integer> map) throws Exception {
+		return sqlSession.selectList("portfolio.selectNewPortfolio", map);
+	}
+	
 }

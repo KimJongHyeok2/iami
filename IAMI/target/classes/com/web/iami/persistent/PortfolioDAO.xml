@@ -5,4 +5,11 @@
 		INSERT INTO portfolio(pot_no, mem_no, pot_subject, pot_description, pot_summary, pot_startdate, pot_enddate, pot_environment, pot_thumbnail, pot_video, pot_source)
 		VALUES(pot_seq.nextval, #{mem_no}, #{pot_subject}, #{pot_description}, #{pot_summary}, #{pot_startdate}, #{pot_enddate}, #{pot_environment}, #{pot_thumbnail}, #{pot_video}, #{pot_source})
 	</insert>
+	<select id="selectNewPortfolio" resultType="com.web.iami.domain.PortfolioDTO">
+		<![CDATA[
+			SELECT * FROM
+				(SELECT rownum rnum, p.* FROM (SELECT * FROM portfolio ORDER BY pot_regdate DESC) p)
+			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+		]]>
+	</select>
 </mapper>
