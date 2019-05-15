@@ -14,6 +14,7 @@ import javax.mail.internet.MimeMessage.RecipientType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,8 @@ public class LoginController {
 	}
 	
 	@GetMapping("/findInfo")
-	public String findInfo(String type) {
+	public String findInfo(String type, Model model) {
+		model.addAttribute("type", "findInfo");
 		return "main";
 	}
 	

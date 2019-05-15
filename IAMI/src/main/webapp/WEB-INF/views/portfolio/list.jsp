@@ -2,6 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<script>
+function view(no) {
+	location.href = "${pageContext.request.contextPath}/portfolio/view/" + no;
+}
+</script>
 <style>
 .list-title {
 	margin-top: 10px;
@@ -41,7 +46,7 @@
 }
 .row .portfolio-card-box .portfolio-card .thumbnail .img {
 	width: 100%;
-	max-height: 250px;
+	height: 250px;
 }
 .row .portfolio-card-box .portfolio-card .thumbnail .icon-box {
 	position: absolute;
@@ -90,7 +95,7 @@
 <c:choose>
 	<c:when test="${not empty list && fn:length(list) != 0}">
 		<c:forEach var="i" items="${list}">
-			<li class="portfolio-card-box col-12 col-sm-6 col-md-4 col-lg-3">
+			<li class="portfolio-card-box col-12 col-sm-6 col-md-4 col-lg-3" onclick="view(${i.pot_no});">
 				<div class="portfolio-card">
 					<div class="thumbnail">
 						<img class="img" src="${pageContext.request.contextPath}/resources/upload/${i.pot_thumbnail}"/>

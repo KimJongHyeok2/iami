@@ -526,7 +526,7 @@ function step2Valid() {
 	var $endDate = $("#pot_endDate").val();
 
 	if($summary.length < 5 || $summary.length > 20) {
-		alert("개요는 5자 이상 150자 이하로 입력해주세요.");
+		alert("주요기능 5자 이상 150자 이하로 입력해주세요.");
 		return false;
 	}
 	if($startDate.length == 0 || $endDate.length == 0) {
@@ -1020,11 +1020,11 @@ function writeOk() {
 				</div>
 				<div id="two" class="content">
 					<div class="title">
-						<h5>개요 및 기간을 입력해주세요.</h5>
+						<h5>주요기능 및 기간을 입력해주세요.</h5>
 					</div>
 					<div class="summary">
 						<div class="summary-title">
-							<h6>개요</h6>
+							<h6>주요기능</h6>
 						</div>
 						<div class="summary-input">
 							<textarea id="pot_summary" name="pot_summary" placeholder="5자 이상 150자 이하"></textarea>

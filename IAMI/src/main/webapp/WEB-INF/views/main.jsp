@@ -32,7 +32,7 @@ function userList(type) {
 }
 function list(type) {
 	var $form = $("<form>/<form>");
-	$form.attr("action", "");
+	$form.attr("action", "${pageContext.request.contextPath}/");
 	$form.attr("method", "post");
 	$form.append("<input type='hidden' id='type' name='type' value='" + type + "'/>");
 	$form.append("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
@@ -226,11 +226,14 @@ function list(type) {
 <div class="contentWrapper">
 	<div class="container-fluid">
 		<c:choose>
-			<c:when test="${param.type == 'findInfo'}">
+			<c:when test="${type == 'findInfo'}">
 				<jsp:include page="find/findInfo.jsp"/>
 			</c:when>
+			<c:when test="${type == 'view'}">
+				<jsp:include page="portfolio/view.jsp"/>
+			</c:when>
 			<c:otherwise>
-				<jsp:include page="list/list.jsp"/>
+				<jsp:include page="portfolio/list.jsp"/>
 			</c:otherwise>
 		</c:choose>
 	</div>

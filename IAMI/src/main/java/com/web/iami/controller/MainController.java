@@ -20,7 +20,7 @@ public class MainController {
 	@Inject
 	private PortfolioService portfolioService;
 	
-	@RequestMapping("/")
+	@RequestMapping("")
 	public String main(@RequestParam(value="type", defaultValue = "new") String type,
 			@RequestParam(value="page", defaultValue = "1") int page,
 			@RequestParam(value="row", defaultValue = "12") int row,

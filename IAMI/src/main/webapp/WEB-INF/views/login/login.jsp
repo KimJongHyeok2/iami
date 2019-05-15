@@ -141,7 +141,7 @@ html, body {
 			</c:if>
 		</div>
 		<div class="func-box">
-			<span onclick="location.href='${pageContext.request.contextPath}/login/findInfo?type=findInfo'">아이디/비밀번호 찾기</span>
+			<span onclick="location.href='${pageContext.request.contextPath}/login/findInfo'">아이디/비밀번호 찾기</span>
 		</div>
 		<div class="social-box">
 			<div class="naver">N</div>

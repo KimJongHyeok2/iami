@@ -92,6 +92,7 @@ function validCheck2(obj) {
 .contentWrapper .container-fluid .findWrapper {
 	display: flex;
 	align-items: center;
+	margin: 10px 0;
 }
 .contentWrapper .container-fluid .findWrapper .findInner {
 	margin: auto;
