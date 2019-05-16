@@ -150,3 +150,5 @@ ALTER TABLE project
 
 
 SELECT * FROM (SELECT rownum rnum, p.* FROM (SELECT * FROM portfolio ORDER BY pot_regdate DESC) p) WHERE rnum >= 1 AND rnum < 11;
+
+SELECT p.*, m.mem_nickname, m.mem_id, m.mem_profile, m.mem_email FROM portfolio p, members m WHERE p.pot_no = 22 AND m.mem_no = p.mem_no;

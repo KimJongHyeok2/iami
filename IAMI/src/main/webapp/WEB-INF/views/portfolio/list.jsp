@@ -3,6 +3,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <script>
+$(document).ready(function() {
+	$(".row").find(".regdate").each(function() {
+		var dates = new Date($(this).html().trim().replace(/-/g, "/").replace(".0", ""));
+		var year = dates.getFullYear();
+		var month = dates.getMonth()+1;
+		month = (month + "").length == 1? ("0" + month):month;
+		var day = dates.getDate();
+		day = (day + "").length == 1? ("0" + day):day;
+		var hour = dates.getHours();
+		hour = (hour + "").length == 1? ("0" + hour):hour;
+		var minute = dates.getMinutes();
+		minute = (minute + "").length == 1? ("0" + minute):minute;
+		
+		$(this).html(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+	});
+});
 function view(no) {
 	location.href = "${pageContext.request.contextPath}/portfolio/view/" + no;
 }

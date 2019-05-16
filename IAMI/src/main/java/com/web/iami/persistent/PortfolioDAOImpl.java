@@ -25,5 +25,10 @@ public class PortfolioDAOImpl implements PortfolioDAO {
 	public List<PortfolioDTO> selectNewPortfolio(Map<String, Integer> map) throws Exception {
 		return sqlSession.selectList("portfolio.selectNewPortfolio", map);
 	}
+
+	@Override
+	public PortfolioDTO selectViewPortfolio(int no) throws Exception {
+		return sqlSession.selectOne("portfolio.selectViewPortfolio", no);
+	}
 	
 }

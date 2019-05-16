@@ -2,8 +2,61 @@
     pageEncoding="UTF-8"%>
 <script>
 $(document).ready(function() {
-	$(".btn-add").remove();
+	$("oembed[url]").each(function() {
+		 const anchor = document.createElement("a");
+		 anchor.setAttribute('href', $(this).attr("url"));
+		 anchor.className = 'embedly-card';
+		 $(this).css("width", "100%");
+		 
+		 $(this).append(anchor);
+	});
+
+	dateFormat();
+
+	$("#summary").html($("#summary").html().trim().replace(/\n/g, "<br>"));
 });
+function dateFormat() {
+	var dates = new Date($("#start-date").html().replace(/-/g, "/").replace(".0", ""));
+	var year = dates.getFullYear();
+	var month = dates.getMonth()+1;
+	month = (month + "").length == 1? ("0" + month):month;
+	var day = dates.getDate();
+	day = (day + "").length == 1? ("0" + day):day;
+	
+	$("#start-date").html(year + "-" + month + "-" + day);
+	
+	dates = new Date($("#end-date").html().replace(/-/g, "/").replace(".0", ""));
+	year = dates.getFullYear();
+	month = dates.getMonth()+1;
+	month = (month + "").length == 1? ("0" + month):month;
+	day = dates.getDate();
+	day = (day + "").length == 1? ("0" + day):day;
+	
+	$("#end-date").html(year + "-" + month + "-" + day);
+	
+	dates = new Date($("#regdate").html().replace(/-/g, "/").replace(".0", ""));
+	year = dates.getFullYear();
+	month = dates.getMonth()+1;
+	month = (month + "").length == 1? ("0" + month):month;
+	day = dates.getDate();
+	day = (day + "").length == 1? ("0" + day):day;
+	var hour = dates.getHours();
+	hour = (hour + "").length == 1? ("0" + hour):hour;
+	var minute = dates.getMinutes();
+	minute = (minute + "").length == 1? ("0" + minute):minute;
+	
+	$("#regdate").html(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+}
+function openRecomment(no) {
+	$("#recomment-write-" + no).toggle();
+	$("#recomment-list-" + no).toggle();
+}
+function openCommentDropdown(no) {
+	$("#comment-dropdown-" + no).toggle();
+}
+function openReCommentDropdown(no) {
+	$("#recomment-dropdown-" + no).toggle();
+}
 </script>
 <style>
 .viewWrapper {
@@ -35,20 +88,25 @@ hr {
 .dev-list .dev-list-content .date-badge {
 	position: absolute;
 	top: 0;
-	left: -25px;
+	left: -27px;
 	font-size: 8pt;
 }
 .dev-list .dev-list-content .date-badge.start {
+	padding: 1px;
 	border: 1px solid rgba(17, 135, 207, 0.4);
 	border-radius: 5px;
 	background-color: rgba(17, 135, 207, 0.4);
 	color: white;
 }
 .dev-list .dev-list-content .date-badge.end {
+	padding: 1px;
 	border: 1px solid rgba(204, 61, 61, 0.4);
 	border-radius: 5px;
 	background-color: rgba(204, 61, 61, 0.4);
 	color: white;
+}
+.dev-list .dev-list-content .start, .end #start-date, #end-date {
+	padding-left: 3px;
 }
 .dev-list .row {
 	margin: 0;
@@ -69,6 +127,7 @@ hr {
 	text-align: center;
 }
 .environment-title .btn-add {
+	display: none;
 	width: 25px;
 	margin-left: 5px;
 	border: 1px solid rgba(17, 135, 207, 0.4) !important;
@@ -97,11 +156,13 @@ hr {
 .environment-input .container .row .dev-card {
 	border: 1px solid rgba(17, 135, 207, 0.4);
 }
+#dem_environment, #git_environment .dev-card {
+	cursor: pointer;
+}
 .container .dev-card {
 	position: relative;
 	padding: 5px;
 	border: 1px solid #D5D5D5;
-	cursor: pointer;
 }
 .container .card-box.select .dev-card {
 	border: 1px solid rgba(17, 135, 207, 0.4);
@@ -150,6 +211,63 @@ hr {
 	border: 1px solid rgba(17, 135, 207, 0.4) !important;
 	color: rgba(17, 135, 207, 0.4) !important;
 }
+.profile-box {
+	margin-bottom: 10px;
+}
+.profile-box .profile-inner {
+	display: flex;
+	align-items: center;
+	margin: 0 10px;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.profile-box .profile-inner .profile-image {
+	position: relative;
+}
+.profile-box .profile-inner .profile-image .badge {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 1px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	border-radius: 5px;
+	background-color: rgba(17, 135, 207, 0.4);
+	color: white;
+}
+.profile-box .profile-inner .profile-image .profile {
+	width: 70px;
+	height: 70px;
+}
+.profile-box .profile-inner .profile-content {
+	padding-left: 5px;
+}
+.profile-box .profile-inner .profile-content i {
+	color: rgba(17, 135, 207, 0.4);
+}
+.profile-box .profile-inner .profile-content .content-1 .nickname {
+	font-size: 13pt;
+	font-weight: bold;
+}
+.profile-box .profile-inner .profile-content .content-1 .id {
+	color: gray;
+}
+.profile-box .profile-inner .profile-content .content-2 .email {
+	padding: 1px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	border-radius: 5px;
+	background-color: rgba(17, 135, 207, 0.4);
+	color: white;
+	font-size: 10pt;
+}
+.profile-box .profile-inner .profile-content .content-3 .regdate {
+	padding: 1px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	border-radius: 5px;
+	background-color: rgba(17, 135, 207, 0.4);
+	font-size: 10pt;
+	color: white;
+}
 .comment-title {
 	margin-left: 10px;
 	margin-right: 10px;
@@ -196,11 +314,23 @@ hr {
 }
 .comment-write .comment-write-input button {
 	width: 100px;
-	border: 1px solid rgba(17, 135, 207, 0.4) !important;
-	background-color: rgba(17, 135, 207, 0.4) !important;
-	color: white !important;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	background-color: rgba(17, 135, 207, 0.4);
+	color: white;
+}
+.comment-write .comment-write-input-m {
+	display: none;
+	margin-top: 5px;
+	margin-right: 10px;
+}
+.comment-write .comment-write-input-m #btn-comment-write-m {
+	width: 100%;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	background-color: rgba(17, 135, 207, 0.4);
+	color: white;
 }
 .recomment-write {
+	display: none;
 	margin-top: 5px;
 }
 .recomment-write .row {
@@ -238,9 +368,9 @@ hr {
 	justify-content: space-between;
 }
 .recomment-write .recomment-write-button button {
-	border: 1px solid rgba(17, 135, 207, 0.4) !important;
-	background-color: rgba(17, 135, 207, 0.4) !important;
-	color: white !important;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	background-color: rgba(17, 135, 207, 0.4);
+	color: white;
 }
 .comment-list {
 	list-style-type: none;
@@ -267,12 +397,17 @@ hr {
 .comment-list .comment .comment-content .nickname {
 	font-size: 13pt;
 	font-weight: bold;
-	color: rgba(17, 135, 207, 0.5);
+}
+.comment-list .comment .comment-content .id {
 	padding-right: 5px;
+	color: gray;
 }
 .comment-list .comment .comment-content .regdate {
 	color: gray;
 	font-size: 10pt;
+}
+.comment-list .comment .comment-content .regdate-m {
+	display: none;
 }
 .comment-list .comment .comment-content .content {
 	margin-top: 5px;
@@ -283,6 +418,7 @@ hr {
 	margin-top: 5px;
 }
 .comment-list .comment .comment-ellipsis {
+	position: relative;
 	padding: 10px;
 }
 .comment-list .comment .comment-ellipsis i {
@@ -290,10 +426,28 @@ hr {
 	text-align: center;
 	cursor: pointer;
 }
+.comment-list .comment .comment-ellipsis .dropdown {
+	display: none;
+	list-style-type: none;
+	position: absolute;
+	left: -1px;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #D5D5D5;
+}
+.comment-list .comment .comment-ellipsis .dropdown li {
+	padding: 5px;
+}
+.comment-list .comment .comment-ellipsis .dropdown li i:hover {
+	color: rgba(17, 135, 207, 0.4);
+}
 .comment-list .comment .comment-content .function button {
 	width: 70px;
 	height: 30px;
 	padding: 0;
+}
+.comment-list .recomment-lists {
+	display: none;
 }
 .comment-list .recomment-list {
 	list-style-type: none;
@@ -330,12 +484,17 @@ hr {
 .comment-list .recomment-list .recomment .recomment-box .recomment-content .nickname {
 	font-size: 13pt;
 	font-weight: bold;
-	color: rgba(17, 135, 207, 0.5);
+}
+.comment-list .recomment-list .recomment .recomment-box .recomment-content .id {
 	padding-right: 5px;
+	color: gray;
 }
 .comment-list .recomment-list .recomment .recomment-box .recomment-content .regdate {
 	color: gray;
 	font-size: 10pt;
+}
+.comment-list .recomment-list .recomment .recomment-box .recomment-content .regdate-m {
+	display: none;
 }
 .comment-list .recomment-list .recomment .recomment-box .recomment-content .content {
 	margin-top: 5px;
@@ -343,6 +502,7 @@ hr {
 	word-wrap: break-word;
 }
 .comment-list .recomment-list .recomment .recomment-box .recomment-ellipsis {
+	position: relative;
 	padding: 10px;
 	text-align: center;
 }
@@ -350,7 +510,48 @@ hr {
 	color: gray;
 	cursor: pointer;
 }
+.comment-list .recomment-list .recomment .recomment-box .recomment-ellipsis .dropdown {
+	display: none;
+	list-style-type: none;
+	position: absolute;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #D5D5D5;
+}
+.comment-list .recomment-list .recomment .recomment-box .recomment-ellipsis .dropdown li {
+	padding: 5px;
+}
+.comment-list .recomment-list .recomment .recomment-box .recomment-ellipsis .dropdown li i:hover {
+	color: rgba(17, 135, 207, 0.4);
+}
+figure {
+	margin-bottom: 0;
+}
+figure .embedly-card-hug {
+	max-width: 1000px !important;
+	margin: 0 !important;
+}
+figure .embedly-card-hug iframe {
+	width: 100% !important;
+}
 @media (max-width:767px) {
+	.margin-top {
+		margin-top: 0 !important;
+	}
+	.margin-card {
+		margin-right: 0 !important;
+		margin-bottom: 5px !important;
+	}
+	.last {
+		margin-bottom: 5px !important;
+	}
+	#btn-comment-write {
+		display: none;
+	}
+	.comment-write .comment-write-input-m {
+		display: block;
+	}
 	.recomment-write .row .nonmember-nickname .wrapper {
 		margin-right: 0;
 	}
@@ -358,13 +559,34 @@ hr {
 		margin-left: 0;
 	}
 }
+@media (max-width:438px) {
+	.comment-list .comment .comment-content .regdate {
+		display: none;
+	}
+	.comment-list .comment .comment-content .regdate-m {
+		display: block;
+	}
+	.comment-list .comment .comment-content .regdate-m .regdate.m {
+		display: block;
+	}
+	.comment-list .recomment-list .recomment .recomment-box .recomment-content .regdate {
+		display: none;
+	}
+	.comment-list .recomment-list .recomment .recomment-box .recomment-content .regdate-m {
+		display: block;
+	}
+	.comment-list .recomment-list .recomment .recomment-box .recomment-content .regdate-m .regdate.m {
+		display: block;
+	}
+}
 </style>
+<script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
 <div class="viewWrapper">
 	<div class="subject">
-		<h3>TBP PLACE</h3>
+		<h2>${portfolio.pot_subject}</h2>
 	</div>
 	<div class="description">
-		중고거래 사이트입니다.
+		${portfolio.pot_description}
 	</div>
 	<hr>
 	<ul class="dev-list">
@@ -372,12 +594,12 @@ hr {
 		<li>
 			<ul class="dev-list-content">
 				<li class="start">
-				<span class="date-badge start">시작</span>
-					2019-05-01
+					<span class="date-badge start">시작</span>
+					<span id="start-date">${portfolio.pot_startdate}</span>
 				</li>
 				<li class="end">
-				<span class="date-badge end">종료</span>
-					2019-05-15
+					<span class="date-badge end">종료</span>
+					<span id="end-date">${portfolio.pot_enddate}</span>
 				</li>
 			</ul>
 		</li>
@@ -386,10 +608,8 @@ hr {
 		<li><h5>주요기능</h5></li>
 		<li>
 			<ul class="dev-list-content">
-				<li>
-					Spring Security Custom<br>
-					Spring Security Custom<br>
-					Spring Security Custom<br>
+				<li id="summary">
+					${portfolio.pot_summary}
 				</li>
 			</ul>
 		</li>
@@ -399,105 +619,8 @@ hr {
 		<li>
 			<ul class="row">
 				<li>
-					<div id="pot_environment" class="environment">
-						<div class="environment-title">
-							<div>배포환경</div><div class="btn-add" onclick="openModal('war');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="war_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>개발환경</div><div class="btn-add" onclick="openModal('dev');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="dev_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>실행환경</div><div class="btn-add" onclick="openModal('run');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="run_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>언어</div><div class="btn-add" onclick="openModal('lan');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="lan_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>라이브러리</div><div class="btn-add" onclick="openModal('lib');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="lib_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>프레임워크</div><div class="btn-add" onclick="openModal('fra');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="fra_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>데이터베이스</div><div class="btn-add" onclick="openModal('dba');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="dba_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>사용기술 / API</div><div class="btn-add" onclick="openModal('api');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="api_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>				
-				</li>				
+					${portfolio.pot_environment}		
+				</li>
 			</ul>
 		</li>
 	</ul>
@@ -506,47 +629,17 @@ hr {
 	<li>
 		<ul class="dev-list-content">
 			<li>
-				동영상
+				${portfolio.pot_video}
 			</li>
 		</ul>
 	</li>
 </ul>
 <ul class="dev-list w3-margin-top">
-	<li><h5>Demo</h5></li>
+	<li><h5>Demo / GitHub</h5></li>
 	<li>
 		<ul class="row">
 			<li>
-				<div id="dem_environment" class="environment">
-					<div id="war_environment" class="environment-input">
-						<div class="container">
-							<div class="row">
-								<div class="empty col-12">
-									등록이 필요합니다.
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</li>
-		</ul>
-	</li>
-</ul>
-<ul class="dev-list w3-margin-top">
-	<li><h5>GitHub</h5></li>
-	<li>
-		<ul class="row">
-			<li>
-				<div id="dem_environment" class="environment">
-					<div id="war_environment" class="environment-input">
-						<div class="container">
-							<div class="row">
-								<div class="empty col-12">
-									등록이 필요합니다.
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				${portfolio.pot_source}
 			</li>
 		</ul>
 	</li>
@@ -554,6 +647,25 @@ hr {
 </div>
 <div class="recommend-box">
 	<button id="btn-next" class="w3-button w3-white w3-border"><i class="far fa-thumbs-up"></i> <span>0</span></button>
+</div>
+<div class="profile-box">
+	<div class="profile-inner">
+		<div class="profile-image">
+			<span class="badge">작성자</span>
+			<img class="profile" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
+		</div>
+		<div class="profile-content">
+			<div class="content-1">
+				<span class="nickname">${portfolio.mem_nickname}</span><span class="id">(${portfolio.mem_id})</span>
+			</div>
+			<div class="content-2">
+				<i class="fas fa-envelope"></i> <span class="email">${portfolio.mem_email}</span>
+			</div>
+			<div class="content-3">
+				<i class="fas fa-clock"></i> <span id="regdate" class="regdate">${portfolio.pot_regdate}</span>
+			</div>
+		</div>
+	</div>
 </div>
 <div class="comment-title">
 	<i class="far fa-comments"></i> 댓글 <span class="w3-badge">8</span>
@@ -577,7 +689,10 @@ hr {
 	</div>
 	<div class="comment-write-input">
 		<textarea placeholder="내용을 입력해주세요."></textarea>
-		<button class="w3-button w3-white w3-border">작성</button>
+		<button id="btn-comment-write" class="w3-button">작성</button>
+	</div>
+	<div class="comment-write-input-m">
+		<button id="btn-comment-write-m" class="w3-button">작성</button>
 	</div>
 </div>
 <ul class="comment-list">
@@ -586,13 +701,16 @@ hr {
 			<img class="profile" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
 		</div>
 		<div class="comment-content">
-			<span class="nickname">테스트</span><span class="regdate">2019-05-16 02:36</span>
+			<span class="nickname">테스트</span><span class="id">(test13585)</span><span class="regdate">2019-05-16 02:36</span>
+			<div class="regdate-m">
+				<span class="regdate m">2019-05-16 02:36</span>
+			</div>
 			<div class="content">
-				dwqhdwquhwdqiuhdqwuihdqwuidwqhuiwdqhuiwdqhuiwhqdiuhqwduihquiwhdiuwqhdiuqwhouidhwquiohdiuoqwhuiowdqhiouhqwdiouhqwduiohwdqouihwqdiouhdwqdwqdwqdwqdwqqwddqw
+				테스트입니다.
 			</div>
 			<div class="function">
-				<button class="w3-button w3-white w3-border">답글 (<span>0</span>)</button>
-				<div class="recomment-write">
+				<button class="w3-button w3-white w3-border" onclick="openRecomment(1);">답글 (<span>0</span>)</button>
+				<div id="recomment-write-1" class="recomment-write">
 					<div class="recomment-write-nonmember">
 						<div class="row">
 							<div class="nonmember-nickname col-md-6">
@@ -613,17 +731,21 @@ hr {
 						<textarea placeholder="내용을 입력해주세요."></textarea>
 					</div>
 					<div class="recomment-write-button">
-					<button class="w3-button w3-white w3-border">취소</button>
-					<button class="w3-button w3-white w3-border">작성</button>
+						<button class="w3-button">취소</button>
+						<button id="btn-recomment-write" class="w3-button">작성</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="comment-ellipsis">
-			<i class="fas fa-ellipsis-v"></i>
+			<i class="fas fa-ellipsis-v" onclick="openCommentDropdown(1);"></i>
+			<ul id="comment-dropdown-1" class="dropdown">
+				<li><i class="fas fa-pen"></i></li>
+				<li><i class="fas fa-trash-alt"></i></li>
+			</ul>
 		</div>
 	</li>
-	<li>
+	<li id="recomment-list-1" class="recomment-lists">
 		<ul class="recomment-list">
 			<li class="recomment">
 				<div class="recomment-arrow">
@@ -634,13 +756,19 @@ hr {
 						<img class="profile" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
 					</div>
 					<div class="recomment-content">
-						<span class="nickname">테스트</span><span class="regdate">2019-05-16 02:36</span>
+						<span class="nickname">테스트</span><span class="id">(test13585)</span><span class="regdate">2019-05-16 02:36</span>
+						<div class="regdate-m">
+							<span class="regdate m">2019-05-16 02:36</span>
+						</div>
 						<div class="content">
 							안녕입니다.
 						</div>
 					</div>
 					<div class="recomment-ellipsis">
-						<i class="fas fa-ellipsis-v"></i>
+						<i class="fas fa-ellipsis-v" onclick="openReCommentDropdown(1);"></i>
+						<ul id="recomment-dropdown-1" class="dropdown">
+							<li><i class="fas fa-trash-alt"></i></li>
+						</ul>
 					</div>
 				</div>
 			</li>

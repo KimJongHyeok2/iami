@@ -12,4 +12,7 @@
 			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
 		]]>
 	</select>
+	<select id="selectViewPortfolio" resultType="com.web.iami.domain.PortfolioDTO">
+		SELECT p.*, m.mem_nickname, m.mem_id, m.mem_profile, m.mem_email FROM portfolio p, members m WHERE p.pot_no = #{param1} AND m.mem_no = p.mem_no
+	</select>
 </mapper>

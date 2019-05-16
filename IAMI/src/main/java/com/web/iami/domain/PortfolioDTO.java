@@ -19,11 +19,18 @@ public class PortfolioDTO {
 	private int pot_status; // 포트폴리오 상태
 	private Timestamp pot_regdate; // 포트폴리오 업로드 일시
 	
+	// 해당 포트폴리오 작성 회원정보 (Join)
+	private String mem_nickname; // 회원 닉네임
+	private String mem_id; // 회원 아이디
+	private String mem_profile; // 회원 프로필 사진명
+	private String mem_email; // 회원 이메일
+	
 	public PortfolioDTO() { }
-
+	
 	public PortfolioDTO(int pot_no, int mem_no, String pot_subject, String pot_description, String pot_summary,
 			String pot_startdate, String pot_enddate, String pot_environment, String pot_thumbnail, String pot_video,
-			String pot_source, int pot_recommend, int pot_status, Timestamp pot_regdate) {
+			String pot_source, int pot_recommend, int pot_status, Timestamp pot_regdate, String mem_nickname,
+			String mem_id, String mem_profile, String mem_email) {
 		this.pot_no = pot_no;
 		this.mem_no = mem_no;
 		this.pot_subject = pot_subject;
@@ -38,6 +45,10 @@ public class PortfolioDTO {
 		this.pot_recommend = pot_recommend;
 		this.pot_status = pot_status;
 		this.pot_regdate = pot_regdate;
+		this.mem_nickname = mem_nickname;
+		this.mem_id = mem_id;
+		this.mem_profile = mem_profile;
+		this.mem_email = mem_email;
 	}
 
 	public int getPot_no() {
@@ -150,6 +161,38 @@ public class PortfolioDTO {
 
 	public void setPot_regdate(Timestamp pot_regdate) {
 		this.pot_regdate = pot_regdate;
+	}
+
+	public String getMem_nickname() {
+		return mem_nickname;
+	}
+
+	public void setMem_nickname(String mem_nickname) {
+		this.mem_nickname = mem_nickname;
+	}
+
+	public String getMem_id() {
+		return mem_id;
+	}
+
+	public void setMem_id(String mem_id) {
+		this.mem_id = mem_id;
+	}
+
+	public String getMem_profile() {
+		return mem_profile;
+	}
+
+	public void setMem_profile(String mem_profile) {
+		this.mem_profile = mem_profile;
+	}
+
+	public String getMem_email() {
+		return mem_email;
+	}
+
+	public void setMem_email(String mem_email) {
+		this.mem_email = mem_email;
 	}
 	
 }

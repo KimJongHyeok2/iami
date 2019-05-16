@@ -26,4 +26,9 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return dao.selectNewPortfolio(map);
 	}
 
+	@Override
+	public PortfolioDTO selectViewPortfolio(int no) throws Exception {
+		return dao.selectViewPortfolio(no);
+	}
+
 }
