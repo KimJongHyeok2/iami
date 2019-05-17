@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<select id="selectMemberInfo" resultType="com.web.iami.domain.MemberDTO">
+		SELECT mem_no, mem_id, mem_nickname, mem_profile, mem_birth, mem_email FROM members WHERE mem_no = #{param1}
+	</select>
+	<update id="updateMemberProfile">
+		UPDATE members SET mem_profile = #{profile} WHERE mem_no = #{no}
+	</update>
+	<update id="updateMemberNickname">
+		UPDATE members SET mem_nickname = #{nickname} WHERE mem_no = #{no}
+	</update>
+	<select id="selectEmail" resultType="Integer">
+		SELECT count(mem_email) FROM members WHERE mem_email = #{param1}
+	</select>
+	<insert id="insertAccessKey" parameterType="com.web.iami.domain.EmailAccessDTO" useGeneratedKeys="true" keyColumn="key_no" keyProperty="key_no">
+		INSERT INTO emailAccessKeys VALUES(key_seq.nextval, #{key_accessKey})
+	</insert>
+	<select id="selectAccessKey" resultType="String">
+		SELECT key_accessKey FROM emailAccessKeys WHERE key_no = #{param1}
+	</select>
+	<update id="updateMemberEmail">
+		UPDATE members SET mem_email = #{email} WHERE mem_no = #{no}
+	</update>
+	<select id="selectMemberPassword" resultType="String">
+		SELECT mem_pw FROM members WHERE mem_no = #{param1}
+	</select>
+	<update id="updateMemberPassword">
+		UPDATE members SET mem_pw = #{password} WHERE mem_no = #{no}
+	</update>
+</mapper>

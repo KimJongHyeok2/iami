@@ -27,7 +27,17 @@ $(document).ready(function() {
 			$("#find-span").html("아이디를 잊으셨나요?");
 		}
 	});
+	resize();
 });
+$(window).resize(resize);
+function resize() {
+	$htmlHeight = $("html").height();
+	$headerHeight = $(".headerWrapper").height();
+	$navHeight = $(".navWrapper").height();
+	$footerHeight = $(".footerWrapper").height();
+	
+	$(".container-fluid .findWrapper").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 61 + "px");
+}
 function findID() {
 	$("#find-pw").removeClass("active");
 	$("#find-id").removeClass("none-id");

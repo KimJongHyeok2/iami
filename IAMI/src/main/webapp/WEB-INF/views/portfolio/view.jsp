@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>
 $(document).ready(function() {
 	$("oembed[url]").each(function() {
@@ -238,6 +239,12 @@ hr {
 .profile-box .profile-inner .profile-image .profile {
 	width: 70px;
 	height: 70px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	border-radius: 50%;
+}
+.profile-box .profile-inner .profile-image .profile-none {
+	width: 70px;
+	height: 70px;
 }
 .profile-box .profile-inner .profile-content {
 	padding-left: 5px;
@@ -253,20 +260,18 @@ hr {
 	color: gray;
 }
 .profile-box .profile-inner .profile-content .content-2 .email {
-	padding: 1px;
-	border: 1px solid rgba(17, 135, 207, 0.4);
+	color: rgba(17, 135, 207, 0.5);
+/* 	border: 1px solid rgba(17, 135, 207, 0.4);
 	border-radius: 5px;
 	background-color: rgba(17, 135, 207, 0.4);
-	color: white;
-	font-size: 10pt;
+	color: white; */
 }
 .profile-box .profile-inner .profile-content .content-3 .regdate {
-	padding: 1px;
-	border: 1px solid rgba(17, 135, 207, 0.4);
+	color: rgba(17, 135, 207, 0.5);
+/*  	border: 1px solid rgba(17, 135, 207, 0.4);
 	border-radius: 5px;
 	background-color: rgba(17, 135, 207, 0.4);
-	font-size: 10pt;
-	color: white;
+	color: white; */
 }
 .comment-title {
 	margin-left: 10px;
@@ -389,6 +394,12 @@ hr {
 .comment-list .comment .comment-profile .profile {
 	width: 50px;
 	height: 50px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	border-radius: 50%;
+}
+.comment-list .comment .comment-profile .profile-none {
+	width: 50px;
+	height: 50px;
 }
 .comment-list .comment .comment-content {
 	padding: 10px;
@@ -474,6 +485,12 @@ hr {
 	background-color: rgba(246, 246, 246, 0.3);
 }
 .comment-list .recomment-list .recomment .recomment-box .recomment-profile .profile {
+	width: 50px;
+	height: 50px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	border-radius: 50%;
+}
+.comment-list .recomment-list .recomment .recomment-box .recomment-profile .profile-none {
 	width: 50px;
 	height: 50px;
 }
@@ -652,7 +669,14 @@ figure .embedly-card-hug iframe {
 	<div class="profile-inner">
 		<div class="profile-image">
 			<span class="badge">작성자</span>
-			<img class="profile" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
+			<c:choose>
+				<c:when test="${not empty portfolio.mem_profile}">
+					<img class="profile" src="${pageContext.request.contextPath}/resources/upload/${portfolio.mem_profile}"/>
+				</c:when>
+				<c:otherwise>
+					<img class="profile-none" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
+				</c:otherwise>
+			</c:choose>
 		</div>
 		<div class="profile-content">
 			<div class="content-1">
@@ -698,7 +722,7 @@ figure .embedly-card-hug iframe {
 <ul class="comment-list">
 	<li class="comment">
 		<div class="comment-profile">
-			<img class="profile" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
+			<img class="profile-none" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
 		</div>
 		<div class="comment-content">
 			<span class="nickname">테스트</span><span class="id">(test13585)</span><span class="regdate">2019-05-16 02:36</span>
@@ -753,7 +777,7 @@ figure .embedly-card-hug iframe {
 				</div>
 				<div class="recomment-box">
 					<div class="recomment-profile">
-						<img class="profile" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
+						<img class="profile-none" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
 					</div>
 					<div class="recomment-content">
 						<span class="nickname">테스트</span><span class="id">(test13585)</span><span class="regdate">2019-05-16 02:36</span>

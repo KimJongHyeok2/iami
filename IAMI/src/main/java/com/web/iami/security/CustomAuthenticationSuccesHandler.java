@@ -52,7 +52,8 @@ public class CustomAuthenticationSuccesHandler implements AuthenticationSuccessH
 
 		request.getSession().setAttribute("mem_no", userDetails.getMem_no());
 		request.getSession().setAttribute("mem_id", userDetails.getMem_id());
-		request.getSession().setAttribute("nickname", userDetails.getMem_nickname());
+		request.getSession().setAttribute("mem_nickname", userDetails.getMem_nickname());
+		request.getSession().setAttribute("mem_profile", userDetails.getMem_profile());
 		
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 		

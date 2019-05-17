@@ -344,7 +344,7 @@ function addThumbnail(obj) {
 		return false;
 	}
 	
-	if(fileSize > maxSize ){
+	if(fileSize > maxSize){
 		alert("10MB 이하의 이미지 파일만 허용됩니다.");
 		return false;
 	}

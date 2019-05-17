@@ -86,7 +86,7 @@ function vaildCheckPW2() {
 }
 function vaildCheckName() {
 	var $name = $("#mem_nickname").val();
-	var $pattern = /^[a-zA-Z가-힣]{3,10}$/;
+	var $pattern = /^[a-zA-Z가-힣0-9]{3,7}$/;
 	
 	if(new RegExp($pattern).test($name)) {
 		$("#mem_nickname").parent(".input-box").find("label").html("올바른 입력입니다.");
@@ -94,7 +94,7 @@ function vaildCheckName() {
 		$("#mem_nickname").parent(".input-box").find("label").addClass("valid");
 		$nicknameFlag = true;
 	} else {
-		$("#mem_nickname").parent(".input-box").find("label").html("한글 또는 영문 3자 이상 10자 이하로 입력해주세요.");
+		$("#mem_nickname").parent(".input-box").find("label").html("한글 또는 영문/숫자 3자 이상 10자 이하로 입력해주세요.");
 		$("#mem_nickname").parent(".input-box").find("label").removeClass("valid");
 		$("#mem_nickname").parent(".input-box").find("label").addClass("invalid");
 		$nicknameFlag = false;

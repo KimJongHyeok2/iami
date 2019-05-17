@@ -22,12 +22,13 @@ function resize() {
 	$navHeight = $(".navWrapper").height();
 	$footerHeight = $(".footerWrapper").height();
 	
-	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 62 + "px");
-	$(".container-fluid .findWrapper").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 63 + "px");
+	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 61 + "px");
 }
 function userList(type) {
 	if(type == "write") {
 		location.href = "${pageContext.request.contextPath}/portfolio/write";
+	} else if(type == "myinfo") {
+		location.href = "${pageContext.request.contextPath}/member/myinfo";
 	}
 }
 function list(type) {
@@ -55,11 +56,18 @@ function list(type) {
 .headerWrapper .headerInner .user {
 	position: relative;
 	float: right;
-	width: 35px;
-	height: 35px;
-	border-radius: 50px;
 	margin-right: 5px;
 	cursor: pointer;
+}
+.headerWrapper .headerInner .user .profile-img {
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+}
+.headerWrapper .headerInner .user .profile-img-none {
+	width: 35px;
+	height: 35px;
 }
 .headerWrapper .headerInner .account {
 	float: right;
@@ -107,10 +115,15 @@ function list(type) {
 .headerWrapper .headerInner .user ul li .user-info .profile {
 	width: 50px;
 	height: 50px;
-	border-radius: 50px;
 	margin-right: 10px;
 }
-.headerWrapper .headerInner .user ul li .user-info .profile img {
+.headerWrapper .headerInner .user ul li .user-info .profile .profile-img {
+	width: 100%;
+	height: 100%;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	border-radius: 50%;
+}
+.headerWrapper .headerInner .user ul li .user-info .profile .profile-img-none {
 	width: 100%;
 	height: 100%;
 }
@@ -124,7 +137,6 @@ function list(type) {
 	background-color: #EAEAEA;
 }
 .navWrapper {
-	border-bottom: 1px solid #D5D5D5;
 	background-color: rgba(17, 135, 207, 0.4);
 }
 .navWrapper .navInner {
@@ -179,20 +191,34 @@ function list(type) {
 		</s:authorize>
 		<s:authorize access="isAuthenticated()">
 	 		<div class="user">
-				<img src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
+	 			<c:choose>
+	 				<c:when test="${not empty sessionScope.mem_profile}">
+						<img id="head-profile" class="profile-img" src="${pageContext.request.contextPath}/resources/upload/${sessionScope.mem_profile}"/>
+	 				</c:when>
+	 				<c:otherwise>
+	 					<img id="head-profile" class="profile-img-none" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
+	 				</c:otherwise>
+				</c:choose>
 				<ul id="user-drop" class="w3-animate-zoom">
 					<li>
 						<div class="user-info">
 							<div class="profile">
-								<img src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
+					 			<c:choose>
+					 				<c:when test="${not empty sessionScope.mem_profile}">
+										<img id="drop-profile" class="profile-img" src="${pageContext.request.contextPath}/resources/upload/${sessionScope.mem_profile}"/>
+					 				</c:when>
+					 				<c:otherwise>
+					 					<img id="drop-profile" class="profile-img-none" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
+					 				</c:otherwise>
+								</c:choose>
 							</div>
 							<div class="info">
-								<div>${sessionScope.nickname}</div>
+								<div>${sessionScope.mem_nickname}</div>
 								<div>${sessionScope.mem_id}</div>
 							</div>
 						</div>
 					</li>
-					<li class="user-list">
+					<li class="user-list" onclick="userList('myinfo');">
 						<i class="fas fa-user-edit"></i> 내 정보
 					</li>
 					<li class="user-list">
@@ -231,6 +257,9 @@ function list(type) {
 			</c:when>
 			<c:when test="${type == 'view'}">
 				<jsp:include page="portfolio/view.jsp"/>
+			</c:when>
+			<c:when test="${type == 'myinfo'}">
+				<jsp:include page="myinfo/myinfo.jsp"/>
 			</c:when>
 			<c:otherwise>
 				<jsp:include page="portfolio/list.jsp"/>

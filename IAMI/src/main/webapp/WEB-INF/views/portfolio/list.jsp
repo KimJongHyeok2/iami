@@ -68,7 +68,8 @@ function view(no) {
 	position: absolute;
 	top: 0;
 	right: 0;
-	color: rgba(17, 135, 207, 0.4);
+	padding: 5px;
+	color: rgb(17, 135, 207);
 }
 .row .portfolio-card-box .portfolio-card .subject {
 	padding: 5px;
@@ -77,15 +78,18 @@ function view(no) {
 	white-space: nowrap;
 }
 .row .portfolio-card-box .portfolio-card .ohter {
-	display: flex;
+	display: flex; 
 	justify-content: space-between;
 	padding: 5px;
 }
 .row .portfolio-card-box .portfolio-card .ohter .regdate {
 	color: gray;
 }
-.row .portfolio-card-box .portfolio-card .ohter .recommend .w3-badge {
+/* .row .portfolio-card-box .portfolio-card .ohter .recommend .w3-badge {
 	background-color: rgba(17, 135, 207, 0.4) !important;
+} */
+.row .portfolio-card-box .portfolio-card .ohter .recommend {
+	color: rgba(17, 135, 207, 0.4);
 }
 .row .btn-box {
 	display: none;
@@ -128,7 +132,8 @@ function view(no) {
 							${i.pot_regdate}
 						</div>
 						<div class="recommend">
-							<span class="w3-badge w3-red">${i.pot_recommend}</span>
+							<%-- <span class="w3-badge w3-red">${i.pot_recommend}</span> --%>
+							<i class="fas fa-comments"></i> <span>0</span> <i class="fas fa-thumbs-up"></i> <span>0</span>
 						</div>
 					</div>
 				</div>
