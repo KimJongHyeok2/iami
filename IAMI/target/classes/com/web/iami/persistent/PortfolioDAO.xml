@@ -8,11 +8,17 @@
 	<select id="selectNewPortfolio" resultType="com.web.iami.domain.PortfolioDTO">
 		<![CDATA[
 			SELECT * FROM
-				(SELECT rownum rnum, p.* FROM (SELECT * FROM portfolio ORDER BY pot_regdate DESC) p)
+				(SELECT rownum rnum, p.* FROM (SELECT * FROM portfolio WHERE pot_status = 1 ORDER BY pot_regdate DESC) p)
 			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
 		]]>
 	</select>
 	<select id="selectViewPortfolio" resultType="com.web.iami.domain.PortfolioDTO">
-		SELECT p.*, m.mem_nickname, m.mem_id, m.mem_profile, m.mem_email FROM portfolio p, members m WHERE p.pot_no = #{param1} AND m.mem_no = p.mem_no
+		SELECT p.*, m.mem_nickname, m.mem_id, m.mem_profile, m.mem_email FROM portfolio p, members m WHERE p.pot_no = #{param1} AND m.mem_no = p.mem_no AND p.pot_status = 1
+	</select>
+	<insert id="insertPortfolioComment" parameterType="com.web.iami.domain.CommentDTO">
+		INSERT INTO comments(com_no, mem_no, pot_no, com_nickname, com_pw, com_content, com_type) VALUES(com_seq.nextval, #{mem_no}, #{pot_no}, #{com_nickname}, #{com_pw}, #{com_content}, #{com_type})
+	</insert>
+	<select id="selectPortfolioComments" resultType="com.web.iami.domain.CommentDTO">
+		SELECT c.*, (SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname, (SELECT mem_profile FROM members WHERE mem_no = c.mem_no) mem_profile FROM comments c WHERE (c.pot_no = #{param1} AND c.com_status = 1)
 	</select>
 </mapper>

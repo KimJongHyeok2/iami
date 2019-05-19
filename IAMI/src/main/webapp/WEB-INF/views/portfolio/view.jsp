@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <script>
 $(document).ready(function() {
 	$("oembed[url]").each(function() {
@@ -13,7 +14,7 @@ $(document).ready(function() {
 	});
 
 	dateFormat();
-
+	commentList();
 	$("#summary").html($("#summary").html().trim().replace(/\n/g, "<br>"));
 });
 function dateFormat() {
@@ -48,6 +49,20 @@ function dateFormat() {
 	
 	$("#regdate").html(year + "-" + month + "-" + day + " " + hour + ":" + minute);
 }
+function commentDateFormat(date) {
+	dates = new Date(date);
+	year = dates.getFullYear();
+	month = dates.getMonth()+1;
+	month = (month + "").length == 1? ("0" + month):month;
+	day = dates.getDate();
+	day = (day + "").length == 1? ("0" + day):day;
+	var hour = dates.getHours();
+	hour = (hour + "").length == 1? ("0" + hour):hour;
+	var minute = dates.getMinutes();
+	minute = (minute + "").length == 1? ("0" + minute):minute;
+	
+	return year + "-" + month + "-" + day + " " + hour + ":" + minute;
+}
 function openRecomment(no) {
 	$("#recomment-write-" + no).toggle();
 	$("#recomment-list-" + no).toggle();
@@ -57,6 +72,238 @@ function openCommentDropdown(no) {
 }
 function openReCommentDropdown(no) {
 	$("#recomment-dropdown-" + no).toggle();
+}
+function openCommentUpdateForm(no) {
+	$("#comment-update-" + no).toggle();
+}
+function commentList() {
+	var pot_no = "${portfolio.pot_no}";
+	var header = "${_csrf.headerName}";
+	var token = "${_csrf.token}";
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/portfolio/comment/list",
+		type: "POST",
+		cache: false,
+		data: {
+			"pot_no" : pot_no
+		},
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data.status == "Ok") {
+					var tempHTML = "";
+					for(var i=0; i<data.count; i++) {
+						tempHTML += "<ul class='comment-list'>";
+						tempHTML += "<li class='comment'>";
+							tempHTML += "<div class='comment-profile'>";
+							if(data.list[i].com_type == 2) {
+								tempHTML += "<img class='profile' src='${pageContext.request.contextPath}/resources/upload/" + data.list[i].mem_profile + "'/>";
+							} else {
+								tempHTML += "<span class='badge'>비회원</span>";
+								tempHTML += "<img class='profile-none' src='${pageContext.request.contextPath}/resources/image/main/user.png'/>";							
+							}
+							tempHTML += "</div>";
+							tempHTML += "<div class='comment-content'>";
+								if(data.list[i].com_type == 2) {									
+									tempHTML += "<span class='nickname'>" + data.list[i].mem_nickname + "</span>";
+									tempHTML += "<span class='id'>(" + data.list[i].mem_id + ")</span>";
+									tempHTML += "<span class='regdate'>" + commentDateFormat(data.list[i].com_regdate) + "</span>";
+								} else {
+									tempHTML += "<span class='nickname'>" + data.list[i].com_nickname + "</span> ";
+									tempHTML += "<span class='regdate'>" + commentDateFormat(data.list[i].com_regdate) + "</span>";
+								}
+								tempHTML += "<div class='regdate-m'>";
+									tempHTML += "<span class='regdate m'>" + data.list[i].com_regdate + "</span>";
+								tempHTML += "</div>";
+								tempHTML += "<div class='content'>";
+									tempHTML += data.list[i].com_content.replace(/\n/g, "<br>");
+								tempHTML += "</div>";
+								if(data.list[i].com_type == 2) {
+									tempHTML += "<div id='comment-update-" + data.list[i].com_no + "' class='update row'>";
+										tempHTML += "<div class='col-md-4'>"
+											tempHTML += "<textarea type='text' class='update-input'>" + data.list[i].com_content + "</textarea>";
+										tempHTML += "</div>"
+										tempHTML += "<div class='col-md-4'>"
+											tempHTML += "<button class='w3-button'>완료</button>";
+										tempHTML += "</div>"
+										tempHTML += "<div class='col-md-4'>"
+											tempHTML += "<button class='w3-button' onclick='openCommentUpdateForm(" + data.list[i].com_no + ");'>취소</button>";
+										tempHTML += "</div>"
+									tempHTML += "</div>";
+								} else {
+									tempHTML += "<div id='comment-update-" + data.list[i].com_no + "' class='update row'>";
+										tempHTML += "<div class='col-md-4'>"
+											tempHTML += "<textarea type='text' class='update-input'>" + data.list[i].com_content + "</textarea>";
+										tempHTML += "</div>"
+										tempHTML += "<div class='col-md-4'>"
+											tempHTML += "<input type='password' class='update-input' placeholder='비밀번호'/>";
+										tempHTML += "</div>"
+										tempHTML += "<div class='col-md-4'>"
+											tempHTML += "<button class='w3-button'>완료</button>";
+										tempHTML += "</div>"
+										tempHTML += "<div class='col-md-4'>"
+											tempHTML += "<button class='w3-button' onclick='openCommentUpdateForm(" + data.list[i].com_no + ");'>취소</button>";
+										tempHTML += "</div>"
+									tempHTML += "</div>";
+								}
+								tempHTML += "<div class='function'>";
+									tempHTML += "<button class='w3-button w3-white w3-border' onclick='openRecomment(" + data.list[i].com_no + ");'>답글 (<span>0</span>)</button>";
+									tempHTML += "<div id='recomment-write-" + data.list[i].com_no + "' class='recomment-write'>";
+									if(${not empty sessionScope.mem_no}) {
+										tempHTML += "<div class='recomment-write-input'>";
+											tempHTML += "<textarea placeholder='내용을 입력해주세요.'></textarea>";
+										tempHTML += "</div>";
+										tempHTML += "<div class='recomment-write-button'>";
+											tempHTML += "<button class='w3-button' onclick='openRecomment(" + data.list[i].com_no + ");'>취소</button>";
+											tempHTML += "<button id='btn-recomment-write' class='w3-button'>작성</button>";
+										tempHTML += "</div>";
+									} else {
+										tempHTML += "<div class='recomment-write-nonmember'>";
+										tempHTML += "<div class='row'>";
+											tempHTML += "<div class='nonmember-nickname col-md-6'>";
+												tempHTML += "<div class='wrapper'>";
+													tempHTML += "<div>닉네임</div>";
+													tempHTML += "<input type='text' placeholder='닉네임을 입력해주세요.'/>";
+												tempHTML += "</div>";
+											tempHTML += "</div>";
+											tempHTML += "<div class='nonmember-password col-md-6'>";
+												tempHTML += "<div class='wrapper'>";
+													tempHTML += "<div>닉네임</div>";
+													tempHTML += "<input type='text' placeholder='비밀번호를 입력해주세요.'/>";
+												tempHTML += "</div>";
+											tempHTML += "</div>";
+										tempHTML += "</div>";
+										tempHTML += "</div>";
+										tempHTML += "<div class='recomment-write-input'>";
+											tempHTML += "<textarea placeholder='내용을 입력해주세요.'></textarea>";
+										tempHTML += "</div>";
+										tempHTML += "<div class='recomment-write-button'>";
+											tempHTML += "<button class='w3-button' onclick='openRecomment(" + data.list[i].com_no + ");'>취소</button>";
+											tempHTML += "<button id='btn-recomment-write' class='w3-button'>작성</button>";
+										tempHTML += "</div>";										
+									}
+									tempHTML += "</div>";
+								tempHTML += "</div>";
+							tempHTML += "</div>";
+							if(data.list[i].com_type == 2) {
+								var mem_no = "${empty sessionScope.mem_no? 0:sessionScope.mem_no}";
+								if(mem_no == data.list[i].mem_no) {
+									tempHTML += "<div class='comment-ellipsis'>";
+										tempHTML += "<i class='fas fa-ellipsis-v' onclick='openCommentDropdown(" + data.list[i].com_no + ");'></i>";
+										tempHTML += "<ul id='comment-dropdown-" + data.list[i].com_no + "' class='dropdown'>";
+											tempHTML += "<li><i class='fas fa-pen' onclick='openCommentUpdateForm(" + data.list[i].com_no + ");'></i></li>";
+											tempHTML += "<li><i class='fas fa-trash-alt'></i></li>";
+										tempHTML += "</ul>";
+									tempHTML += "</div>";
+								}
+							} else {
+								tempHTML += "<div class='comment-ellipsis'>";
+									tempHTML += "<i class='fas fa-ellipsis-v' onclick='openCommentDropdown(" + data.list[i].com_no + ");'></i>";
+									tempHTML += "<ul id='comment-dropdown-" + data.list[i].com_no + "' class='dropdown'>";
+										tempHTML += "<li><i class='fas fa-pen' onclick='openCommentUpdateForm(" + data.list[i].com_no + ");'></i></li>";
+										tempHTML += "<li><i class='fas fa-trash-alt'></i></li>";
+									tempHTML += "</ul>";
+								tempHTML += "</div>";								
+							}
+						tempHTML += "</li>";
+						tempHTML += "<li id='recomment-list-" + data.list[i].com_no + "' class='recomment-lists'>";
+							tempHTML += "<ul class='recomment-list'>";
+								tempHTML += "<li class='recomment'>";
+									tempHTML += "<div class='recomment-arrow'>";
+										tempHTML += "<i class='fas fa-location-arrow fa-2x'></i>";
+									tempHTML += "</div>";
+									tempHTML += "<div class='recomment-box'>";
+										tempHTML += "<div class='recomment-profile'>";
+/* 											if(data.list[i].com_type == 2) {
+												tempHTML += "<img class='profile' src='${pageContext.request.contextPath}/resources/image/main/user.png'/>"
+											} else {
+												tempHTML += "<span class='badge'>비회원</span>";
+												tempHTML += "<img class='profile-none' src='${pageContext.request.contextPath}/resources/image/main/user.png'/>"
+											} */
+											tempHTML += "<span class='badge'>비회원</span>";
+											tempHTML += "<img class='profile-none' src='${pageContext.request.contextPath}/resources/image/main/user.png'/>"
+										tempHTML += "</div>";
+										tempHTML += "<div class='recomment-content'>";
+/* 											if(data.list[i].com_type == 2) {
+												tempHTML += "<span class='nickname'>테스트</span><span class='id'>(test13585)</span><span class='regdate'>2019-05-16 02:36</span>";
+											} else {
+												tempHTML += "<span class='nickname'>테스트</span><span class='regdate'>2019-05-16 02:36</span>";
+											} */
+											tempHTML += "<span class='nickname'>테스트</span><span class='id'>(test13585)</span><span class='regdate'>2019-05-16 02:36</span>";
+											tempHTML += "<div class='regdate-m'>";
+												tempHTML += "<span class='regdate m'>2019-05-16 02:36</span>";
+											tempHTML += "</div>";
+											tempHTML += "<div class='content'>";
+												tempHTML += "안녕하세요.";
+											tempHTML += "</div>";
+										tempHTML += "</div>";
+										tempHTML += "<div class='recomment-ellipsis'>";
+											tempHTML += "<i class='fas fa-ellipsis-v' onclick='openReCommentDropdown(1);'></i>";
+											tempHTML += "<ul id='recomment-dropdown-1' class='dropdown'>";
+												tempHTML += "<li><i class='fas fa-trash-alt'></i></li>";
+											tempHTML += "</ul>";
+										tempHTML += "</div>";
+									tempHTML += "</div>";
+								tempHTML += "</li>";
+							tempHTML += "</ul>";
+						tempHTML += "</li>";
+						tempHTML += "</ul>";
+					}
+					$(".comment-list-box").html(tempHTML);
+				}
+			}
+		}
+	});
+}
+function nonmemberCommentWrite() {
+	var nickname = $("#comment-nickname").val();
+	var password = $("#comment-password").val();
+	var content = $("#comment-content").val();
+	var pot_no = "${portfolio.pot_no}";
+	var header = "${_csrf.headerName}";
+	var token = "${_csrf.token}";
+	
+	if(nickname == null || nickname.length < 3 || nickname.length > 7) {
+		alert("닉네임은 3자 이상 7자 이하로 입력해주세요.");
+		return false;
+	}
+	if(password == null || password.length < 4 || password.length > 20) {
+		alert("비밀번호는 4자 이상 20자 이하로 입력해주세요.");
+		return false;
+	}
+	if(content == null || content.length == 0) {
+		alert("내용을 입력해주세요.");
+		return false;
+	}
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/portfolio/comment/write",
+		type: "POST",
+		cache: false,
+		data: {
+			"pot_no" : pot_no,
+			"com_nickname" : nickname,
+			"com_pw" : password,
+			"com_content" : content,
+			"com_type" : 1
+		},
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success:function(data, status) {
+			if(status == "success") {
+				if(data != "Fail") {
+					alert("작성되었습니다.");
+					commentList();
+				} else {
+					alert("알 수 없는 오류입니다.");
+				}
+			}
+		}
+	});
 }
 </script>
 <style>
@@ -247,7 +494,7 @@ hr {
 	height: 70px;
 }
 .profile-box .profile-inner .profile-content {
-	padding-left: 5px;
+	padding-left: 10px;
 }
 .profile-box .profile-inner .profile-content i {
 	color: rgba(17, 135, 207, 0.4);
@@ -260,14 +507,16 @@ hr {
 	color: gray;
 }
 .profile-box .profile-inner .profile-content .content-2 .email {
-	color: rgba(17, 135, 207, 0.5);
+	/* color: rgba(17, 135, 207, 0.5); */
+	color: gray;
 /* 	border: 1px solid rgba(17, 135, 207, 0.4);
 	border-radius: 5px;
 	background-color: rgba(17, 135, 207, 0.4);
 	color: white; */
 }
 .profile-box .profile-inner .profile-content .content-3 .regdate {
-	color: rgba(17, 135, 207, 0.5);
+	/* color: rgba(17, 135, 207, 0.5); */
+	color: gray;
 /*  	border: 1px solid rgba(17, 135, 207, 0.4);
 	border-radius: 5px;
 	background-color: rgba(17, 135, 207, 0.4);
@@ -391,11 +640,24 @@ hr {
 	padding: 10px;
 	border: 1px solid rgba(17, 135, 207, 0.4);
 }
+.comment-list .comment .comment-profile {
+	position: relative;
+}
 .comment-list .comment .comment-profile .profile {
 	width: 50px;
 	height: 50px;
 	border: 1px solid rgba(17, 135, 207, 0.4);
 	border-radius: 50%;
+}
+.comment-list .comment .comment-profile .badge {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 1px;
+	border: 1px solid rgba(242, 150, 97, 0.4);
+	border-radius: 5px;
+	background-color: rgba(242, 150, 97, 0.4);
+	color: white;
 }
 .comment-list .comment .comment-profile .profile-none {
 	width: 50px;
@@ -424,6 +686,26 @@ hr {
 	margin-top: 5px;
 	word-break: break-all;
 	word-wrap: break-word;
+	color: black;
+}
+.comment-list .comment .comment-content .update {
+	display: none;
+	margin: 0;
+}
+.comment-list .comment .comment-content .update div {
+	margin-top: 5px;
+	padding-left: 0;
+}
+.comment-list .comment .comment-content .update .update-input {
+	width: 100%;
+	height: 40px;
+}
+.comment-list .comment .comment-content .update .w3-button {
+	width: 100%;
+	height: 40px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	background-color: rgba(17, 135, 207, 0.4);
+	color: white;
 }
 .comment-list .comment .comment-content .function {
 	margin-top: 5px;
@@ -484,11 +766,24 @@ hr {
 	border: 1px solid rgba(17, 135, 207, 0.4);
 	background-color: rgba(246, 246, 246, 0.3);
 }
+.comment-list .recomment-list .recomment .recomment-box .recomment-profile {
+	position: relative;
+}
 .comment-list .recomment-list .recomment .recomment-box .recomment-profile .profile {
 	width: 50px;
 	height: 50px;
 	border: 1px solid rgba(17, 135, 207, 0.4);
 	border-radius: 50%;
+}
+.comment-list .recomment-list .recomment .recomment-box .recomment-profile .badge {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 1px;
+	border: 1px solid rgba(242, 150, 97, 0.4);
+	border-radius: 5px;
+	background-color: rgba(242, 150, 97, 0.4);
+	color: white;
 }
 .comment-list .recomment-list .recomment .recomment-box .recomment-profile .profile-none {
 	width: 50px;
@@ -695,33 +990,46 @@ figure .embedly-card-hug iframe {
 	<i class="far fa-comments"></i> 댓글 <span class="w3-badge">8</span>
 </div>
 <div class="comment-write">
-	<div class="comment-write-nonmember">
-		<div class="row">
-			<div class="nonmember-nickname col-md-6">
-				<div class="wrapper">
-					<div>닉네임</div>
-					<input type="text"/>
+	<s:authorize access="!isAuthenticated()">
+		<div class="comment-write-nonmember">
+			<div class="row">
+				<div class="nonmember-nickname col-md-6">
+					<div class="wrapper">
+						<div>닉네임</div>
+						<input id="comment-nickname" type="text" placeholder="닉네임을 입력해주세요."/>
+					</div>
 				</div>
-			</div>
-			<div class="nonmember-password col-md-6">
-				<div class="wrapper">
-					<div>비밀번호</div>
-					<input type="text"/>
+				<div class="nonmember-password col-md-6">
+					<div class="wrapper">
+						<div>비밀번호</div>
+						<input id="comment-password" type="password" placeholder="비밀번호를 입력해주세요."/>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="comment-write-input">
-		<textarea placeholder="내용을 입력해주세요."></textarea>
-		<button id="btn-comment-write" class="w3-button">작성</button>
-	</div>
-	<div class="comment-write-input-m">
-		<button id="btn-comment-write-m" class="w3-button">작성</button>
-	</div>
+		<div class="comment-write-input">
+			<textarea id="comment-content" placeholder="내용을 입력해주세요."></textarea>
+			<button id="btn-comment-write" class="w3-button" onclick="nonmemberCommentWrite();">작성</button>
+		</div>
+		<div class="comment-write-input-m">
+			<button id="btn-comment-write-m" class="w3-button" onclick="nonmemberCommentWrite();">작성</button>
+		</div>
+	</s:authorize>
+	<s:authorize access="isAuthenticated()">
+		<div class="comment-write-input">
+			<textarea id="comment-content" placeholder="내용을 입력해주세요."></textarea>
+			<button id="btn-comment-write" class="w3-button" onclick="nonmemberCommentWrite();">작성</button>
+		</div>
+		<div class="comment-write-input-m">
+			<button id="btn-comment-write-m" class="w3-button" onclick="nonmemberCommentWrite();">작성</button>
+		</div>
+	</s:authorize>
 </div>
-<ul class="comment-list">
+<div class="comment-list-box">
+<ul id="comment-list" class="comment-list">
 	<li class="comment">
 		<div class="comment-profile">
+			<span class="badge">비회원</span>
 			<img class="profile-none" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
 		</div>
 		<div class="comment-content">
@@ -740,13 +1048,13 @@ figure .embedly-card-hug iframe {
 							<div class="nonmember-nickname col-md-6">
 								<div class="wrapper">
 									<div>닉네임</div>
-									<input type="text"/>
+									<input type="text" placeholder="닉네임을 입력해주세요."/>
 								</div>
 							</div>
 							<div class="nonmember-password col-md-6">
 								<div class="wrapper">
 									<div>비밀번호</div>
-									<input type="text"/>
+									<input type="text" placeholder="비밀번호를 입력해주세요."/>
 								</div>
 							</div>
 						</div>
@@ -777,6 +1085,7 @@ figure .embedly-card-hug iframe {
 				</div>
 				<div class="recomment-box">
 					<div class="recomment-profile">
+						<span class="badge">비회원</span>
 						<img class="profile-none" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
 					</div>
 					<div class="recomment-content">
@@ -799,3 +1108,4 @@ figure .embedly-card-hug iframe {
 		</ul>
 	</li>
 </ul>
+</div>

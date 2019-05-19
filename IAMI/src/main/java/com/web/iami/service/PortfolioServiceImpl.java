@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import com.web.iami.domain.CommentDTO;
 import com.web.iami.domain.PortfolioDTO;
 import com.web.iami.persistent.PortfolioDAO;
 
@@ -29,6 +30,16 @@ public class PortfolioServiceImpl implements PortfolioService {
 	@Override
 	public PortfolioDTO selectViewPortfolio(int no) throws Exception {
 		return dao.selectViewPortfolio(no);
+	}
+
+	@Override
+	public int insertPortfolioComment(CommentDTO dto) throws Exception {
+		return dao.insertPortfolioComment(dto);
+	}
+
+	@Override
+	public List<CommentDTO> selectPortfolioComments(int pot_no) throws Exception {
+		return dao.selectPortfolioComments(pot_no);
 	}
 
 }

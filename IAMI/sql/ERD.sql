@@ -2,6 +2,8 @@
 /* Drop Tables */
 
 DROP TABLE career CASCADE CONSTRAINTS;
+DROP TABLE recomments CASCADE CONSTRAINTS;
+DROP TABLE comments CASCADE CONSTRAINTS;
 DROP TABLE customerNotice CASCADE CONSTRAINTS;
 DROP TABLE emailAccessKeys CASCADE CONSTRAINTS;
 DROP TABLE friend CASCADE CONSTRAINTS;
@@ -26,6 +28,21 @@ CREATE TABLE career
 	car_task varchar2(100) NOT NULL,
 	car_regdate timestamp DEFAULT SYSDATE,
 	PRIMARY KEY (car_no)
+);
+
+
+CREATE TABLE comments
+(
+	com_no number NOT NULL,
+	mem_no number,
+	pot_no number NOT NULL,
+	com_nickname varchar2(30),
+	com_pw varchar2(100),
+	com_content clob NOT NULL,
+	com_type number(2) NOT NULL,
+	com_status number DEFAULT 1,
+	com_regdate timestamp DEFAULT SYSDATE,
+	PRIMARY KEY (com_no)
 );
 
 
@@ -110,8 +127,30 @@ CREATE TABLE project
 );
 
 
+CREATE TABLE recomments
+(
+	rcom_no number NOT NULL,
+	mem_no number,
+	pot_no number NOT NULL,
+	com_no number NOT NULL,
+	rcom_nickname varchar2(30),
+	rcom_pw varchar2(100),
+	rcom_content clob NOT NULL,
+	rcom_type number(2) NOT NULL,
+	rcom_status number DEFAULT 1,
+	rcom_regdate timestamp DEFAULT SYSDATE,
+	PRIMARY KEY (rcom_no)
+);
+
+
 
 /* Create Foreign Keys */
+
+ALTER TABLE recomments
+	ADD FOREIGN KEY (com_no)
+	REFERENCES comments (com_no)
+;
+
 
 ALTER TABLE career
 	ADD FOREIGN KEY (mem_no)
@@ -149,6 +188,18 @@ ALTER TABLE project
 ;
 
 
-SELECT * FROM (SELECT rownum rnum, p.* FROM (SELECT * FROM portfolio ORDER BY pot_regdate DESC) p) WHERE rnum >= 1 AND rnum < 11;
+ALTER TABLE comments
+	ADD FOREIGN KEY (pot_no)
+	REFERENCES portfolio (pot_no)
+;
 
-SELECT p.*, m.mem_nickname, m.mem_id, m.mem_profile, m.mem_email FROM portfolio p, members m WHERE p.pot_no = 22 AND m.mem_no = p.mem_no;
+
+ALTER TABLE recomments
+	ADD FOREIGN KEY (pot_no)
+	REFERENCES portfolio (pot_no)
+;
+
+
+SELECT * FROM COMMENTS;
+
+SELECT c.*, (SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname FROM comments c WHERE (c.pot_no = 23 AND c.com_status = 1);
