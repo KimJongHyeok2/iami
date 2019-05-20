@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.web.iami.domain.CommentDTO;
 import com.web.iami.domain.PortfolioDTO;
+import com.web.iami.domain.ReCommentDTO;
 import com.web.iami.persistent.PortfolioDAO;
 
 @Service("PortfolioService")
@@ -38,8 +39,48 @@ public class PortfolioServiceImpl implements PortfolioService {
 	}
 
 	@Override
-	public List<CommentDTO> selectPortfolioComments(int pot_no) throws Exception {
-		return dao.selectPortfolioComments(pot_no);
+	public List<CommentDTO> selectPortfolioComments(Map<String, Integer> map) throws Exception {
+		return dao.selectPortfolioComments(map);
+	}
+
+	@Override
+	public String selectCommentPassword(int com_no) throws Exception {
+		return dao.selectCommentPassword(com_no);
+	}
+
+	@Override
+	public int updatePortfolioComment(Map<String, String> map) throws Exception {
+		return dao.updatePortfolioComment(map);
+	}
+
+	@Override
+	public int deletePortfolioComment(int com_no) throws Exception {
+		return dao.deletePortfolioComment(com_no);
+	}
+
+	@Override
+	public int insertPortfolioReComment(ReCommentDTO dto) throws Exception {
+		return dao.insertPortfolioReComment(dto);
+	}
+
+	@Override
+	public List<ReCommentDTO> selectPortfolioReComments(int pot_no) throws Exception {
+		return dao.selectPortfolioReComments(pot_no);
+	}
+
+	@Override
+	public String selectReCommentPassword(int rcom_no) throws Exception {
+		return dao.selectReCommentPassword(rcom_no);
+	}
+	
+	@Override
+	public int deletePortfolioReComment(int rcom_no) throws Exception {
+		return dao.deletePortfolioReComment(rcom_no);
+	}
+
+	@Override
+	public int selectCommentCount(int pot_no) throws Exception {
+		return dao.selectCommentCount(pot_no);
 	}
 
 }

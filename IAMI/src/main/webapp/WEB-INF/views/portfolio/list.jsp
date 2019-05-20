@@ -133,7 +133,7 @@ function view(no) {
 						</div>
 						<div class="recommend">
 							<%-- <span class="w3-badge w3-red">${i.pot_recommend}</span> --%>
-							<i class="fas fa-comments"></i> <span>0</span> <i class="fas fa-thumbs-up"></i> <span>0</span>
+							<i class="fas fa-comments"></i> <span>${i.commentCount}</span> <i class="fas fa-thumbs-up"></i> <span>${i.pot_recommend}</span>
 						</div>
 					</div>
 				</div>

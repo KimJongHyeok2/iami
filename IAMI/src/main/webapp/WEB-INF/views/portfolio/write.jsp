@@ -1139,7 +1139,7 @@ function writeOk() {
 							<div class="container">
 								<div class="row">
 									<div class="empty col-12">
-										등록이 필요합니다.
+										등록이 필요합니다.(선택)
 									</div>
 								</div>
 							</div>

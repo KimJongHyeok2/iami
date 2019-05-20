@@ -25,12 +25,15 @@ public class PortfolioDTO {
 	private String mem_profile; // 회원 프로필 사진명
 	private String mem_email; // 회원 이메일
 	
+	// 해당 포트폴리오 댓글/추천 수
+	private int commentCount;
+	
 	public PortfolioDTO() { }
 	
 	public PortfolioDTO(int pot_no, int mem_no, String pot_subject, String pot_description, String pot_summary,
 			String pot_startdate, String pot_enddate, String pot_environment, String pot_thumbnail, String pot_video,
 			String pot_source, int pot_recommend, int pot_status, Timestamp pot_regdate, String mem_nickname,
-			String mem_id, String mem_profile, String mem_email) {
+			String mem_id, String mem_profile, String mem_email, int commentCount) {
 		this.pot_no = pot_no;
 		this.mem_no = mem_no;
 		this.pot_subject = pot_subject;
@@ -49,6 +52,7 @@ public class PortfolioDTO {
 		this.mem_id = mem_id;
 		this.mem_profile = mem_profile;
 		this.mem_email = mem_email;
+		this.commentCount = commentCount;
 	}
 
 	public int getPot_no() {
@@ -193,6 +197,14 @@ public class PortfolioDTO {
 
 	public void setMem_email(String mem_email) {
 		this.mem_email = mem_email;
+	}
+
+	public int getCommentCount() {
+		return commentCount;
+	}
+
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
 	}
 	
 }

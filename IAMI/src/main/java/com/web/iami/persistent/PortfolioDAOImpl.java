@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.web.iami.domain.CommentDTO;
 import com.web.iami.domain.PortfolioDTO;
+import com.web.iami.domain.ReCommentDTO;
 
 @Repository("PortfolioDAO")
 public class PortfolioDAOImpl implements PortfolioDAO {
@@ -38,8 +39,48 @@ public class PortfolioDAOImpl implements PortfolioDAO {
 	}
 
 	@Override
-	public List<CommentDTO> selectPortfolioComments(int pot_no) throws Exception {
-		return sqlSession.selectList("portfolio.selectPortfolioComments", pot_no);
+	public List<CommentDTO> selectPortfolioComments(Map<String, Integer> map) throws Exception {
+		return sqlSession.selectList("portfolio.selectPortfolioComments", map);
+	}
+
+	@Override
+	public String selectCommentPassword(int com_no) throws Exception {
+		return sqlSession.selectOne("portfolio.selectCommentPassword", com_no);
+	}
+
+	@Override
+	public int updatePortfolioComment(Map<String, String> map) throws Exception {
+		return sqlSession.update("portfolio.updatePortfolioComment", map);
+	}
+
+	@Override
+	public int deletePortfolioComment(int com_no) throws Exception {
+		return sqlSession.update("portfolio.deletePortfolioComment", com_no);
+	}
+
+	@Override
+	public int insertPortfolioReComment(ReCommentDTO dto) throws Exception {
+		return sqlSession.insert("portfolio.insertPortfolioReComment", dto);
+	}
+
+	@Override
+	public List<ReCommentDTO> selectPortfolioReComments(int pot_no) throws Exception {
+		return sqlSession.selectList("portfolio.selectPortfolioReComments", pot_no);
+	}
+
+	@Override
+	public String selectReCommentPassword(int rcom_no) throws Exception {
+		return sqlSession.selectOne("portfolio.selectReCommentPassword", rcom_no);
+	}
+	
+	@Override
+	public int deletePortfolioReComment(int rcom_no) throws Exception {
+		return sqlSession.update("portfolio.deletePortfolioReComment", rcom_no);
+	}
+
+	@Override
+	public int selectCommentCount(int pot_no) throws Exception {
+		return sqlSession.selectOne("portfolio.selectCommentCount", pot_no);
 	}
 	
 }

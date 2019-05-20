@@ -8,7 +8,7 @@
 	<select id="selectNewPortfolio" resultType="com.web.iami.domain.PortfolioDTO">
 		<![CDATA[
 			SELECT * FROM
-				(SELECT rownum rnum, p.* FROM (SELECT * FROM portfolio WHERE pot_status = 1 ORDER BY pot_regdate DESC) p)
+				(SELECT rownum rnum, p.*, ((SELECT count(com_no) FROM comments WHERE pot_no = p.pot_no AND com_status = 1) + (SELECT count(rcom_no) FROM recomments WHERE pot_no = p.pot_no AND rcom_status = 1)) commentCount FROM (SELECT * FROM portfolio WHERE pot_status = 1 ORDER BY pot_regdate DESC) p)
 			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
 		]]>
 	</select>
@@ -16,9 +16,39 @@
 		SELECT p.*, m.mem_nickname, m.mem_id, m.mem_profile, m.mem_email FROM portfolio p, members m WHERE p.pot_no = #{param1} AND m.mem_no = p.mem_no AND p.pot_status = 1
 	</select>
 	<insert id="insertPortfolioComment" parameterType="com.web.iami.domain.CommentDTO">
-		INSERT INTO comments(com_no, mem_no, pot_no, com_nickname, com_pw, com_content, com_type) VALUES(com_seq.nextval, #{mem_no}, #{pot_no}, #{com_nickname}, #{com_pw}, #{com_content}, #{com_type})
+		INSERT INTO comments(com_no, mem_no, pot_no, com_nickname, com_pw, com_content, com_type) VALUES(com_seq.nextval, #{mem_no}, #{pot_no}, #{com_nickname, jdbcType=VARCHAR}, #{com_pw, jdbcType=VARCHAR}, #{com_content}, #{com_type})
 	</insert>
 	<select id="selectPortfolioComments" resultType="com.web.iami.domain.CommentDTO">
-		SELECT c.*, (SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname, (SELECT mem_profile FROM members WHERE mem_no = c.mem_no) mem_profile FROM comments c WHERE (c.pot_no = #{param1} AND c.com_status = 1)
+		<!-- SELECT c.*, (SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname, (SELECT mem_profile FROM members WHERE mem_no = c.mem_no) mem_profile FROM comments c WHERE (c.pot_no = #{param1}) -->
+		<![CDATA[
+			SELECT * FROM
+				(SELECT rownum rnum, c.*, 
+					(SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname, (SELECT mem_profile FROM members WHERE mem_no = c.mem_no) mem_profile FROM (SELECT * FROM comments WHERE pot_no = #{no} ORDER BY com_no DESC) c)
+			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+		]]>
+	</select>
+	<select id="selectCommentPassword" resultType="String">
+		SELECT com_pw FROM comments WHERE com_no = #{param1}
+	</select>
+	<update id="updatePortfolioComment">
+		UPDATE comments SET com_content = #{content} WHERE com_no = #{no}
+	</update>
+	<update id="deletePortfolioComment">
+		UPDATE comments SET com_status = 0 WHERE com_no = #{param1}
+	</update>
+	<insert id="insertPortfolioReComment" parameterType="com.web.iami.domain.ReCommentDTO">
+		INSERT INTO recomments(rcom_no, mem_no, pot_no, com_no, rcom_nickname, rcom_pw, rcom_content, rcom_type) VALUES(rcom_seq.nextval, #{mem_no}, #{pot_no}, #{com_no}, #{rcom_nickname, jdbcType=VARCHAR}, #{rcom_pw, jdbcType=VARCHAR}, #{rcom_content}, #{rcom_type})
+	</insert>
+	<select id="selectPortfolioReComments" resultType="com.web.iami.domain.ReCommentDTO">
+		SELECT c.*, (SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname, (SELECT mem_profile FROM members WHERE mem_no = c.mem_no) mem_profile FROM recomments c WHERE (c.pot_no = #{param1} AND c.rcom_status = 1)
+	</select>
+	<select id="selectReCommentPassword" resultType="String">
+		SELECT rcom_pw FROM recomments WHERE rcom_no = #{param1}
+	</select>
+	<update id="deletePortfolioReComment">
+		UPDATE recomments SET rcom_status = 0 WHERE rcom_no = #{param1}
+	</update>
+	<select id="selectCommentCount" resultType="Integer">
+		SELECT count(com_no) FROM comments WHERE pot_no = #{param1} AND com_status = 1
 	</select>
 </mapper>

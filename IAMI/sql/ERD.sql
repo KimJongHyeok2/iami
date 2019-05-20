@@ -203,3 +203,18 @@ ALTER TABLE recomments
 SELECT * FROM COMMENTS;
 
 SELECT c.*, (SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname FROM comments c WHERE (c.pot_no = 23 AND c.com_status = 1);
+
+CREATE SEQUENCE rcom_seq;
+
+SELECT * FROM
+	(SELECT rownum rnum, p.*, (SELECT count(com_no) FROM comments WHERE pot_no = p.pot_no AND pot_status = 1) commentCount FROM (SELECT * FROM portfolio WHERE pot_status = 1 ORDER BY pot_regdate DESC) p)
+WHERE rnum >= 1 AND rnum < 11;
+
+SELECT c.*, (SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname, (SELECT mem_profile FROM members WHERE mem_no = c.mem_no) mem_profile FROM comments c WHERE (c.pot_no = #{param1})
+
+SELECT * FROM
+	(SELECT rownum rnum, c.*, 
+		(SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname, (SELECT mem_profile FROM members WHERE mem_no = c.mem_no) mem_profile FROM (SELECT * FROM comments WHERE pot_no = 23 ORDER BY pot_no DESC) c)
+WHERE rnum >= 1 AND rnum < 11;
+
+SELECT * FROM comments WHERE pot_no = 23 AND com_status = 1;

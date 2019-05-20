@@ -221,9 +221,9 @@ function list(type) {
 					<li class="user-list" onclick="userList('myinfo');">
 						<i class="fas fa-user-edit"></i> 내 정보
 					</li>
-					<li class="user-list">
+<!-- 				<li class="user-list">
 						<i class="fas fa-user-friends"></i> 친구목록
-					</li>
+					</li> -->
 					<li class="user-list" onclick="userList('write');">
 						<i class="fas fa-edit"></i> 포트폴리오 업로드
 					</li>
