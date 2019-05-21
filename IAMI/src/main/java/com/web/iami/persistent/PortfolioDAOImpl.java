@@ -82,5 +82,20 @@ public class PortfolioDAOImpl implements PortfolioDAO {
 	public int selectCommentCount(int pot_no) throws Exception {
 		return sqlSession.selectOne("portfolio.selectCommentCount", pot_no);
 	}
+
+	@Override
+	public int isAlreadyRecommend(Map<String, String> map) throws Exception {
+		return sqlSession.selectOne("portfolio.isAlreadyRecommend", map);
+	}
+
+	@Override
+	public int updatePortfolioRecommend(int pot_no) throws Exception {
+		return sqlSession.update("portfolio.updatePortfolioRecommend", pot_no);
+	}
+
+	@Override
+	public int insertRecommendHistory(Map<String, String> map) throws Exception {
+		return sqlSession.insert("portfolio.insertRecommendHistory", map);
+	}
 	
 }

@@ -254,7 +254,7 @@ function commentList(page) {
 					// 댓글 페이징
 					if(data.startPage > data.pageBlock) {
 						tempHTML += "<li class='prev" + (data.page==i? "active":"") + "' onclick='" + (data.page!=i? "commentList(" + parseInt(data.startPage - data.pageBlock) + ")":"") + "'>";
-							tempHTML += "이전";
+							tempHTML += "<i class='fas fa-chevron-left'></i>";
 						tempHTML += "</li>";
 					}
 					for(var i=data.startPage; i<=data.endPage; i++) {
@@ -270,7 +270,7 @@ function commentList(page) {
 					}
 					if(data.endPage < data.pageCount) {
 						tempHTML += "<li class='next pagination-last " + (data.page==i? "active":"") + "' onclick='" + (data.page!=i? "commentList(" + parseInt(data.startPage + data.pageBlock) + ")":"") + "'>";
-							tempHTML += "다음";
+							tempHTML += "<i class='fas fa-chevron-right'></i>";
 						tempHTML += "</li>";
 					}
 					commentCount = data.commentCount;
@@ -281,20 +281,6 @@ function commentList(page) {
 		}
 	});
 }
-/* <ul class="pagination-box">
-<li>이전</li>
-<li>1</li>
-<li>2</li>
-<li>3</li>
-<li>4</li>
-<li>5</li>
-<li class="active">6</li>
-<li>7</li>
-<li>8</li>
-<li>9</li>
-<li>10</li>
-<li class="pagination-last">다음</li>
-</ul> */
 function recommentList() {
 	var pot_no = "${portfolio.pot_no}";
 	
@@ -723,6 +709,35 @@ function memberReCommentWrite(no) {
 		}
 	});
 }
+function recommend() {
+	var mem_no = "${empty sessionScope.mem_no? 0:sessionScope.mem_no}";
+	var pot_no = "${portfolio.pot_no}";
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/portfolio/recommend",
+		type: "POST",
+		data: {
+			"pot_no" : pot_no,
+			"mem_no" : mem_no
+		},
+		cache: false,
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data == "Ok") {
+					alert("추천하였습니다.");
+					$("#recommend_count").html(parseInt($("#recommend_count").html()) + 1);
+				} else if(data == "Already") {
+					alert("이미 추천을 누르셨습니다.");
+				} else {
+					alert("알 수 없는 오류입니다.");
+				}
+			}
+		}
+	});
+}
 </script>
 <style>
 .viewWrapper {
@@ -1037,6 +1052,7 @@ hr {
 }
 .recomment-write .recomment-write-button {
 	display: flex;
+	margin-top: 5px;
 	justify-content: space-between;
 }
 .recomment-write .recomment-write-button button {
@@ -1304,7 +1320,7 @@ hr {
 	cursor: default;
 }
 .pagination-box li.next {
-	border-left: 1px solid transparent;
+	border-left: none;
 }
 figure {
 	margin-bottom: 0;
@@ -1435,7 +1451,7 @@ figure .embedly-card-hug iframe {
 </ul>
 </div>
 <div class="recommend-box">
-	<button id="btn-next" class="w3-button w3-white w3-border"><i class="far fa-thumbs-up"></i> <span>0</span></button>
+	<button id="btn-next" class="w3-button w3-white w3-border" onclick="recommend();"><i class="far fa-thumbs-up"></i> <span id="recommend_count">${portfolio.pot_recommend}</span></button>
 </div>
 <div class="profile-box">
 	<div class="profile-inner">
@@ -1503,92 +1519,6 @@ figure .embedly-card-hug iframe {
 	</s:authorize>
 </div>
 <div class="comment-list-box">
-<ul id="comment-list" class="comment-list">
-	<li class="comment">
-		<div class="comment-profile">
-			<span class="badge">비회원</span>
-			<img class="profile-none" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
-		</div>
-		<div class="comment-content">
-			<span class="nickname">테스트</span><span class="id">(test13585)</span><span class="regdate">2019-05-16 02:36</span>
-			<div class="regdate-m">
-				<span class="regdate m">2019-05-16 02:36</span>
-			</div>
-			<div class="content">
-				테스트입니다.
-			</div>
-			<div class="function">
-				<button class="w3-button w3-white w3-border" onclick="openRecomment(1);">답글 (<span>0</span>)</button>
-				<div id="recomment-write-1" class="recomment-write">
-					<div class="recomment-write-nonmember">
-						<div class="row">
-							<div class="nonmember-nickname col-md-6">
-								<div class="wrapper">
-									<div>닉네임</div>
-									<input type="text" placeholder="닉네임을 입력해주세요."/>
-								</div>
-							</div>
-							<div class="nonmember-password col-md-6">
-								<div class="wrapper">
-									<div>비밀번호</div>
-									<input type="text" placeholder="비밀번호를 입력해주세요."/>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="recomment-write-input">
-						<textarea placeholder="내용을 입력해주세요."></textarea>
-					</div>
-					<div class="recomment-write-button">
-						<button class="w3-button">닫기</button>
-						<button id="btn-recomment-write" class="w3-button">작성</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="comment-ellipsis">
-			<i class="fas fa-ellipsis-v" onclick="openCommentDropdown(1);"></i>
-			<ul id="comment-dropdown-1" class="dropdown">
-				<li><i class="fas fa-pen"></i></li>
-				<li><i class="fas fa-trash-alt"></i></li>
-			</ul>
-		</div>
-	</li>
-	<li id="recomment-list-1" class="recomment-lists">
-		<ul class="recomment-list">
-			<li class="recomment">
-				<div class="recomment-arrow">
-					<i class="fas fa-location-arrow fa-2x"></i>
-				</div>
-				<div class="recomment-box">
-					<div class="recomment-profile">
-						<span class="badge">비회원</span>
-						<img class="profile-none" src="${pageContext.request.contextPath}/resources/image/main/user.png"/>
-					</div>
-					<div class="recomment-content">
-						<span class="nickname">테스트</span><span class="id">(test13585)</span><span class="regdate">2019-05-16 02:36</span>
-						<div class="regdate-m">
-							<span class="regdate m">2019-05-16 02:36</span>
-						</div>
-						<div class="content">
-							안녕입니다.
-						</div>
-					</div>
-					<div class="recomment-ellipsis">
-						<i class="fas fa-ellipsis-v" onclick="openReCommentDropdown(1);"></i>
-						<ul id="recomment-dropdown-1" class="dropdown">
-							<li><i class="fas fa-trash-alt"></i></li>
-						</ul>
-					</div>
-				</div>
-			</li>
-		</ul>
-	</li>
-</ul>
 </div>
 <ul class="pagination-box">
-</ul>
-<ul class="pagination-box m">
-	<li>이전</li>
-	<li class="pagination-last">다음</li>
 </ul>

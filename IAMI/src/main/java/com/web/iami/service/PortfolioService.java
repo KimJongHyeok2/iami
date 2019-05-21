@@ -21,4 +21,7 @@ public interface PortfolioService {
 	public String selectReCommentPassword(int rcom_no) throws Exception;
 	public int deletePortfolioReComment(int rcom_no) throws Exception;
 	public int selectCommentCount(int pot_no) throws Exception;
+	public int isAlreadyRecommend(Map<String, String> map) throws Exception;
+	public int updatePortfolioRecommend(int pot_no) throws Exception;
+	public int insertRecommendHistory(Map<String, String> map) throws Exception;
 }

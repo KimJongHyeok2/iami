@@ -9,20 +9,94 @@
 <title>IAMI</title>
 <jsp:include page="/resources/common/common.jsp"/>
 <script type="text/javascript">
+var visitChart;
 $(document).ready(function() {
+	var header = "${_csrf.headerName}";
+	var token = "${_csrf.token}";
+	
 	resize();
+	
 	$(".user").click(function() {
 		$("#user-drop").toggle();
 	});
+	$.ajax({
+		url: "${pageContext.request.contextPath}/common/visitor",
+		type: "GET",
+		cache: false,
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data.status == "Ok") {
+					var visitCount = new Array();
+					var visitDate = new Array();
+					for(var i=0; i<data.count; i++) {
+						visitDate.push(data.list[i].vit_date);
+						visitCount.push(data.list[i].vit_count);
+					}
+					visitChart = c3.generate({
+						bindto: "#chart",
+						data: {
+							json: {
+								date: visitDate,
+								data1: visitCount,
+								data2: visitCount
+							},
+							x: "date",
+							names: {
+								data1: "방문자(Bar)",
+								data2: "방문자(Line)"
+							},
+							types: {
+								data1: "bar",
+								data2: "line"
+							},
+						},
+						grid: {
+							x: {
+								show: true
+							},
+							y: {
+								show: true
+							}
+						},
+						axis: {
+							x: {
+								tick: {
+									format: function (x) {
+										var dates = new Date(x);
+										var year = dates.getFullYear();
+										var month = dates.getMonth()+1;
+										month = (month + "").length == 1? ("0" + month):month;
+										var day = dates.getDate();
+										day = (day + "").length == 1? ("0" + day):day;
+										
+										return year + "-" + month + "-" + day;
+									}
+								}
+							}
+						},
+					});
+				}
+			}
+		}
+	});
 });
-$(window).resize(resize);
+$(window).resize(function() {
+	resize();
+	visitChart.resize({
+		width: $(".chart").width()
+	});
+});
 function resize() {
 	$htmlHeight = $("html").height();
 	$headerHeight = $(".headerWrapper").height();
 	$navHeight = $(".navWrapper").height();
+	$chartHeight = $(".chartWrapper").height();
 	$footerHeight = $(".footerWrapper").height();
 	
-	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 61 + "px");
+	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $chartHeight - $footerHeight - 71 + "px");
 }
 function userList(type) {
 	if(type == "write") {
@@ -39,6 +113,22 @@ function list(type) {
 	$form.append("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
 	$form.appendTo("body");
 	$form.submit();
+}
+function dateFormat(date) {
+	var dates = new Date(date);
+	var year = dates.getFullYear();
+	var month = dates.getMonth()+1;
+	month = (month + "").length == 1? ("0" + month):month;
+	var day = dates.getDate();
+	day = (day + "").length == 1? ("0" + day):day;
+	
+	return year + "-" + month + "-" + day;
+}
+function openChart() {
+	visitChart.resize({
+		width: $(".chart").width()
+	});
+	$(".chart").toggle();
 }
 </script>
 <style type="text/css">
@@ -164,6 +254,35 @@ function list(type) {
 	margin: auto;
 	padding: 0;
 }
+.chartWrapper {
+	margin-bottom: 10px;
+}
+.chartWrapper .chartInner {
+	position: relative;
+	max-width: 1200px;
+	margin: auto;
+	padding: 0 10px;
+}
+.chartWrapper .chartInner .chart-box {
+	text-align: center;
+}
+.chartWrapper .chartInner .chart-box .chart {
+	display: none;
+	position: absolute;
+	width: 100%;
+	max-width: 500px;
+	top: -340px;
+	left: 50%;
+	transform: translatex(-50%);
+	padding: 5px;
+	background-color: white;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+}
+.chartWrapper .chartInner .chart-box .chart-btn {
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	background-color: rgba(17, 135, 207, 0.4);
+	color: white;
+}
 @media (max-width:399px) {
 	.account {
 		display: none;
@@ -267,6 +386,21 @@ function list(type) {
 		</c:choose>
 	</div>
 </div>
+<c:if test="${type == 'new' || type == 'popular'}">
+	<div class="chartWrapper">
+		<div class="chartInner">
+			<div class="chart-box">
+				<div class="chart">
+					<div id="chart"></div>
+				</div>
+				<button class="w3-button chart-btn" onclick="openChart();">
+					<div><i class="fas fa-chevron-up"></i></div>
+					<div>방문자 통계</div>
+				</button>
+			</div>
+		</div>
+	</div>
+</c:if>
 <jsp:include page="/resources/include/footer/footer.jsp"/>
 </body>
 </html>

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -301,4 +302,36 @@ public class RestPortfolioController {
 		return "Fail";
 	}
 	
+	// 포트폴리오 추천
+	@PostMapping("/recommend")
+	public String recommend(@RequestParam(value = "mem_no", defaultValue = "0") int mem_no,
+			@RequestParam(value = "pot_no", defaultValue = "0") int pot_no,
+			HttpServletRequest request) {
+		
+		if(pot_no != 0) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("mem_no", String.valueOf(mem_no));
+			map.put("ip", request.getRemoteAddr());
+			map.put("pot_no", String.valueOf(pot_no));
+			
+			try {
+				int count = portfolioService.isAlreadyRecommend(map);
+					
+				if(count == 0) {
+					int count2 = portfolioService.insertRecommendHistory(map);
+					count2 += portfolioService.updatePortfolioRecommend(pot_no);
+					if(count2 == 2) {
+						return "Ok";
+					}
+				} else {
+					return "Already";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+		}
+		
+		return "Fail";
+	}
 }

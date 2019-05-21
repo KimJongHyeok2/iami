@@ -51,4 +51,13 @@
 	<select id="selectCommentCount" resultType="Integer">
 		SELECT count(com_no) FROM comments WHERE pot_no = #{param1} AND com_status = 1
 	</select>
+	<select id="isAlreadyRecommend" resultType="Integer">
+		SELECT count(*) FROM (SELECT * FROM recommendHistory WHERE pot_no = #{pot_no}) WHERE mem_no = #{mem_no} AND rec_ip = #{ip}
+	</select>
+	<update id="updatePortfolioRecommend">
+		UPDATE portfolio SET pot_recommend = pot_recommend + 1 WHERE pot_no = #{param1}
+	</update>
+	<insert id="insertRecommendHistory">
+		INSERT INTO recommendHistory VALUES(rec_seq.nextval, #{pot_no}, #{mem_no}, #{ip})
+	</insert>
 </mapper>

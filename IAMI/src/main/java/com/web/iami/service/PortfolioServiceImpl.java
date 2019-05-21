@@ -83,4 +83,19 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return dao.selectCommentCount(pot_no);
 	}
 
+	@Override
+	public int isAlreadyRecommend(Map<String, String> map) throws Exception {
+		return dao.isAlreadyRecommend(map);
+	}
+
+	@Override
+	public int updatePortfolioRecommend(int pot_no) throws Exception {
+		return dao.updatePortfolioRecommend(pot_no);
+	}
+
+	@Override
+	public int insertRecommendHistory(Map<String, String> map) throws Exception {
+		return dao.insertRecommendHistory(map);
+	}
+
 }

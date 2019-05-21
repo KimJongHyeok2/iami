@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="common">
+	<insert id="insertVisitDate">
+		INSERT INTO visitor(vit_no) VALUES(vit_seq.nextval)
+	</insert>
+	<select id="checkAlreadyVisitDate" resultType="Integer">
+		SELECT count(*) FROM visitor WHERE vit_date = #{param1}
+	</select>
+	<update id="updateVisitCount">
+		UPDATE visitor SET vit_count = vit_count + 1 WHERE vit_date = #{param1}
+	</update>
+	<select id="selectWeekVisitCount" resultType="com.web.iami.domain.VisitDTO">
+		SELECT * FROM visitor WHERE vit_date BETWEEN #{startDay} AND #{endDay}
+	</select>
+</mapper>

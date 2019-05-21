@@ -75,6 +75,19 @@
 			</beans:props>
 		</beans:property>
 	</beans:bean>
+	
+	<beans:bean name="visitorIntercepter" class="com.web.iami.intercepter.VisitorIntercepter"/>
+	
+	<!-- Intercepter -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/"/>
+			<mapping path="/portfolio/view/*"/>
+			<mapping path="/login"/>
+			<mapping path="/register"/>
+			<beans:ref bean="visitorIntercepter"/>
+		</interceptor>
+	</interceptors>
 
 	<!-- AOP -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
