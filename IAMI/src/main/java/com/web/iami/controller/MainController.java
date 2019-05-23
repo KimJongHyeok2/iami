@@ -30,15 +30,19 @@ public class MainController {
 		
 		map.put("page", (page-1)*row+1);
 		map.put("row", row);
+
 		
-		if(type.equals("new")) {
-			try {
-				List<PortfolioDTO> list = portfolioService.selectNewPortfolio(map);
-				
-				model.addAttribute("list", list);
-			} catch (Exception e) {
-				e.printStackTrace();
+		try {
+			List<PortfolioDTO> list = null;
+			
+			if(type.equals("new")) {
+				list = portfolioService.selectNewPortfolio(map);					
+			} else if(type.equals("popular")) {
+				list = portfolioService.selectPopularPortfolio(map);
 			}
+			model.addAttribute("list", list);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		model.addAttribute("type", type);

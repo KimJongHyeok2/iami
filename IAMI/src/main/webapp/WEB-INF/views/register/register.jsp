@@ -262,6 +262,7 @@ function register() {
 			success: function(data, status) {
 				if(status == "success") {
 					if(data != "Fail") {
+						alert("가입되었습니다.");
 						location.href = "${pageContext.request.contextPath}/";
 					} else {
 						return false;
@@ -273,6 +274,7 @@ function register() {
 }
 </script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/register.css">
+<link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/image/main/icon.ico">
 </head>
 <body onload="birthSet();">
 <div class="container">

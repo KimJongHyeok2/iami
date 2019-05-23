@@ -1,0 +1,159 @@
+@charset "UTF-8";
+.infoWrapper {
+	display: flex;
+	align-items: center;
+}
+.infoWrapper input {
+	padding: 5px;
+}
+.infoWrapper .infoInner {
+	flex-grow: 1;
+	max-width: 1000px;
+	margin: auto;
+	text-align: center;
+}
+.infoWrapper .infoInner button {
+	width: 100px;
+	margin-top: 7.5px;
+	background-color: rgba(17, 135, 207, 0.4);
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	color: white;
+}
+.infoWrapper .infoInner .profile-box .profile {
+	padding: 15px;
+	height: 300px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+}
+.infoWrapper .infoInner .profile-box .profile label {
+	width: 100px;
+	margin-top: 7.5px;
+	background-color: rgba(17, 135, 207, 0.4);
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	color: white;
+}
+.infoWrapper .infoInner .profile-box .profile input[type="file"] {
+	display: none;
+}
+.infoWrapper .infoInner .profile-box .profile:hover {
+	border: 1px solid rgb(17, 135, 207);
+}
+.infoWrapper .infoInner .profile-box .profile .profile-member {
+	padding: 15px 0;
+	text-align: center;
+}
+.infoWrapper .infoInner .profile-box .profile .profile-member .img {
+	width: 100px;
+	height: 100px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	border-radius: 50%;
+}
+.infoWrapper .infoInner .profile-box .profile .profile-member .img-none {
+	width: 100px;
+	height: 100px;
+}
+.infoWrapper .infoInner .info-box .info {
+	padding: 15px;
+	min-height: 300px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+}
+.infoWrapper .infoInner .info-box .info:hover {
+	border: 1px solid rgb(17, 135, 207);
+}
+.infoWrapper .infoInner .info-box .info table {
+	width: 100%;
+	border-collapse: collapse;
+}
+.infoWrapper .infoInner .info-box .info table td {
+	padding: 5px;
+	border: 1px solid #D5D5D5;
+}
+.infoWrapper .infoInner .info-box .info table td #nickname .nickname-input {
+	width: 106px;
+	height: 35px;
+}
+.infoWrapper .infoInner .info-box .info table .head {
+	min-width: 90px;
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.infoWrapper .infoInner .info-box .info input {
+	border: 1px solid #D5D5D5;
+}
+.infoWrapper .infoInner .info-box .info table td button {
+	width: 50px;
+	padding: 2px;
+}
+.infoWrapper .infoInner .info-box .info .nickname-update-btn {
+	display: none;
+}
+.infoWrapper .infoInner .info-box .info .email-update-box {
+	display: none;
+	margin-top: 5px;
+	padding: 15px;
+	border: 1px solid #D5D5D5;
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.infoWrapper .infoInner .info-box .info .email-update-box input {
+	flex-grow: 1;
+	height: 35px;
+}
+.infoWrapper .infoInner .info-box .info .email-update-box .title {
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+.infoWrapper .infoInner .info-box .info .email-update-box .content {
+	display: flex;
+	justify-content: center;
+}
+.infoWrapper .infoInner .info-box .info .email-update-box .content .spinner-border {
+	color: white;
+}
+.infoWrapper .infoInner .info-box .info .email-update-box .access {
+	display: flex;
+	justify-content: center;
+	margin-top: 5px;
+}
+.infoWrapper .infoInner .info-box .info .email-update-box button {
+	max-width: 50px;
+	margin: 0;
+	padding: 0;
+}
+.infoWrapper .infoInner .password-box .password {
+	margin-top: 10px;
+	padding: 15px;
+	min-height: 300px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+}
+.infoWrapper .infoInner .password-box .password .password-input.now {
+	margin-bottom: 5px;
+}
+.infoWrapper .infoInner .password-box .password .password-input input {
+	width: 100%;
+	height: 35px;
+	border: 1px solid #D5D5D5;
+}
+.infoWrapper .infoInner .password-box .password .password-input.new input {
+	border-bottom: none;
+}
+.infoWrapper .infoInner .password-box .password .password-input button {
+	width: 100%;
+}
+.infoWrapper .infoInner .password-box .password:hover {
+	border: 1px solid rgb(17, 135, 207);
+}
+.infoWrapper .infoInner .profile-box, .info-box, .password-box {
+	padding: 0 10px;
+}
+@media (max-width:767px) {
+	.infoWrapper .infoInner {
+		margin-top: 10px !important;
+		margin-bottom: 10px !important;
+	}
+	.info-box .info {
+		margin-top: 10px;
+	}
+}
+@media (min-width:768px) {
+	.infoWrapper .infoInner .info-box {
+		padding-left: 0;
+	}
+}

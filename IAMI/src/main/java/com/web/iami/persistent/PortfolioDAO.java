@@ -24,4 +24,8 @@ public interface PortfolioDAO {
 	public int isAlreadyRecommend(Map<String, String> map) throws Exception;
 	public int updatePortfolioRecommend(int pot_no) throws Exception;
 	public int insertRecommendHistory(Map<String, String> map) throws Exception;
+	public List<PortfolioDTO> selectPopularPortfolio(Map<String, Integer> map) throws Exception;
+	public List<PortfolioDTO> selectMemberPortfolio(int mem_no) throws Exception;
+	public int updatePortfolio(PortfolioDTO dto) throws Exception;
+	public int deletePortfolio(int pot_no) throws Exception;
 }

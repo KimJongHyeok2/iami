@@ -1,0 +1,99 @@
+@charset "UTF-8";
+html, body {
+	background-color: #f4f5f7;
+}
+.loginInner {
+	max-width: 500px;
+	margin: auto;
+}
+.loginInner .logo {
+	text-align: center;
+}
+.loginInner .form {
+}
+.loginInner .form input {
+	width: 100%;
+	height: 50px;
+	padding: 5px;
+}
+.loginInner .form .input-id {
+	border: 1px solid #D5D5D5;
+	border-bottom: none;
+}
+.loginInner .form .input-pw {
+	border: 1px solid #D5D5D5;
+}
+.loginInner .form .btn-login {
+	width: 100%;
+	height: 50px;
+	background-color: #1187CF;
+	color: white;
+}
+.loginInner .form .check-valid {
+	margin-top: 5px;
+	color: #CC3D3D;
+}
+.loginInner .func-box {
+	margin-top: 10px;
+	text-align: center;
+}
+.loginInner .func-box span {
+	font-size: 10pt;
+	color: gray;
+	cursor: pointer;
+}
+.loginInner .social-box {
+	margin-top: 20px;
+	text-align: center;
+	font-size: 13pt;
+}
+.loginInner .social-box div {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	border-radius: 50px;
+	padding: 0 !important;
+	cursor: pointer;
+}
+.loginInner .social-box .naver {
+	font-weight: bold;
+	background-color: #03cf5d;
+	color: white;
+}
+.loginInner .social-box .kakao {
+	font-weight: bold;
+	background-color: #f9df33;
+	color: white;
+}
+.loginInner .social-box .facebook {
+	font-weight: bold;
+	background-color: #3b5998;
+	color: white;
+}
+.loginInner .social-box .google {
+	font-weight: bold;
+	background-color: #F15F5F;
+	color: white;
+}
+.loginInner .register-box {
+	margin-top: 20px;
+}
+.loginInner .register-box .comment {
+	text-align: center;
+	font-size: 10pt;
+	color: gray;
+}
+.loginInner .register-box button {
+	width: 100%;
+	height: 50px;
+	margin-top: 5px;
+	background-color: #1187CF;
+	color: white;
+}
+@media (max-width: 600px) {
+	.logo img {
+		width: 220px;
+		height: 150px;
+	}
+}

@@ -97,5 +97,25 @@ public class PortfolioDAOImpl implements PortfolioDAO {
 	public int insertRecommendHistory(Map<String, String> map) throws Exception {
 		return sqlSession.insert("portfolio.insertRecommendHistory", map);
 	}
+
+	@Override
+	public List<PortfolioDTO> selectPopularPortfolio(Map<String, Integer> map) throws Exception {
+		return sqlSession.selectList("portfolio.selectPopularPortfolio", map);
+	}
+
+	@Override
+	public List<PortfolioDTO> selectMemberPortfolio(int mem_no) throws Exception {
+		return sqlSession.selectList("portfolio.selectMemberPortfolio", mem_no);
+	}
+
+	@Override
+	public int updatePortfolio(PortfolioDTO dto) throws Exception {
+		return sqlSession.update("portfolio.updatePortfolio", dto);
+	}
+
+	@Override
+	public int deletePortfolio(int pot_no) throws Exception {
+		return sqlSession.update("portfolio.deletePortfolio", pot_no);
+	}
 	
 }

@@ -79,40 +79,7 @@ function deleteComment() {
 	}
 }
 </script>
-<style type="text/css">
-.container-fluid {
-	position: relative;
-	height: 100%;
-}
-.container-fluid .container-inner {
-	position: absolute;
-	min-width: 200px;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-}
-.container-fluid .container-inner .row {
-	margin: 0;
-}
-.container-fluid .container-inner .row input {
-	width: 100%;
-	height: 35px;
-}
-.container-fluid .container-inner .row .delete {
-	width: 100%;
-	margin-top: 5px;
-	border: 1px solid rgba(17, 135, 207, 0.4);
-	background-color: rgba(17, 135, 207, 0.4);
-	color: white;
-}
-.container-fluid .container-inner .row .cancle {
-	width: 100%;
-	margin-top: 5px;
-	border: 1px solid rgba(204, 61, 61, 0.4);
-	background-color: rgba(204, 61, 61, 0.4);
-	color: white;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/delete.css">
 </head>
 <body>
 <div class="container-fluid">

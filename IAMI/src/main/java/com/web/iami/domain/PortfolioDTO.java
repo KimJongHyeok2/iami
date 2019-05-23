@@ -28,12 +28,15 @@ public class PortfolioDTO {
 	// 해당 포트폴리오 댓글/추천 수
 	private int commentCount;
 	
-	public PortfolioDTO() { }
+	// 추천 순
+	private int rnum;
 	
+	public PortfolioDTO() { }
+
 	public PortfolioDTO(int pot_no, int mem_no, String pot_subject, String pot_description, String pot_summary,
 			String pot_startdate, String pot_enddate, String pot_environment, String pot_thumbnail, String pot_video,
 			String pot_source, int pot_recommend, int pot_status, Timestamp pot_regdate, String mem_nickname,
-			String mem_id, String mem_profile, String mem_email, int commentCount) {
+			String mem_id, String mem_profile, String mem_email, int commentCount, int rnum) {
 		this.pot_no = pot_no;
 		this.mem_no = mem_no;
 		this.pot_subject = pot_subject;
@@ -53,6 +56,7 @@ public class PortfolioDTO {
 		this.mem_profile = mem_profile;
 		this.mem_email = mem_email;
 		this.commentCount = commentCount;
+		this.rnum = rnum;
 	}
 
 	public int getPot_no() {
@@ -205,6 +209,25 @@ public class PortfolioDTO {
 
 	public void setCommentCount(int commentCount) {
 		this.commentCount = commentCount;
+	}
+
+	public int getRnum() {
+		return rnum;
+	}
+
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
+
+	@Override
+	public String toString() {
+		return "PortfolioDTO [pot_no=" + pot_no + ", mem_no=" + mem_no + ", pot_subject=" + pot_subject
+				+ ", pot_description=" + pot_description + ", pot_summary=" + pot_summary + ", pot_startdate="
+				+ pot_startdate + ", pot_enddate=" + pot_enddate + ", pot_environment=" + pot_environment
+				+ ", pot_thumbnail=" + pot_thumbnail + ", pot_video=" + pot_video + ", pot_source=" + pot_source
+				+ ", pot_recommend=" + pot_recommend + ", pot_status=" + pot_status + ", pot_regdate=" + pot_regdate
+				+ ", mem_nickname=" + mem_nickname + ", mem_id=" + mem_id + ", mem_profile=" + mem_profile
+				+ ", mem_email=" + mem_email + ", commentCount=" + commentCount + ", rnum=" + rnum + "]";
 	}
 	
 }

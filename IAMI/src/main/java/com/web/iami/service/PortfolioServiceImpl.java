@@ -98,4 +98,24 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return dao.insertRecommendHistory(map);
 	}
 
+	@Override
+	public List<PortfolioDTO> selectPopularPortfolio(Map<String, Integer> map) throws Exception {
+		return dao.selectPopularPortfolio(map);
+	}
+
+	@Override
+	public List<PortfolioDTO> selectMemberPortfolio(int mem_no) throws Exception {
+		return dao.selectMemberPortfolio(mem_no);
+	}
+
+	@Override
+	public int updatePortfolio(PortfolioDTO dto) throws Exception {
+		return dao.updatePortfolio(dto);
+	}
+
+	@Override
+	public int deletePortfolio(int pot_no) throws Exception {
+		return dao.deletePortfolio(pot_no);
+	}
+
 }

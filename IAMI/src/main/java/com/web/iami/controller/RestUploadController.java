@@ -26,6 +26,7 @@ public class RestUploadController {
 	@Inject
 	private MemberService memberService;
 	
+	// 포트폴리오 섬네일 업로드
 	@PostMapping("/thumbnail")
 	public ImageDTO thumbnail(HttpServletRequest request) {
 		
@@ -61,6 +62,7 @@ public class RestUploadController {
 		return dto;
 	}
 	
+	// 회원 프로필 사진 업로드
 	@PostMapping("/profile")
 	public ImageDTO profile(HttpServletRequest request) {
 		

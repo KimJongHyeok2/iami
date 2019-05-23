@@ -1,23 +1,28 @@
 package com.web.iami.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.iami.domain.CommentDTO;
+import com.web.iami.domain.MemberDTO;
 import com.web.iami.domain.PortfolioDTO;
 import com.web.iami.domain.ReCommentDTO;
 import com.web.iami.domain.RestCommentDTO;
+import com.web.iami.domain.RestPortfolio;
 import com.web.iami.domain.RestReCommentDTO;
+import com.web.iami.service.MemberService;
 import com.web.iami.service.PortfolioService;
 import com.web.iami.util.CommentValidator;
 import com.web.iami.util.PortfolioValidator;
@@ -29,6 +34,8 @@ public class RestPortfolioController {
 
 	@Inject
 	private PortfolioService portfolioService;
+	@Inject
+	private MemberService memberService;
 	
 	// 포트폴리오 업로드
 	@PostMapping("/writeOk")
@@ -334,4 +341,84 @@ public class RestPortfolioController {
 		
 		return "Fail";
 	}
+	
+	// 선택 회원 포트폴리오 목록
+	@PostMapping("/list")
+	public RestPortfolio list(@RequestParam(value = "mem_no", defaultValue = "0") int mem_no) {
+		
+		RestPortfolio dto = new RestPortfolio();
+		
+		if(mem_no != 0) {			
+			try {
+				dto.setList(portfolioService.selectMemberPortfolio(mem_no));
+				
+				if(dto.getList() != null) {
+					dto.setCount(dto.getList().size());
+					dto.setStatus("Ok");
+				}
+
+				MemberDTO dto2 = memberService.selectMemberInfo(mem_no);
+				
+				if(dto2 == null) {
+					dto.setStatus("Fail");
+				} else {
+					dto.setMem_no(dto2.getMem_no());
+					dto.setMem_nickname(dto2.getMem_nickname());
+					dto.setMem_id(dto2.getMem_id());
+					dto.setMem_profile(dto2.getMem_profile());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return dto;
+	}
+	
+	// 포트폴리오 수정
+	@PostMapping("/updateOk")
+	public String updateOk(PortfolioDTO dto, BindingResult result) {
+		
+		PortfolioValidator validation = new PortfolioValidator();
+		if(validation.supports(dto.getClass())) {
+			
+			validation.validate(dto, result);
+
+			if(result.hasErrors()) {
+				return "Fail";
+			} else {
+				try {
+					int count = portfolioService.updatePortfolio(dto);
+					
+					if(count == 1) {
+						return "Ok";
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return "Fail";
+	}
+	
+	// 포트폴리오 삭제
+	@PostMapping("/deleteOk")
+	public String deleteOk(@RequestParam(value = "pot_no", defaultValue = "0") int pot_no) {
+		
+		if(pot_no != 0) {
+			try {
+				int count = portfolioService.deletePortfolio(pot_no);
+				
+				if(count == 1) {
+					return "Ok";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return "Fail";
+	}
+	
 }

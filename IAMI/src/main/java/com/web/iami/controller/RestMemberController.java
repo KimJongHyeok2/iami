@@ -33,6 +33,7 @@ public class RestMemberController {
 	@Value("${email.username}")
 	private String fromEmail;
 	
+	// 회원 닉네임 수정
 	@PostMapping("/myinfo/update/nickname")
 	public String updateNickname(@RequestParam(value = "mem_no", defaultValue = "0") int mem_no,
 			String mem_nickname,
@@ -59,6 +60,7 @@ public class RestMemberController {
 		return "Fail";
 	}
 	
+	// 회원 이메일 수정(인증키 요청)
 	@PostMapping("/myinfo/update/emailAccess")
 	public String updateEmail(String mem_email) {
 		
@@ -99,6 +101,7 @@ public class RestMemberController {
 		return "Fail";
 	}
 	
+	// 회원 이메일 수정(인증키 확인)
 	@PostMapping("/myinfo/update/emailAccessOk")
 	public String updateEmailOk(@RequestParam(value = "mem_no", defaultValue = "0") int mem_no,
 			String mem_email, EmailAccessDTO dto, BindingResult result,
@@ -137,12 +140,12 @@ public class RestMemberController {
 		return "Fail";
 	}
 	
+	// 회원 비밀번호 변경
 	@PostMapping("/myinfo/update/password")
 	public String updatePassword(@RequestParam(value = "mem_no", defaultValue = "0") int mem_no,
 			String password_now, String password_new) {
 		
 		if(mem_no == 0 || password_now == null || password_now.length() == 0 || password_new == null || password_new.length() == 0) {
-			System.out.println("여기옴?");
 			return "Fail";
 		} else {
 			PasswordEncoding encode = new PasswordEncoding();
@@ -171,7 +174,6 @@ public class RestMemberController {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("여기인가");
 		return "Fail";
 	}
 	

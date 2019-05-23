@@ -618,11 +618,12 @@ function writeOk() {
 		var token = "${_csrf.token}";
 		
 		$.ajax({
-			url: "${pageContext.request.contextPath}/portfolio/writeOk",
+			url: "${pageContext.request.contextPath}/portfolio/updateOk",
 			type: "POST",
 			cache: false,
 			data: {
-				"mem_no" : ${empty sessionScope.mem_no? 0:sessionScope.mem_no},
+				"pot_no" : "${portfolio.pot_no}",
+				"mem_no" : "${empty sessionScope.mem_no? 0:sessionScope.mem_no}",
 				"pot_subject" : $subject,
 				"pot_description" : $description,
 				"pot_summary" : $summary,
@@ -639,7 +640,7 @@ function writeOk() {
 			success: function(data, status) {
 				if(status == "success") {
 					if(data != "Fail") {
-						alert("업로드되었습니다.");
+						alert("수정되었습니다.");
 						location.href = "${pageContext.request.contextPath}/";
 					} else {
 						alert("알 수 없는 오류입니다.");
@@ -650,7 +651,6 @@ function writeOk() {
 	}
 }
 </script>
-<link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/image/main/icon.ico">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/write.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -685,7 +685,7 @@ function writeOk() {
 							<h6>제목</h6>
 						</div>
 						<div class="subject-input">
-							<input id="pot_subject" name="pot_subject" type="text" placeholder="5자 이상 20자 이하"/>
+							<input id="pot_subject" name="pot_subject" type="text" value="${portfolio.pot_subject}" placeholder="5자 이상 20자 이하"/>
 						</div>
 					</div>
 					<div class="description">
@@ -693,7 +693,7 @@ function writeOk() {
 							<h6>설명</h6>
 						</div>
 						<div class="description-input">
-							<textarea id="pot_description" name="pot_description" placeholder="5자 이상 30자 이하"></textarea>
+							<textarea id="pot_description" name="pot_description" placeholder="5자 이상 30자 이하">${portfolio.pot_description}</textarea>
 						</div>
 					</div>
 				</div>
@@ -706,7 +706,7 @@ function writeOk() {
 							<h6>주요기능</h6>
 						</div>
 						<div class="summary-input">
-							<textarea id="pot_summary" name="pot_summary" placeholder="5자 이상 150자 이하"></textarea>
+							<textarea id="pot_summary" name="pot_summary" placeholder="5자 이상 150자 이하">${portfolio.pot_summary}</textarea>
 						</div>
 					</div>
 					<div class="date">
@@ -716,7 +716,7 @@ function writeOk() {
 						<div class="date-input">
 							<div class="container">
 								<div class="row">
-									<input type="text" id="pot_startDate" name="pot_startDate" class="dateSelector start col-sm-6" placeholder="시작일"/><input type="text" id="pot_endDate" name="pot_endDate" class="dateSelector end col-sm-6" placeholder="종료일"/>
+									<input type="text" id="pot_startDate" name="pot_startDate" class="dateSelector start col-sm-6" value="${portfolio.pot_startdate}" placeholder="시작일"/><input type="text" id="pot_endDate" name="pot_endDate" class="dateSelector end col-sm-6" value="${portfolio.pot_enddate}" placeholder="종료일"/>
 								</div>
 							</div>
 						</div>
@@ -727,102 +727,7 @@ function writeOk() {
 						<h5>주요환경을 선택해주세요.</h5>
 					</div>
 					<div id="pot_environment" class="environment">
-						<div class="environment-title">
-							<div>배포환경</div><div class="btn-add" onclick="openModal('war');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="war_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>개발환경</div><div class="btn-add" onclick="openModal('dev');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="dev_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>실행환경</div><div class="btn-add" onclick="openModal('run');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="run_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>언어</div><div class="btn-add" onclick="openModal('lan');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="lan_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>라이브러리</div><div class="btn-add" onclick="openModal('lib');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="lib_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>프레임워크</div><div class="btn-add" onclick="openModal('fra');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="fra_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>데이터베이스</div><div class="btn-add" onclick="openModal('dba');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="dba_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>사용기술 / API</div><div class="btn-add" onclick="openModal('api');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="api_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.(선택)
-									</div>
-								</div>
-							</div>
-						</div>
+						${portfolio.pot_environment}
 					</div>
 				</div>
 				<div id="four" class="content">
@@ -843,7 +748,7 @@ function writeOk() {
 							<h6>동영상</h6>
 						</div>
 						<div class="environment-input">
-							<textarea id="media"></textarea>
+							<textarea id="media">${portfolio.pot_video}</textarea>
 						</div>
 					</div>
 				</div>
@@ -852,30 +757,7 @@ function writeOk() {
 						<h5>Demo와 GitHub URL을 추가해주세요.</h5>
 					</div>
 					<div id="pot_source" class="environment">
-						<div class="environment-title">
-							<div>Demo</div><div class="btn-add" onclick="openModal('dem');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="dem_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="environment-title margin-title">
-							<div>GitHub</div><div class="btn-add" onclick="openModal('git');"><i class="fas fa-plus"></i></div>
-						</div>
-						<div id="git_environment" class="environment-input">
-							<div class="container">
-								<div class="row">
-									<div class="empty col-12">
-										등록이 필요합니다.
-									</div>
-								</div>
-							</div>
-						</div>
+						${portfolio.pot_source}
 					</div>
 				</div>
 			</div>

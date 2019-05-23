@@ -5,12 +5,12 @@
 		INSERT INTO visitor(vit_no) VALUES(vit_seq.nextval)
 	</insert>
 	<select id="checkAlreadyVisitDate" resultType="Integer">
-		SELECT count(*) FROM visitor WHERE vit_date = #{param1}
+		SELECT count(*) FROM visitor WHERE vit_date = TO_DATE(#{param1}, 'YYYY-MM-DD')
 	</select>
 	<update id="updateVisitCount">
-		UPDATE visitor SET vit_count = vit_count + 1 WHERE vit_date = #{param1}
+		UPDATE visitor SET vit_count = vit_count + 1 WHERE vit_date = TO_DATE(#{param1}, 'YYYY-MM-DD')
 	</update>
 	<select id="selectWeekVisitCount" resultType="com.web.iami.domain.VisitDTO">
-		SELECT * FROM visitor WHERE vit_date BETWEEN #{startDay} AND #{endDay}
+		SELECT * FROM visitor WHERE vit_date BETWEEN TO_DATE(#{startDay}, 'YYYY-MM-DD') AND TO_DATE(#{endDay}, 'YYYY-MM-DD')
 	</select>
 </mapper>

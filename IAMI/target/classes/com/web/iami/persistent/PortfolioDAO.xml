@@ -60,4 +60,25 @@
 	<insert id="insertRecommendHistory">
 		INSERT INTO recommendHistory VALUES(rec_seq.nextval, #{pot_no}, #{mem_no}, #{ip})
 	</insert>
+	<select id="selectPopularPortfolio" resultType="com.web.iami.domain.PortfolioDTO">
+		<![CDATA[
+			SELECT * FROM
+				(SELECT rownum rnum, p.*, ((SELECT count(com_no) FROM comments WHERE pot_no = p.pot_no AND com_status = 1) + (SELECT count(rcom_no) FROM recomments WHERE pot_no = p.pot_no AND rcom_status = 1)) commentCount FROM (SELECT * FROM portfolio WHERE pot_status = 1 ORDER BY pot_recommend DESC) p)
+			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+		]]>
+	</select>
+	<select id="selectMemberPortfolio" resultType="com.web.iami.domain.PortfolioDTO">
+		SELECT * FROM portfolio WHERE mem_no = #{param1} AND pot_status = 1 ORDER BY pot_no DESC
+	</select>
+	<update id="updatePortfolio">
+		UPDATE portfolio
+			SET pot_subject = #{pot_subject}, pot_description = #{pot_description},
+			pot_summary = #{pot_summary}, pot_startdate = #{pot_startdate}, pot_enddate = #{pot_enddate},
+			pot_environment = #{pot_environment}, pot_thumbnail = #{pot_thumbnail}, pot_video = #{pot_video},
+			pot_source = #{pot_source}
+		WHERE pot_no = #{pot_no}
+	</update>
+	<update id="deletePortfolio">
+		UPDATE portfolio SET pot_status = 0 WHERE pot_no = #{param1} 
+	</update>
 </mapper>

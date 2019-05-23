@@ -10,6 +10,7 @@
 <jsp:include page="/resources/common/common.jsp"/>
 <script type="text/javascript">
 var visitChart;
+var rotate = 180;
 $(document).ready(function() {
 	var header = "${_csrf.headerName}";
 	var token = "${_csrf.token}";
@@ -64,7 +65,7 @@ $(document).ready(function() {
 						axis: {
 							x: {
 								tick: {
-									format: function (x) {
+									format: function(x) {
 										var dates = new Date(x);
 										var year = dates.getFullYear();
 										var month = dates.getMonth()+1;
@@ -103,6 +104,14 @@ function userList(type) {
 		location.href = "${pageContext.request.contextPath}/portfolio/write";
 	} else if(type == "myinfo") {
 		location.href = "${pageContext.request.contextPath}/member/myinfo";
+	} else if(type == "list") {
+		var no = "${empty sessionScope.mem_no? 0:sessionScope.mem_no}";
+		if(no == 0) {
+			alert("로그인이 필요합니다.");
+			return false;
+		} else {			
+			portfolioList(no);
+		}
 	}
 }
 function list(type) {
@@ -129,169 +138,139 @@ function openChart() {
 		width: $(".chart").width()
 	});
 	$(".chart").toggle();
+	$("#chevron-up").css("transform", "rotate(" + rotate + "deg)");
+	rotate += 180;
+}
+function portfolioList(no) {
+	var header = "${_csrf.headerName}";
+	var token = "${_csrf.token}";
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/portfolio/list",
+		type: "POST",
+		data: {
+			"mem_no" : no
+		},
+		cache: false,
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		complete: function(data) {
+			$("#portfolio-list").toggle();
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data.status == "Ok") {
+					if(data.mem_profile != null) {						
+						$("#portfolio-profile").attr("src", "${pageContext.request.contextPath}/resources/upload/" + data.mem_profile + "");
+					} else {
+						$("#portfolio-profile").attr("src", "${pageContext.request.contextPath}/resources/image/main/user.png");
+					}
+					$("#portfolio-nickname").html(data.mem_nickname);
+					var tempHTML = "";
+					if(data.count > 0) {
+						for(var i=0; i<data.count; i++) {
+							tempHTML += "<li class='list'>";
+								tempHTML += "<div class='container'>";							
+									tempHTML += "<div class='row " + (i==data.count-1? "last":"") + "'>";
+										tempHTML += "<div class='thumbnail-box'>";
+											tempHTML += "<img class='thumbnail' src='${pageContext.request.contextPath}/resources/upload/" + data.list[i].pot_thumbnail  + "'/>";
+										tempHTML += "</div>";
+										tempHTML += "<div class='content-box'>";
+											tempHTML += "<div class='title'>";
+												tempHTML += "<h5>" + data.list[i].pot_subject + "</h5>";
+											tempHTML += "</div>";
+											tempHTML += "<div class='regdate'>";
+												tempHTML += portfolioDateFormat(data.list[i].pot_regdate);
+											tempHTML += "</div>";
+											tempHTML += "<div class='functions'>";
+												tempHTML += "<button class='w3-button view' onclick='view(" + data.list[i].pot_no + ")'>보기</button>";
+												if(${not empty sessionScope.mem_no}) {
+													if("${empty sessionScope.mem_no? 0:sessionScope.mem_no}" == data.list[i].mem_no) {
+														tempHTML += "<button class='w3-button update' onclick='update(" + data.list[i].pot_no + ");'>수정</button>";
+														tempHTML += "<button class='w3-button delete' onclick='deletes(" + data.list[i].pot_no + ", " + data.mem_no + ");'>삭제</button>";	
+													}
+												}
+											tempHTML += "</div>";
+										tempHTML += "</div>";
+									tempHTML += "</div>";
+								tempHTML += "</div>";
+							tempHTML += "</li>";
+						}
+					} else {
+						tempHTML += "<li class='list'>";
+							tempHTML += "<div class='container'>";
+								tempHTML += "<div class='row last empty'>";
+									tempHTML += "<div class='empty'>등록된 포트폴리오가 없습니다.</div>";
+								tempHTML += "</div>";
+							tempHTML += "</div>";
+						tempHTML += "</li>";
+					}
+					$("#portfolio").html(tempHTML);
+				}
+			}
+		}
+	});
+}
+function view(no) {
+	location.href = "${pageContext.request.contextPath}/portfolio/view/" + no;
+}
+function update(no) {
+	location.href = "${pageContext.request.contextPath}/portfolio/view/" + no;
+	var $form = $("<form>/<form>");
+	$form.attr("action", "${pageContext.request.contextPath}/portfolio/update");
+	$form.attr("method", "post");
+	$form.append("<input type='hidden' id='no' name='no' value='" + no + "'/>");
+	$form.append('<s:csrfInput/>');
+	$form.appendTo("body");
+	$form.submit();
+}
+function deletes(pot_no, mem_no) {
+	var confirms = confirm("정말로 삭제하시겠습니까?");
+	var header = "${_csrf.headerName}";
+	var token = "${_csrf.token}";
+	
+	if(confirms) {
+		$.ajax({
+			url: "${pageContext.request.contextPath}/portfolio/deleteOk",
+			type: "POST",
+			data: {
+				"pot_no" : pot_no
+			},
+			cache: false,
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data == "Ok") {
+						portfolioList(mem_no);
+						$("#portfolio-list").toggle();
+					} else {
+						alert("알 수 없는 오류입니다.");
+					}
+				}
+			}
+		});	
+	}
+}
+function portfolioDateFormat(date) {
+	var dates = new Date(date);
+	year = dates.getFullYear();
+	month = dates.getMonth()+1;
+	month = (month + "").length == 1? ("0" + month):month;
+	day = dates.getDate();
+	day = (day + "").length == 1? ("0" + day):day;
+	var hour = dates.getHours();
+	hour = (hour + "").length == 1? ("0" + hour):hour;
+	var minute = dates.getMinutes();
+	minute = (minute + "").length == 1? ("0" + minute):minute;
+	
+	return year + "-" + month + "-" + day + " " + hour + ":" + minute;
 }
 </script>
-<style type="text/css">
-.headerWrapper {
-	border-bottom: 1px solid #D5D5D5;
-}
-.headerWrapper .headerInner {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	max-width: 1200px;
-	margin: auto;
-	padding: 0;
-}
-.headerWrapper .headerInner .user {
-	position: relative;
-	float: right;
-	margin-right: 5px;
-	cursor: pointer;
-}
-.headerWrapper .headerInner .user .profile-img {
-	width: 35px;
-	height: 35px;
-	border-radius: 50%;
-	border: 1px solid rgba(17, 135, 207, 0.4);
-}
-.headerWrapper .headerInner .user .profile-img-none {
-	width: 35px;
-	height: 35px;
-}
-.headerWrapper .headerInner .account {
-	float: right;
-	margin-right: 5px;
-}
-.headerWrapper .headerInner .account-399 {
-	position: relative;
-	display: none;
-	margin-right: 5px;
-}
-.headerWrapper .headerInner .account button {
-	border-color: rgba(17, 135, 207, 0.4) !important;
-	color: rgba(17, 135, 207, 0.8) !important;
-}
-.headerWrapper .headerInner .account-399 button {
-	border-color: rgba(17, 135, 207, 0.4) !important;
-	color: rgba(17, 135, 207, 0.8) !important;
-}
-.headerWrapper .headerInner .user img {
-	width: 100%;
-	height: 100%;
-}
-.headerWrapper .headerInner .user ul {
-	display: none;
-	position: absolute;
-	top: 40px;
-	left: -225px;
-	width: 250px;
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	background-color: white;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-	z-index: 1;
-	cursor: default;
-}
-.headerWrapper .headerInner .user ul li {
-	padding: 10px;
-}
-.headerWrapper .headerInner .user ul li .user-info {
-	display: flex;
-	align-items: center;
-}
-.headerWrapper .headerInner .user ul li .user-info .profile {
-	width: 50px;
-	height: 50px;
-	margin-right: 10px;
-}
-.headerWrapper .headerInner .user ul li .user-info .profile .profile-img {
-	width: 100%;
-	height: 100%;
-	border: 1px solid rgba(17, 135, 207, 0.4);
-	border-radius: 50%;
-}
-.headerWrapper .headerInner .user ul li .user-info .profile .profile-img-none {
-	width: 100%;
-	height: 100%;
-}
-.headerWrapper .headerInner .user ul li.user-list {
-	border-top: 1px solid #EAEAEA;
-	cursor: pointer;
-	/* color: rgba(17, 135, 207, 0.7); */
-	color: #747474;
-}
-.headerWrapper .headerInner .user ul li.user-list:hover {
-	background-color: #EAEAEA;
-}
-.navWrapper {
-	background-color: rgba(17, 135, 207, 0.4);
-}
-.navWrapper .navInner {
-	max-width: 1200px;
-	margin: auto;
-	color: white;
-}
-.navWrapper .navInner ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-}
-.navWrapper .navInner ul li {
-	display: inline-block;
-	padding: 10px;
-	cursor: pointer;
-}
-.navWrapper .navInner ul li span:hover {
-	border-bottom: 3px solid white;
-}
-.contentWrapper .container-fluid {
-	position: relative;
-	max-width: 1200px;
-	margin: auto;
-	padding: 0;
-}
-.chartWrapper {
-	margin-bottom: 10px;
-}
-.chartWrapper .chartInner {
-	position: relative;
-	max-width: 1200px;
-	margin: auto;
-	padding: 0 10px;
-}
-.chartWrapper .chartInner .chart-box {
-	text-align: center;
-}
-.chartWrapper .chartInner .chart-box .chart {
-	display: none;
-	position: absolute;
-	width: 100%;
-	max-width: 500px;
-	top: -340px;
-	left: 50%;
-	transform: translatex(-50%);
-	padding: 5px;
-	background-color: white;
-	border: 1px solid rgba(17, 135, 207, 0.4);
-}
-.chartWrapper .chartInner .chart-box .chart-btn {
-	border: 1px solid rgba(17, 135, 207, 0.4);
-	background-color: rgba(17, 135, 207, 0.4);
-	color: white;
-}
-@media (max-width:399px) {
-	.account {
-		display: none;
-	}
-	#account-399 {
-		display: block;
-	}
-}
-</style>
+<link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/image/main/icon.ico">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/main.css">
 </head>
 <body>
 <div class="headerWrapper">
@@ -346,7 +325,7 @@ function openChart() {
 					<li class="user-list" onclick="userList('write');">
 						<i class="fas fa-edit"></i> 포트폴리오 업로드
 					</li>
-					<li class="user-list">
+					<li class="user-list" onclick="userList('list');">
 						<i class="far fa-folder-open"></i> 내 포트폴리오
 					</li>
 					<li class="user-list" onclick="$('#logout').submit();">
@@ -390,17 +369,41 @@ function openChart() {
 	<div class="chartWrapper">
 		<div class="chartInner">
 			<div class="chart-box">
-				<div class="chart">
+				<div class="chart w3-animate-opacity">
+					<div>
+						<h3>주간 방문자 통계</h3>
+					</div>
 					<div id="chart"></div>
 				</div>
 				<button class="w3-button chart-btn" onclick="openChart();">
-					<div><i class="fas fa-chevron-up"></i></div>
+					<div><i id="chevron-up" class="fas fa-chevron-up"></i></div>
 					<div>방문자 통계</div>
 				</button>
 			</div>
 		</div>
 	</div>
 </c:if>
+<div id="portfolio-list" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+		<div class="w3-center portfolio-content"><br>
+			<span onclick="$('#portfolio-list').toggle();" class="w3-button w3-xlarge w3-display-topright" title="Close Modal">&times;</span>
+			<img id="portfolio-profile" src="${pageContext.request.contextPath}/resources/image/main/user.png" alt="Profile" class="w3-circle w3-margin-top w3-margin-bottom"/>
+			<div><h3 id="portfolio-nickname">NONE</h3></div>
+			<ul id="portfolio" class="portfolio">
+				<li class="list">
+					<div class="container">
+						<div class="row last empty">
+							등록된 포트폴리오가 없습니다.
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+			<button onclick="$('#portfolio-list').toggle();" type="button" class="w3-button cancle">닫기</button>
+		</div>
+	</div>
+</div>
 <jsp:include page="/resources/include/footer/footer.jsp"/>
 </body>
 </html>
