@@ -512,8 +512,8 @@ function step1Valid() {
 		alert("제목은 5자 이상 10자 이하로 입력해주세요.");
 		return false;
 	}
-	if($description.length < 5 || $description.length > 30) {
-		alert("설명은 5자 이상 30자 이하로 입력해주세요.");
+	if($description.length < 10) {
+		alert("설명은 10자 이상으로 입력해주세요.");
 		return false;
 	}
 	
@@ -525,8 +525,8 @@ function step2Valid() {
 	var $startDate = $("#pot_startDate").val();
 	var $endDate = $("#pot_endDate").val();
 
-	if($summary.length < 5 || $summary.length > 20) {
-		alert("주요기능 5자 이상 150자 이하로 입력해주세요.");
+	if($summary.length < 10) {
+		alert("주요기능은 10자 이상으로 입력해주세요.");
 		return false;
 	}
 	if($startDate.length == 0 || $endDate.length == 0) {
@@ -607,7 +607,7 @@ function step5Valid() {
 function writeOk() {
 	if(step1Valid() && step2Valid() && step3Valid() && step4Valid() && step5Valid()) {
 		var $subject = $("#pot_subject").val();
-		var $description = $("#pot_subject").val();
+		var $description = $("#pot_description").val();
 		var $summary = $("#pot_summary").val();
 		var $startdate = $("#pot_startDate").val();
 		var $enddate = $("#pot_endDate").val();
@@ -651,6 +651,7 @@ function writeOk() {
 	}
 }
 </script>
+<link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/image/main/icon.ico">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/write.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -721,6 +722,7 @@ function writeOk() {
 							</div>
 						</div>
 					</div>
+					<div style="margin-bottom: 5px;"></div>
 				</div>
 				<div id="three" class="content">
 					<div class="title">

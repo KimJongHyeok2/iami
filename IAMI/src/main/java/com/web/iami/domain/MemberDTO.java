@@ -18,12 +18,19 @@ public class MemberDTO {
 	private String mem_email; // 이메일
 	private Timestamp mem_regdate; // 가입일시
 	private String mem_auth; // 권한
+	private int mem_type; // 타입
 	private int enabled; // 상태
 	
+	// 네이버 로그인
+	private String sns_gender; // 성별
+	
 	public MemberDTO() { }
+	
+
 
 	public MemberDTO(int mem_no, String mem_id, String mem_pw, String mem_nickname, int mem_gender, String mem_profile,
-			Date mem_birth, String mem_email, Timestamp mem_regdate, String mem_auth, int enabled, Exception e) {
+			Date mem_birth, String mem_email, Timestamp mem_regdate, String mem_auth, int mem_type, int enabled,
+			String sns_gender) {
 		this.mem_no = mem_no;
 		this.mem_id = mem_id;
 		this.mem_pw = mem_pw;
@@ -34,9 +41,11 @@ public class MemberDTO {
 		this.mem_email = mem_email;
 		this.mem_regdate = mem_regdate;
 		this.mem_auth = mem_auth;
+		this.mem_type = mem_type;
 		this.enabled = enabled;
+		this.sns_gender = sns_gender;
 	}
-	
+
 	public int getMem_no() {
 		return mem_no;
 	}
@@ -147,6 +156,22 @@ public class MemberDTO {
 
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
+	}
+
+	public String getSns_gender() {
+		return sns_gender;
+	}
+
+	public void setSns_gender(String sns_gender) {
+		this.sns_gender = sns_gender;
+	}
+
+	public int getMem_type() {
+		return mem_type;
+	}
+
+	public void setMem_type(int mem_type) {
+		this.mem_type = mem_type;
 	}
 	
 }

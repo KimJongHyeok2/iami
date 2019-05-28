@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.web.iami.domain.EmailAccessDTO;
 import com.web.iami.domain.MemberDTO;
+import com.web.iami.domain.SocialMemberDTO;
 import com.web.iami.persistent.RegisterDAO;
 
 @Service("RegisterService")
@@ -37,6 +38,26 @@ public class RegisterServiceImpl implements RegisterService {
 	@Override
 	public int insertMember(MemberDTO dto) throws Exception {
 		return dao.insertMember(dto);
+	}
+
+	@Override
+	public int insertMemberByNaver(SocialMemberDTO dto) throws Exception {
+		return dao.insertMemberByNaver(dto);
+	}
+
+	@Override
+	public int selectMemberCountById(String mem_id) throws Exception {
+		return dao.selectMemberCountById(mem_id);
+	}
+
+	@Override
+	public String selectPasswordById(String mem_id) throws Exception {
+		return dao.selectPasswordById(mem_id);
+	}
+
+	@Override
+	public int selectEmailCountByEmail(String mem_email) throws Exception {
+		return dao.selectEmailCountByEmail(mem_email);
 	}
 
 }

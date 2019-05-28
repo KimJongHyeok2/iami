@@ -11,7 +11,7 @@
 	<context:property-placeholder
 	location="classpath:db.properties"/>
 
-	<security:http auto-config="true" use-expressions="true">
+	<security:http use-expressions="true" authentication-manager-ref="normal">
 		<security:form-login login-page="/login"
 		username-parameter="mem_id"
 		password-parameter="mem_pw"
@@ -26,8 +26,6 @@
 		<security:intercept-url pattern="/portfolio/delete" access="hasRole('ROLE_USER')"/>
 		<security:intercept-url pattern="/upload/**" access="hasRole('ROLE_USER')"/>
 		<security:intercept-url pattern="/member/**" access="hasRole('ROLE_USER')"/>
-		<security:intercept-url pattern="/login/findID" access="hasRole('ROLE_USER')"/>
-		<security:intercept-url pattern="/login/findPW" access="hasRole('ROLE_USER')"/>
 		<security:logout logout-url="/logout" logout-success-url="/login"/>
 		<security:access-denied-handler error-page="/access-denied"/>
 		<security:session-management>
@@ -35,7 +33,7 @@
 		</security:session-management>
 	</security:http>
 	
-	<security:authentication-manager>
+	<security:authentication-manager id="normal">
 		<security:authentication-provider ref="customAuthenticationProvider"/>
 		<security:authentication-provider user-service-ref="customUserDetailService"/>
 	</security:authentication-manager>

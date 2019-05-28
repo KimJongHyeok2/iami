@@ -18,6 +18,7 @@ $(document).ready(function() {
 
 	dateFormat();
 	commentList();
+	$("#description").html($("#description").html().trim().replace(/\n/g, "<br>"));
 	$("#summary").html($("#summary").html().trim().replace(/\n/g, "<br>"));
 });
 function dateFormat() {
@@ -745,7 +746,7 @@ function recommend() {
 	<div class="subject">
 		<h2>${portfolio.pot_subject}</h2>
 	</div>
-	<div class="description">
+	<div id="description" class="description">
 		${portfolio.pot_description}
 	</div>
 	<hr>

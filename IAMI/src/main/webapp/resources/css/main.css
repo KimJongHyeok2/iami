@@ -207,7 +207,7 @@
 	box-sizing: border-box;
 }
 #portfolio-list .portfolio .list .row .content-box .title h5 {
-	font-weight: bold;
+	font-weight: normal;
 }
 #portfolio-list .portfolio .list .row .content-box .regdate {
 	color: gray;

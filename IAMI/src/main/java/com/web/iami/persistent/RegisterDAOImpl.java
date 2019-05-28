@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.web.iami.domain.EmailAccessDTO;
 import com.web.iami.domain.MemberDTO;
+import com.web.iami.domain.SocialMemberDTO;
 
 @Repository("RegisterDAO")
 public class RegisterDAOImpl implements RegisterDAO {
@@ -37,6 +38,26 @@ public class RegisterDAOImpl implements RegisterDAO {
 	@Override
 	public int insertMember(MemberDTO dto) throws Exception {
 		return sqlSession.insert("register.insertMember", dto);
+	}
+
+	@Override
+	public int insertMemberByNaver(SocialMemberDTO dto) throws Exception {
+		return sqlSession.insert("register.insertMemberByNaver", dto);
+	}
+
+	@Override
+	public int selectMemberCountById(String mem_id) throws Exception {
+		return sqlSession.selectOne("register.selectMemberCountById", mem_id);
+	}
+
+	@Override
+	public String selectPasswordById(String mem_id) throws Exception {
+		return sqlSession.selectOne("register.selectPasswordById", mem_id);
+	}
+
+	@Override
+	public int selectEmailCountByEmail(String mem_email) throws Exception {
+		return sqlSession.selectOne("register.selectEmailCountByEmail", mem_email);
 	}
 
 }

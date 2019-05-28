@@ -1,5 +1,7 @@
 package com.web.iami.controller;
 
+import java.util.Random;
+
 import javax.inject.Inject;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -14,9 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.iami.domain.EmailAccessDTO;
 import com.web.iami.domain.MemberDTO;
+import com.web.iami.domain.SocialLoginDTO;
+import com.web.iami.domain.SocialMemberDTO;
+import com.web.iami.service.MemberService;
 import com.web.iami.service.RegisterService;
 import com.web.iami.util.EmailAccessValidator;
 import com.web.iami.util.MemberValidator;
+import com.web.iami.util.SocialMemberValidator;
 
 @RestController
 @RequestMapping("/register")
@@ -24,6 +30,8 @@ public class RestRegisterController {
 
 	@Inject
 	private RegisterService registerService;
+	@Inject
+	private MemberService memberService;
 	@Inject
 	private JavaMailSender mailSender;
 	@Value("${email.username}")
@@ -152,5 +160,76 @@ public class RestRegisterController {
 		}
 		
 		return "Fail";
+	}
+	
+	// 네이버 연동 회원가입
+	@PostMapping("/naver")
+	public SocialLoginDTO naverRegister(SocialMemberDTO dto, BindingResult result) {
+		
+		SocialLoginDTO socialDTO = new SocialLoginDTO();
+		
+		SocialMemberValidator validation = new SocialMemberValidator();
+		
+		if(validation.supports(dto.getClass())) {
+			validation.validate(dto, result);
+			
+			if(!result.hasErrors()) {
+				try {
+					dto.setMem_id(dto.getMem_email().substring(0, dto.getMem_email().lastIndexOf("@")));
+					
+					int count = registerService.selectMemberCountById(dto.getMem_id());
+					
+					if(count == 0) {
+						int emailCount = registerService.selectEmailCountByEmail(dto.getMem_email());
+						
+						if(emailCount != 0) {
+							socialDTO.setStatus("emailAlready");
+							return socialDTO;
+						}
+						
+						Random ran = new Random();
+						StringBuffer sb = new StringBuffer();
+						int num = 0;
+
+						do {
+							num = ran.nextInt(75) + 48;
+							if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
+								sb.append((char) num);
+							} else {
+								continue;
+							}
+
+						} while (sb.length() < 10);
+						
+						dto.setMem_pw("{noop}" + sb.toString());
+						
+						int count2 = registerService.insertMemberByNaver(dto);
+						
+						if(dto.getSns_gender().equals("M")) {
+							dto.setMem_gender(1);
+						} else {
+							dto.setMem_gender(2);							
+						}
+						
+						if(count2 == 1) {
+							socialDTO.setDto(dto);
+							socialDTO.setStatus("Ok");
+							return socialDTO;
+						}
+					} else if(count == 1) {
+						socialDTO.setStatus("Ok");
+						socialDTO.setDto(dto);
+						socialDTO.getDto().setMem_pw(registerService.selectPasswordById(dto.getMem_id()));
+						return socialDTO;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}				
+			}
+		}
+		
+		socialDTO.setStatus("Fail");
+		
+		return socialDTO;
 	}
 }

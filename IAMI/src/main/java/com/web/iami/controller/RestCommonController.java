@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 
@@ -23,11 +24,14 @@ public class RestCommonController {
 	
 	@GetMapping("/visitor")
 	public RestVisitDTO visitor() {
+		TimeZone time = TimeZone.getTimeZone("Asia/Seoul");
 		
 		Calendar startDay = Calendar.getInstance();
+		startDay.setTimeZone(time);
 		startDay.add(Calendar.DATE, -startDay.get(Calendar.DAY_OF_WEEK)+1);
 		
 		Calendar endDay = Calendar.getInstance();
+		endDay.setTimeZone(time);
 		endDay.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 		endDay.add(Calendar.DATE, 7);
 		

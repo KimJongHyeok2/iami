@@ -218,16 +218,5 @@ public class PortfolioDTO {
 	public void setRnum(int rnum) {
 		this.rnum = rnum;
 	}
-
-	@Override
-	public String toString() {
-		return "PortfolioDTO [pot_no=" + pot_no + ", mem_no=" + mem_no + ", pot_subject=" + pot_subject
-				+ ", pot_description=" + pot_description + ", pot_summary=" + pot_summary + ", pot_startdate="
-				+ pot_startdate + ", pot_enddate=" + pot_enddate + ", pot_environment=" + pot_environment
-				+ ", pot_thumbnail=" + pot_thumbnail + ", pot_video=" + pot_video + ", pot_source=" + pot_source
-				+ ", pot_recommend=" + pot_recommend + ", pot_status=" + pot_status + ", pot_regdate=" + pot_regdate
-				+ ", mem_nickname=" + mem_nickname + ", mem_id=" + mem_id + ", mem_profile=" + mem_profile
-				+ ", mem_email=" + mem_email + ", commentCount=" + commentCount + ", rnum=" + rnum + "]";
-	}
 	
 }

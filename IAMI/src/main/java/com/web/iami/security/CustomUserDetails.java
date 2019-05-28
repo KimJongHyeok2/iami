@@ -18,6 +18,7 @@ public class CustomUserDetails implements UserDetails {
 	private String mem_auth;
 	private String mem_nickname;
 	private String mem_profile;
+	private int mem_type;
 	private boolean enabled;
 
 	public int getMem_no() {
@@ -42,6 +43,10 @@ public class CustomUserDetails implements UserDetails {
 
 	public String getMem_profile() {
 		return mem_profile;
+	}
+
+	public int getMem_type() {
+		return mem_type;
 	}
 
 	@Override

@@ -3,7 +3,7 @@
 <mapper namespace="portfolio">
 	<insert id="insertPortfolio" parameterType="com.web.iami.domain.PortfolioDTO">
 		INSERT INTO portfolio(pot_no, mem_no, pot_subject, pot_description, pot_summary, pot_startdate, pot_enddate, pot_environment, pot_thumbnail, pot_video, pot_source)
-		VALUES(pot_seq.nextval, #{mem_no}, #{pot_subject}, #{pot_description}, #{pot_summary}, #{pot_startdate}, #{pot_enddate}, #{pot_environment}, #{pot_thumbnail}, #{pot_video}, #{pot_source})
+		VALUES(pot_seq.nextval, #{mem_no}, #{pot_subject}, #{pot_description}, #{pot_summary}, TO_DATE(#{pot_startdate}, 'YYYY-MM-DD'), TO_DATE(#{pot_enddate}, 'YYYY-MM-DD'), #{pot_environment}, #{pot_thumbnail}, #{pot_video}, #{pot_source})
 	</insert>
 	<select id="selectNewPortfolio" resultType="com.web.iami.domain.PortfolioDTO">
 		<![CDATA[
@@ -73,7 +73,7 @@
 	<update id="updatePortfolio">
 		UPDATE portfolio
 			SET pot_subject = #{pot_subject}, pot_description = #{pot_description},
-			pot_summary = #{pot_summary}, pot_startdate = #{pot_startdate}, pot_enddate = #{pot_enddate},
+			pot_summary = #{pot_summary}, pot_startdate = TO_DATE(#{pot_startdate}, 'YYYY-MM-DD'), pot_enddate = TO_DATE(#{pot_enddate}, 'YYYY-MM-DD'),
 			pot_environment = #{pot_environment}, pot_thumbnail = #{pot_thumbnail}, pot_video = #{pot_video},
 			pot_source = #{pot_source}
 		WHERE pot_no = #{pot_no}

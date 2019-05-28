@@ -16,4 +16,16 @@
 	<insert id="insertMember" parameterType="com.web.iami.domain.MemberDTO">
 		INSERT INTO members(mem_no, mem_id, mem_pw, mem_nickname, mem_birth, mem_gender, mem_email) VALUES(mem_seq.nextval, #{mem_id}, #{mem_pw}, #{mem_nickname}, #{mem_birth}, #{mem_gender}, #{mem_email})
 	</insert>
+	<insert id="insertMemberByNaver" parameterType="com.web.iami.domain.MemberDTO">
+		INSERT INTO members(mem_no, mem_id, mem_pw, mem_nickname, mem_gender, mem_email, mem_type) VALUES(mem_seq.nextval, #{mem_id}, #{mem_pw}, #{mem_nickname}, #{mem_gender}, #{mem_email}, 2)
+	</insert>
+	<select id="selectMemberCountById" resultType="Integer">
+		SELECT count(mem_no) FROM members WHERE mem_id = #{param1}
+	</select>
+	<select id="selectPasswordById" resultType="String">
+		SELECT mem_pw FROM members WHERE mem_id = #{param1}
+	</select>
+	<select id="selectEmailCountByEmail" resultType="Integer">
+		SELECT count(mem_email) FROM members WHERE mem_email = #{param1}
+	</select>
 </mapper>

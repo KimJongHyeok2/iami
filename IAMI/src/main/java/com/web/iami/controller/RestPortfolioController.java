@@ -1,15 +1,12 @@
 package com.web.iami.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -233,7 +230,6 @@ public class RestPortfolioController {
 			if(result.hasErrors()) {
 				return "Fail";
 			} else {
-				System.out.println(dto);
 				try {
 					int count = portfolioService.insertPortfolioReComment(dto);
 					if(count == 1) {

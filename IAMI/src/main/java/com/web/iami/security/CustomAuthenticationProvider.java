@@ -1,7 +1,6 @@
 package com.web.iami.security;
 
 import javax.inject.Inject;
-
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,17 +20,23 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 		String id = (String)auth.getPrincipal();
 		String pw = (String)auth.getCredentials();
-		
+
 		CustomUserDetails user = null;
-				
+		
 		user = (CustomUserDetails)service.loadUserByUsername(id);
 		
 		PasswordEncoding encode = new PasswordEncoding();
 		
-		if(!encode.matches(pw, user.getPassword())) {
-			throw new BadCredentialsException(id);
+		if(user.getMem_type() == 1) {
+			if(!encode.matches(pw, user.getPassword())) {
+				throw new BadCredentialsException(id);
+			}	
+		} else if(user.getMem_type() == 2) {
+			if(!pw.equals(user.getMem_pw())) {
+				throw new BadCredentialsException(id);
+			}
 		}
-			
+
 		if(!user.isEnabled()) {
 			throw new AuthenticationCredentialsNotFoundException(id);
 		}

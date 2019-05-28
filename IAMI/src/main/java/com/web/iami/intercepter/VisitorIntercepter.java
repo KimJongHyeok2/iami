@@ -2,9 +2,11 @@ package com.web.iami.intercepter;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -24,8 +26,13 @@ public class VisitorIntercepter extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		
-		Calendar nowDate = Calendar.getInstance();
-		String date = new SimpleDateFormat("yyyy-MM-dd").format(nowDate.getTime());
+		String date;
+		Date nowDate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		TimeZone time = TimeZone.getTimeZone("Asia/Seoul");
+		sdf.setTimeZone(time);
+		date = sdf.format(nowDate);
+		
 		int dateCount = commonService.checkAlreadyVisitDate(date);
 		
 		if(dateCount == 0) {

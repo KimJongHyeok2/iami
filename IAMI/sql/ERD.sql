@@ -1,3 +1,4 @@
+
 /* Drop Tables */
 
 DROP TABLE recomments CASCADE CONSTRAINTS;
@@ -9,13 +10,8 @@ DROP TABLE portfolio CASCADE CONSTRAINTS;
 DROP TABLE members CASCADE CONSTRAINTS;
 DROP TABLE visitor CASCADE CONSTRAINTS;
 
-DROP SEQUENCE cnc_seq;
-DROP SEQUENCE key_seq;
-DROP SEQUENCE mem_seq;
-DROP SEQUENCE pot_seq;
-DROP SEQUENCE com_seq;
-DROP SEQUENCE rcom_seq;
-DROP SEQUENCE vit_seq;
+
+
 
 /* Create Tables */
 
@@ -33,6 +29,7 @@ CREATE TABLE comments
 	PRIMARY KEY (com_no)
 );
 
+
 CREATE TABLE customerNotice
 (
 	cnc_no number NOT NULL,
@@ -44,12 +41,14 @@ CREATE TABLE customerNotice
 	PRIMARY KEY (cnc_no)
 );
 
+
 CREATE TABLE emailAccessKeys
 (
 	key_no number NOT NULL,
 	key_accessKey varchar2(30) NOT NULL,
 	PRIMARY KEY (key_no)
 );
+
 
 CREATE TABLE members
 (
@@ -59,22 +58,24 @@ CREATE TABLE members
 	mem_nickname varchar2(30) DEFAULT 'NONE',
 	mem_gender number(2) NOT NULL,
 	mem_profile varchar2(300),
-	mem_birth date NOT NULL,
+	mem_birth date,
 	mem_email varchar2(100) NOT NULL,
 	mem_regdate timestamp DEFAULT SYSDATE,
 	mem_auth varchar2(20) DEFAULT 'ROLE_USER',
+	mem_type number(5) DEFAULT 1,
 	failureCount number DEFAULT 0,
 	enabled number DEFAULT 1,
 	PRIMARY KEY (mem_no)
 );
+
 
 CREATE TABLE portfolio
 (
 	pot_no number NOT NULL,
 	mem_no number NOT NULL,
 	pot_subject varchar2(70) NOT NULL,
-	pot_description varchar2(100) NOT NULL,
-	pot_summary varchar2(500) NOT NULL,
+	pot_description clob NOT NULL,
+	pot_summary clob NOT NULL,
 	pot_startdate date NOT NULL,
 	pot_enddate date NOT NULL,
 	pot_environment clob NOT NULL,
@@ -87,6 +88,7 @@ CREATE TABLE portfolio
 	PRIMARY KEY (pot_no)
 );
 
+
 CREATE TABLE recommendHistory
 (
 	rec_no number NOT NULL,
@@ -95,6 +97,7 @@ CREATE TABLE recommendHistory
 	rec_ip varchar2(100) NOT NULL,
 	PRIMARY KEY (rec_no)
 );
+
 
 CREATE TABLE recomments
 (
@@ -111,6 +114,7 @@ CREATE TABLE recomments
 	PRIMARY KEY (rcom_no)
 );
 
+
 CREATE TABLE visitor
 (
 	vit_no number NOT NULL,
@@ -119,6 +123,8 @@ CREATE TABLE visitor
 	PRIMARY KEY (vit_no)
 );
 
+
+
 /* Create Foreign Keys */
 
 ALTER TABLE recomments
@@ -126,37 +132,35 @@ ALTER TABLE recomments
 	REFERENCES comments (com_no)
 ;
 
+
 ALTER TABLE customerNotice
 	ADD FOREIGN KEY (mem_no)
 	REFERENCES members (mem_no)
 ;
+
 
 ALTER TABLE portfolio
 	ADD FOREIGN KEY (mem_no)
 	REFERENCES members (mem_no)
 ;
 
+
 ALTER TABLE comments
 	ADD FOREIGN KEY (pot_no)
 	REFERENCES portfolio (pot_no)
 ;
+
 
 ALTER TABLE recommendHistory
 	ADD FOREIGN KEY (pot_no)
 	REFERENCES portfolio (pot_no)
 ;
 
+
 ALTER TABLE recomments
 	ADD FOREIGN KEY (pot_no)
 	REFERENCES portfolio (pot_no)
 ;
 
-/* Create Sequence */
-
-CREATE SEQUENCE cnc_seq;
-CREATE SEQUENCE key_seq;
-CREATE SEQUENCE mem_seq;
-CREATE SEQUENCE pot_seq;
-CREATE SEQUENCE com_seq;
-CREATE SEQUENCE rcom_seq;
-CREATE SEQUENCE vit_seq;
+SELECT * FROM members;
+DELETE FROM members;

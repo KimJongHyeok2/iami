@@ -2,7 +2,8 @@ package com.web.iami.aop;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Calendar;import java.util.Date;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,15 +24,10 @@ public class LoggingAspect {
 	
 	@Around("execution(* com.web.iami.controller.*.*(..))")
 	public Object requestLogging(ProceedingJoinPoint jp) throws Throwable {
-		
-		logger.info("----------------------------------------------------------------------------------------------");
 	
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 		
 		String signature = jp.getSignature().getName();
-		logger.info("Request : " + request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getRequestURI());
-		logger.info("Method : " + signature);
-		logger.info("Parameter : " + Arrays.toString(jp.getArgs()));
 		long startTime = System.currentTimeMillis();
 		Calendar currCal = Calendar.getInstance();
 		
@@ -45,10 +41,19 @@ public class LoggingAspect {
 	        if (ip == null) {
 	            ip = request.getRemoteAddr();
 	        }
-			
+	        
+	        TimeZone time = TimeZone.getTimeZone("Asia/Seoul");
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	        sdf.setTimeZone(time);
+	        
+	        logger.info("----------------------------------------------------------------------------------------------");
+	        
+			logger.info("Request : " + request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getRequestURI());
+			logger.info("Method : " + signature);
+			logger.info("Parameter : " + Arrays.toString(jp.getArgs()));
 			logger.info("MemberIP : " + ip);
 			logger.info("Runtime : " + (endTime - startTime) + "ms");
-			logger.info("RunDate : " + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(currCal.getTime()));
+			logger.info("RunDate : " + sdf.format(currCal.getTime()));
 			
 			logger.info("----------------------------------------------------------------------------------------------");
 		}
