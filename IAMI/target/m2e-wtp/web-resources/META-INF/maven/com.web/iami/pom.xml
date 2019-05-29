@@ -227,6 +227,25 @@
         	<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/cos.jar</systemPath>
         </dependency>        
 
+		<!-- Facebook Social -->
+		<dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-facebook</artifactId>
+            <version>2.0.3.RELEASE</version>
+        </dependency>
+        
+        <!-- Google Social -->
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-google</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+ 
+ 		<dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.3</version>
+        </dependency> 
 	</dependencies>
     <build>
         <plugins>

@@ -14,4 +14,5 @@ public interface RegisterDAO {
 	public int selectMemberCountById(String mem_id) throws Exception;
 	public String selectPasswordById(String mem_id) throws Exception;
 	public int selectEmailCountByEmail(String mem_email) throws Exception;
+	public int insertMemberByGoogle(SocialMemberDTO dto) throws Exception;
 }

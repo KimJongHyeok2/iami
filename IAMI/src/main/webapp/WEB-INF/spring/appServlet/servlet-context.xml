@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
 
 	<context:property-placeholder
-	location="classpath:emailproperty.properties, classpath:db.properties"/>
+	location="classpath:emailproperty.properties, classpath:db.properties, classpath:facebook.properties, classpath:google.properties"/>
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
@@ -92,6 +92,35 @@
 	<!-- AOP -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	<beans:bean name="loggingAspect" class="com.web.iami.aop.LoggingAspect"/>
+
+	<!-- Facebook Social -->
+	<beans:bean id="facebookConnectionFactory" class="org.springframework.social.facebook.connect.FacebookConnectionFactory">
+		<beans:constructor-arg value="${fb.clientId}"/>
+		<beans:constructor-arg value="${fb.secretCode}"/>
+	</beans:bean>
+	
+	<beans:bean id="facebookOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+		<beans:property name="scope" value="email"/>
+		<beans:property name="redirectUri" value="${fb.redirectUri}"/>
+		<beans:qualifier value="facebookOAuth2Parameters"/>
+	</beans:bean>
+	
+    <beans:bean id="googleOAuth2Template"
+        class="org.springframework.social.google.connect.GoogleOAuth2Template">
+        <beans:constructor-arg value="${go.clientId}"/>
+        <beans:constructor-arg value="${go.secretCode}"/>
+    </beans:bean>
+	
+	<beans:bean id="googleOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+		<beans:property name="scope" value="profile email"/>
+		<beans:property name="redirectUri" value="${go.redirectUri}"/>
+		<beans:qualifier value="googleOAuth2Parameters"/>
+	</beans:bean>
+	
+ 	<beans:bean id="googleSocialInfo" class="com.web.iami.domain.SocialInfoDTO">
+		<beans:property name="clientId" value="${go.clientId}"/>
+		<beans:property name="secretCode" value="${go.secretCode}"/>
+	</beans:bean>
 
 	<context:component-scan base-package="com.web.iami"/>
 	

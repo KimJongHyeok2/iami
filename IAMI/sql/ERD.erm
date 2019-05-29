@@ -11,7 +11,7 @@
 	</page_setting>
 	<category_index>0</category_index>
 	<zoom>1.0</zoom>
-	<x>579</x>
+	<x>0</x>
 	<y>0</y>
 	<default_color>
 		<r>128</r>
@@ -135,7 +135,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2019-04-29 21:27:39</creation_date>
-			<updated_date>2019-05-29 04:00:31</updated_date>
+			<updated_date>2019-05-30 03:50:11</updated_date>
 			<model_property>
 				<name>프로젝트명</name>
 				<value></value>
@@ -1720,7 +1720,7 @@
 			<connections>
 				<relation>
 					<id>2</id>
-					<source>2</source>
+					<source>6</source>
 					<target>3</target>
 						<source_xp>-1</source_xp>
 						<source_yp>-1</source_yp>
@@ -1742,7 +1742,7 @@
 				</relation>
 				<relation>
 					<id>3</id>
-					<source>6</source>
+					<source>2</source>
 					<target>3</target>
 						<source_xp>-1</source_xp>
 						<source_yp>-1</source_yp>
@@ -1839,7 +1839,7 @@
 				<normal_column>
 					<id>19</id>
 					<referenced_column>34</referenced_column>
-					<relation>3</relation>
+					<relation>2</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -1873,7 +1873,7 @@
 				<normal_column>
 					<id>20</id>
 					<referenced_column>8</referenced_column>
-					<relation>2</relation>
+					<relation>3</relation>
 					<description></description>
 					<unique_key_name></unique_key_name>
 					<logical_name></logical_name>
@@ -2118,7 +2118,7 @@
 				<font_name>맑은 고딕</font_name>
 				<font_size>9</font_size>
 			<x>756</x>
-			<y>558</y>
+			<y>600</y>
 			<color>
 				<r>128</r>
 				<g>128</g>
@@ -3110,11 +3110,11 @@
 					<logical_name></logical_name>
 					<physical_name></physical_name>
 					<type>decimal(p)</type>
-					<constraint></constraint>
+					<constraint>DEFAULT 0</constraint>
 					<default_value></default_value>
 					<auto_increment>false</auto_increment>
 					<foreign_key>false</foreign_key>
-					<not_null>true</not_null>
+					<not_null>false</not_null>
 					<primary_key>false</primary_key>
 					<unique_key>false</unique_key>
 					<character_set></character_set>

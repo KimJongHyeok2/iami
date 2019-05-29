@@ -10,15 +10,34 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.social.google.connect.GoogleOAuth2Template;
+import org.springframework.social.oauth2.GrantType;
+import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.web.iami.domain.SocialInfoDTO;
 import com.web.iami.service.LoginService;
 import com.web.iami.util.PasswordEncoding;
 
@@ -33,8 +52,22 @@ public class LoginController {
 	@Value("${email.username}")
 	private String fromEmail;
 	
+	@Inject
+	private SocialInfoDTO googleSocialInfo;
+	@Autowired
+	private GoogleOAuth2Template googleOAuth2Template;
+	@Autowired
+	@Qualifier("googleOAuth2Parameters")
+	private OAuth2Parameters googleOAuth2Parameters;
+	
 	@RequestMapping("")
-	public String login() {
+	public String login(HttpServletResponse response, Model model) {
+		
+		// URL 생성
+		String googleUrl = googleOAuth2Template.buildAuthenticateUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
+		System.out.println("/googleLogin, url : " + googleUrl);
+		model.addAttribute("google_url", googleUrl);
+		
 		return "login/login";
 	}
 	
@@ -148,5 +181,44 @@ public class LoginController {
 		}
 		
 		return "find/success";
+	}
+	
+	// 네이버 로그인 Callback
+	@GetMapping("/callback")
+	public String callback(HttpSession session) {
+		return "login/naverCallback";
+	}
+	
+	// 구글 로그인 Callback
+	@GetMapping("/googleCallback")
+	public String googleCallback(HttpServletRequest request, Model model) throws Exception {
+		
+		String code = request.getParameter("code");
+
+		RestTemplate restTemplate = new RestTemplate();
+		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
+		parameters.add("code", code);
+		parameters.add("client_id", googleSocialInfo.getClientId());
+		parameters.add("client_secret", googleSocialInfo.getSecretCode());
+		parameters.add("redirect_uri", googleOAuth2Parameters.getRedirectUri());
+		parameters.add("grant_type", "authorization_code");
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String,String>>(parameters, headers);
+		ResponseEntity<Map> responseEntity = restTemplate.exchange("https://www.googleapis.com/oauth2/v4/token", HttpMethod.POST, requestEntity, Map.class);
+		Map<String, Object> responseMap = responseEntity.getBody();
+		
+		String[] tokens = ((String)responseMap.get("id_token")).split("\\.");
+		Base64 base64 = new Base64(true);
+		String body = new String(base64.decode(tokens[1]));
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> result = mapper.readValue(body, Map.class);
+		
+		model.addAttribute("name", result.get("name"));
+		model.addAttribute("email", result.get("email"));
+		
+		return "login/googleCallback";
 	}
 }

@@ -41,7 +41,7 @@ public class PortfolioController {
 		
 		if(dto == null) {
 			return "redirect:/";
-		} else {			
+		} else {
 			model.addAttribute("portfolio", dto);
 		}
 		

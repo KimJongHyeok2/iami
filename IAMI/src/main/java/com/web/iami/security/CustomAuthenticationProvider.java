@@ -27,11 +27,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		
 		PasswordEncoding encode = new PasswordEncoding();
 		
-		if(user.getMem_type() == 1) {
+		if(user.getMem_type() == 1) { // IAMI 회원이라면
 			if(!encode.matches(pw, user.getPassword())) {
 				throw new BadCredentialsException(id);
 			}	
-		} else if(user.getMem_type() == 2) {
+		} else if(user.getMem_type() == 2) { // 네이버 로그인 회원이라면
 			if(!pw.equals(user.getMem_pw())) {
 				throw new BadCredentialsException(id);
 			}
@@ -40,28 +40,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		if(!user.isEnabled()) {
 			throw new AuthenticationCredentialsNotFoundException(id);
 		}
-
-/*		try {
-			user = (CustomUserDetails)service.loadUserByUsername(id);
-			
-			PasswordEncoding encode = new PasswordEncoding();
-			
-			if(!encode.matches(pw, user.getPassword())) {
-				throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
-			}
-			
-			if(!user.isEnabled()) {
-				throw new LockedException("블락된 계정입니다.");
-			}
-		} catch (InternalAuthenticationServiceException e) {
-			throw new InternalAuthenticationServiceException(e.getMessage());
-		} catch (BadCredentialsException e) {
-			throw new BadCredentialsException(e.getMessage());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
-		}
-*/
+		
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(id, pw, user.getAuthorities());
 		token.setDetails(user);
 		

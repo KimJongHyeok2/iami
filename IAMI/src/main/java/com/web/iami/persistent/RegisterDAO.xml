@@ -28,4 +28,7 @@
 	<select id="selectEmailCountByEmail" resultType="Integer">
 		SELECT count(mem_email) FROM members WHERE mem_email = #{param1}
 	</select>
+	<insert id="insertMemberByGoogle" parameterType="com.web.iami.domain.MemberDTO">
+		INSERT INTO members(mem_no, mem_id, mem_pw, mem_nickname, mem_email, mem_type) VALUES(mem_seq.nextval, #{mem_id}, #{mem_pw}, #{mem_nickname}, #{mem_email}, 3)
+	</insert>
 </mapper>

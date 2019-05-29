@@ -60,4 +60,9 @@ public class RegisterServiceImpl implements RegisterService {
 		return dao.selectEmailCountByEmail(mem_email);
 	}
 
+	@Override
+	public int insertMemberByGoogle(SocialMemberDTO dto) throws Exception {
+		return dao.insertMemberByGoogle(dto);
+	}
+
 }

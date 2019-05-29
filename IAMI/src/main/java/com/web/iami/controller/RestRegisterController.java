@@ -170,15 +170,19 @@ public class RestRegisterController {
 		
 		SocialMemberValidator validation = new SocialMemberValidator();
 		
+		// 유효성 검사
 		if(validation.supports(dto.getClass())) {
 			validation.validate(dto, result);
 			
 			if(!result.hasErrors()) {
 				try {
+					// 아이디 설정
 					dto.setMem_id(dto.getMem_email().substring(0, dto.getMem_email().lastIndexOf("@")));
 					
+					// 기존에 가입된 회원인지
 					int count = registerService.selectMemberCountById(dto.getMem_id());
 					
+					// 가입되지 않았다면
 					if(count == 0) {
 						int emailCount = registerService.selectEmailCountByEmail(dto.getMem_email());
 						
@@ -187,39 +191,118 @@ public class RestRegisterController {
 							return socialDTO;
 						}
 						
+						// 비밀번호 난수 생성
 						Random ran = new Random();
 						StringBuffer sb = new StringBuffer();
 						int num = 0;
 
 						do {
 							num = ran.nextInt(75) + 48;
+							
 							if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
 								sb.append((char) num);
 							} else {
 								continue;
 							}
-
 						} while (sb.length() < 10);
 						
+						// Spring 5버전부터 비밀번호 인코더 미사용시 {noop}명시
 						dto.setMem_pw("{noop}" + sb.toString());
 						
-						int count2 = registerService.insertMemberByNaver(dto);
-						
+						// 성별 값 남자(M) 1, 여자 2
 						if(dto.getSns_gender().equals("M")) {
 							dto.setMem_gender(1);
 						} else {
 							dto.setMem_gender(2);							
 						}
 						
+						int count2 = registerService.insertMemberByNaver(dto);
+						
 						if(count2 == 1) {
 							socialDTO.setDto(dto);
 							socialDTO.setStatus("Ok");
 							return socialDTO;
 						}
-					} else if(count == 1) {
+					} else if(count == 1) { // 이미 가입되어 있다면
 						socialDTO.setStatus("Ok");
 						socialDTO.setDto(dto);
-						socialDTO.getDto().setMem_pw(registerService.selectPasswordById(dto.getMem_id()));
+						socialDTO.getDto().setMem_pw(registerService.selectPasswordById(dto.getMem_id())); // 난수로 생성한 비밀번호 SET
+						return socialDTO;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}				
+			}
+		}
+		
+		socialDTO.setStatus("Fail");
+		
+		return socialDTO;
+	}
+	
+	// 구글 연동 회원가입
+	@PostMapping("/google")
+	public SocialLoginDTO googleRegister(SocialMemberDTO dto, BindingResult result) {
+		
+		SocialLoginDTO socialDTO = new SocialLoginDTO();
+		
+		System.out.println(dto.getMem_email());
+		System.out.println(dto.getMem_email());
+		System.out.println(dto.getMem_email());
+		System.out.println(dto.getMem_email());
+		
+		SocialMemberValidator validation = new SocialMemberValidator();
+		
+		// 유효성 검사
+		if(validation.supports(dto.getClass())) {
+			validation.validate(dto, result);
+			
+			if(!result.hasErrors()) {
+				try {
+					// 아이디 설정
+					dto.setMem_id(dto.getMem_email().substring(0, dto.getMem_email().lastIndexOf("@")));
+					
+					// 기존에 가입된 회원인지
+					int count = registerService.selectMemberCountById(dto.getMem_id());
+					
+					// 가입되지 않았다면
+					if(count == 0) {
+						int emailCount = registerService.selectEmailCountByEmail(dto.getMem_email());
+						
+						if(emailCount != 0) {
+							socialDTO.setStatus("emailAlready");
+							return socialDTO;
+						}
+						
+						// 비밀번호 난수 생성
+						Random ran = new Random();
+						StringBuffer sb = new StringBuffer();
+						int num = 0;
+						
+						do {
+							num = ran.nextInt(75) + 48;
+							
+							if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
+								sb.append((char) num);
+							} else {
+								continue;
+							}
+						} while (sb.length() < 10);
+						
+						// Spring 5버전부터 비밀번호 인코더 미사용시 {noop}명시
+						dto.setMem_pw("{noop}" + sb.toString());
+						
+						int count2 = registerService.insertMemberByGoogle(dto);
+						
+						if(count2 == 1) {
+							socialDTO.setDto(dto);
+							socialDTO.setStatus("Ok");
+							return socialDTO;
+						}
+					} else if(count == 1) { // 이미 가입되어 있다면
+						socialDTO.setStatus("Ok");
+						socialDTO.setDto(dto);
+						socialDTO.getDto().setMem_pw(registerService.selectPasswordById(dto.getMem_id())); // 난수로 생성한 비밀번호 SET
 						return socialDTO;
 					}
 				} catch (Exception e) {

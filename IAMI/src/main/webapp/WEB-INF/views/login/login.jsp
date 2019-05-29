@@ -12,20 +12,15 @@
 <jsp:include page="/resources/common/common.jsp"/>
 <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-/* 	$(".social-box div").click(function() {
-		alert("공부 중입니다!");
-	}); */
-	
+$(document).ready(function() {	
 	var naverLogin = new naver.LoginWithNaverId(
 			{
 				clientId: "KmvgOPJ6Ilbc111SxJ7C",
-				callbackUrl: "http://localhost/iami/callback",
+				callbackUrl: "http://34.85.117.116/login/naverCallback",
 				isPopup: true, /* 팝업을 통한 연동처리 여부 */
-				loginButton: {color: "green", type: 1, height: 30} /* 로그인 버튼의 타입을 지정 */
+				loginButton: {color: "green", type: 3, height: 43} /* 로그인 버튼의 타입을 지정  */
 			}
 	);
-	
 	naverLogin.init();
 });
 function validCheck(obj) {
@@ -51,22 +46,14 @@ function snsLogin(infos) {
 	$form.appendTo("body");
 	$form.submit();
 }
+function googleLogin(url) {
+	var pop = window.open(url,"pop","width=600,height=600, scrollbars=yes, resizable=yes");
+}
 </script>
 <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/image/main/icon.ico">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/login.css">
 </head>
 <body>
-<%
-	String clientId = "KmvgOPJ6Ilbc111SxJ7C";//애플리케이션 클라이언트 아이디값";
-	String redirectURI = URLEncoder.encode("http://localhost/iami/callback", "UTF-8");
-	SecureRandom random = new SecureRandom();
-	String state = new BigInteger(130, random).toString();
-	String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code";
-	apiURL += "&client_id=" + clientId;
-	apiURL += "&redirect_uri=" + redirectURI;
-	apiURL += "&state=" + state;
-	session.setAttribute("state", state);
-%>
 <div class="container">
 	<div class="loginInner">
 		<div class="logo">
@@ -89,9 +76,9 @@ function snsLogin(infos) {
 		<div class="social-box">
 			<%-- <div class="naver" onclick="location.href='<%=apiURL%>'">N</div> --%>
 			<div id="naverIdLogin"></div>
-<!-- 			<div class="kakao">K</div>
-			<div class="facebook">F</div>
-			<div class="google">G</div> -->
+<!-- 		<div class="kakao">K</div>
+			<div class="facebook">F</div> -->
+			<div onclick="googleLogin('${google_url}');"><img class="btn-google" src="${pageContext.request.contextPath}/resources/image/main/btn_google_sign.png"/></div>
 		</div>
 		<div class="register-box">
 			<div class="comment">아직 회원이 아니시라면</div>

@@ -60,4 +60,9 @@ public class RegisterDAOImpl implements RegisterDAO {
 		return sqlSession.selectOne("register.selectEmailCountByEmail", mem_email);
 	}
 
+	@Override
+	public int insertMemberByGoogle(SocialMemberDTO dto) throws Exception {
+		return sqlSession.insert("register.insertMemberByGoogle", dto);
+	}
+
 }

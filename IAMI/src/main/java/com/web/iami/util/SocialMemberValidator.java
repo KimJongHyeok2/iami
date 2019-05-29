@@ -17,9 +17,7 @@ public class SocialMemberValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 		SocialMemberDTO dto = (SocialMemberDTO)target;
 		
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mem_id", "emptySocialMemberID");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mem_nickname", "emptySocialMemberNickname");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "sns_gender", "emptySocialMemberGender");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mem_email", "emptySocialMemberEmail");
 	}
 
