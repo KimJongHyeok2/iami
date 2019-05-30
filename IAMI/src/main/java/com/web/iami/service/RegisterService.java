@@ -15,4 +15,5 @@ public interface RegisterService {
 	public String selectPasswordById(String mem_id) throws Exception;
 	public int selectEmailCountByEmail(String mem_email) throws Exception;
 	public int insertMemberByGoogle(SocialMemberDTO dto) throws Exception;
+	public int insertMemberByFacebook(SocialMemberDTO dto) throws Exception;
 }

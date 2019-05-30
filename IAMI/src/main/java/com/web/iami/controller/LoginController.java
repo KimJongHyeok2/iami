@@ -24,8 +24,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.User;
+import org.springframework.social.facebook.api.UserOperations;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.google.connect.GoogleOAuth2Template;
+import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.GrantType;
+import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,13 +68,24 @@ public class LoginController {
 	@Qualifier("googleOAuth2Parameters")
 	private OAuth2Parameters googleOAuth2Parameters;
 	
+	@Autowired
+	private FacebookConnectionFactory connectionFactory;
+	@Autowired
+	@Qualifier("facebookOAuth2Parameters")
+	private OAuth2Parameters facebookOAuth2Parameters;
+	
 	@RequestMapping("")
 	public String login(HttpServletResponse response, Model model) {
 		
-		// URL 생성
+		// Google Login URL 생성
 		String googleUrl = googleOAuth2Template.buildAuthenticateUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
-		System.out.println("/googleLogin, url : " + googleUrl);
 		model.addAttribute("google_url", googleUrl);
+		
+		// Facebook Login URL 생성
+		OAuth2Operations oauthOperations = connectionFactory.getOAuthOperations();
+		String facebookUrl = oauthOperations.buildAuthenticateUrl(GrantType.AUTHORIZATION_CODE, facebookOAuth2Parameters);
+		System.out.println(facebookUrl);
+		model.addAttribute("facebook_url", facebookUrl);
 		
 		return "login/login";
 	}
@@ -184,7 +203,7 @@ public class LoginController {
 	}
 	
 	// 네이버 로그인 Callback
-	@GetMapping("/callback")
+	@GetMapping("/naverCallback")
 	public String callback(HttpSession session) {
 		return "login/naverCallback";
 	}
@@ -220,5 +239,53 @@ public class LoginController {
 		model.addAttribute("email", result.get("email"));
 		
 		return "login/googleCallback";
+	}
+	
+	// 페이스북 로그인 Callback
+	@GetMapping("/facebookCallback")
+	public String facebookCallback(String code, Model model) {
+		
+		String redirectUri = facebookOAuth2Parameters.getRedirectUri();
+
+		OAuth2Operations oauthOperations = connectionFactory.getOAuthOperations();
+		AccessGrant accessGrant = oauthOperations.exchangeForAccess(code, redirectUri, null);
+		String accessToken = accessGrant.getAccessToken();
+		Long expireTime = accessGrant.getExpireTime();
+		
+		if(expireTime != null && expireTime < System.currentTimeMillis()) {
+			accessToken = accessGrant.getRefreshToken();
+		}
+		
+		Connection<Facebook> connection = connectionFactory.createConnection(accessGrant);
+		Facebook facebook = connection == null ? new FacebookTemplate(accessToken) : connection.getApi();
+		UserOperations userOperations = facebook.userOperations();
+		
+		String[] fields = {"id", "email", "name"};
+		User userProfile = facebook.fetchObject("me", User.class, fields);
+		String name = userProfile.getName();
+		String email = userProfile.getEmail(); 
+
+		if(email == null) {
+			Random ran = new Random();
+			StringBuffer sb = new StringBuffer();
+			int num = 0;
+			
+			// 페이스북 사용자가 이메일 주소 대신 전화번호 사용 시 난수로 대체 
+			do {
+				num = ran.nextInt(75) + 48;
+				
+				if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
+					sb.append((char) num);
+				} else {
+					continue;
+				}
+			} while (sb.length() < 5);
+			
+			email = "fb" + sb.toString() + "@none.com";
+		}
+		model.addAttribute("name", name);
+		model.addAttribute("email", email);
+		
+		return "login/facebookCallback";
 	}
 }

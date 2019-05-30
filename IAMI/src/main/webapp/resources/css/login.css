@@ -56,33 +56,21 @@ html, body {
 	padding: 0 !important;
 	cursor: pointer;
 } */
-.loginInner .social-box .naver {
-	font-weight: bold;
-	background-color: #03cf5d;
-	color: white;
-}
-.loginInner .social-box .kakao {
-	font-weight: bold;
-	background-color: #f9df33;
-	color: white;
-}
-.loginInner .social-box .facebook {
-	font-weight: bold;
-	background-color: #3b5998;
-	color: white;
-}
-.loginInner .social-box .google {
-	font-weight: bold;
-	background-color: #F15F5F;
-	color: white;
+.loginInner .social-box div:not(.comment) {
+	display: inline-block;
 }
 .loginInner .social-box .btn-google {
 	max-width: 205px;
 	max-height: 50px;
 	cursor: pointer;
 }
-.loginInner .social-box #naverIdLogin img {
-
+.loginInner .social-box .btn-login {
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+}
+.loginInner .social-box .comment {
+	margin-bottom: 5px;
 }
 .loginInner .social-box #my-signin2 {
 	margin-top: 5px;
@@ -96,7 +84,7 @@ html, body {
 .loginInner .register-box {
 	margin-top: 20px;
 }
-.loginInner .register-box .comment {
+.loginInner .comment {
 	text-align: center;
 	font-size: 10pt;
 	color: gray;

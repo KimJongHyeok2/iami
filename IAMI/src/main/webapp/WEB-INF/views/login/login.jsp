@@ -16,9 +16,9 @@ $(document).ready(function() {
 	var naverLogin = new naver.LoginWithNaverId(
 			{
 				clientId: "KmvgOPJ6Ilbc111SxJ7C",
-				callbackUrl: "http://34.85.117.116/login/naverCallback",
+				callbackUrl: "https://iamiportfolio.com/login/naverCallback",
 				isPopup: true, /* 팝업을 통한 연동처리 여부 */
-				loginButton: {color: "green", type: 3, height: 43} /* 로그인 버튼의 타입을 지정  */
+				loginButton: {color: "green", type: 1, height: 47} /* 로그인 버튼의 타입을 지정  */
 			}
 	);
 	naverLogin.init();
@@ -49,9 +49,13 @@ function snsLogin(infos) {
 function googleLogin(url) {
 	var pop = window.open(url,"pop","width=600,height=600, scrollbars=yes, resizable=yes");
 }
+function facebookLogin(url) {
+	var pop = window.open(url,"pop","scrollbars=yes, resizable=yes");
+}
 </script>
 <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/image/main/icon.ico">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/login.css">
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v3.3&appId=372667063380455&autoLogAppEvents=1"></script>
 </head>
 <body>
 <div class="container">
@@ -78,10 +82,12 @@ function googleLogin(url) {
 			<div id="naverIdLogin"></div>
 <!-- 		<div class="kakao">K</div>
 			<div class="facebook">F</div> -->
-			<div onclick="googleLogin('${google_url}');"><img class="btn-google" src="${pageContext.request.contextPath}/resources/image/main/btn_google_sign.png"/></div>
+			<%-- <div onclick="googleLogin('${google_url}');"><img class="btn-google" src="${pageContext.request.contextPath}/resources/image/main/btn_google_sign.png"/></div> --%>
+			<img class="btn-login" onclick="googleLogin('${google_url}');" src="${pageContext.request.contextPath}/resources/image/main/btn-google.png"/>
+			<img class="btn-login" onclick="facebookLogin('${facebook_url}');" src="${pageContext.request.contextPath}/resources/image/main/btn-facebook.png"/>
 		</div>
 		<div class="register-box">
-			<div class="comment">아직 회원이 아니시라면</div>
+			<div class="comment">아직 회원이 아니신가요?</div>
 			<button class="w3-button btn-login" onclick="location.href='${pageContext.request.contextPath}/register'">회원가입</button>
 		</div>
 	</div>

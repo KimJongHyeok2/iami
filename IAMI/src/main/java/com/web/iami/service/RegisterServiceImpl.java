@@ -65,4 +65,9 @@ public class RegisterServiceImpl implements RegisterService {
 		return dao.insertMemberByGoogle(dto);
 	}
 
+	@Override
+	public int insertMemberByFacebook(SocialMemberDTO dto) throws Exception {
+		return dao.insertMemberByFacebook(dto);
+	}
+
 }

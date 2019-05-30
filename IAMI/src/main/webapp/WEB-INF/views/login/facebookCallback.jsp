@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>구글 로그인</title>
+<title>페이스북 로그인</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
 var name = "${name}";
@@ -12,8 +12,12 @@ var email = "${email}";
 var header = "${_csrf.headerName}";
 var token = "${_csrf.token}";
 
+if(email == "" && email.length == 0) {
+	email = "facebook";
+}
+
 $.ajax({
-	url: "${pageContext.request.contextPath}/register/google",
+	url: "${pageContext.request.contextPath}/register/facebook",
 	type: "POST",
 	data: {
 		"mem_nickname" : name,

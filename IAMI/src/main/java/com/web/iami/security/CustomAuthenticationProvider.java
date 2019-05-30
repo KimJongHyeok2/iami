@@ -31,7 +31,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			if(!encode.matches(pw, user.getPassword())) {
 				throw new BadCredentialsException(id);
 			}	
-		} else if(user.getMem_type() == 2) { // 네이버 로그인 회원이라면
+		} else if(user.getMem_type() == 2 || user.getMem_type() == 3 || user.getMem_type() == 4) { // 소셜 회원이라면
 			if(!pw.equals(user.getMem_pw())) {
 				throw new BadCredentialsException(id);
 			}

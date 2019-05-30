@@ -65,4 +65,9 @@ public class RegisterDAOImpl implements RegisterDAO {
 		return sqlSession.insert("register.insertMemberByGoogle", dto);
 	}
 
+	@Override
+	public int insertMemberByFacebook(SocialMemberDTO dto) throws Exception {
+		return sqlSession.insert("register.insertMemberByFacebook", dto);
+	}
+
 }

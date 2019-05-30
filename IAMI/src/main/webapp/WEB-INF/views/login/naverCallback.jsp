@@ -12,7 +12,7 @@
 	var naverLogin = new naver.LoginWithNaverId(
 		{
 			clientId: "KmvgOPJ6Ilbc111SxJ7C",
-			callbackUrl: "http://34.85.117.116/login/naverCallback",
+			callbackUrl: "https://iamiportfolio.com/login/naverCallback",
 			isPopup: false,
 			callbackHandle: true
 			/* callback 페이지가 분리되었을 경우에 callback 페이지에서는 callback처리를 해줄수 있도록 설정합니다. */
@@ -70,7 +70,6 @@
 				data: {
 					"mem_id" : uniqId,
 					"mem_nickname" : name,
-					"sns_gender" : gender,
 					"mem_email" : email
 				},
 				cache: false,
@@ -82,13 +81,13 @@
 						if(data.status == "Ok") {
 							var infos = [data.dto.mem_id, data.dto.mem_pw];
  							opener.snsLogin(infos);
- 							window.close();
 						} else if(data.status == "emailAlready") {
 							alert("이미 가입된 이메일입니다.");
-							window.close();
 						} else {
-							alert("알 수 없는 오류입니다.");ㅣ
+							alert("알 수 없는 오류입니다.");
 						}
+						
+						window.close();
 					}
 				}
 			});

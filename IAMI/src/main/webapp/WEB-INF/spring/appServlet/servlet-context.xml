@@ -100,11 +100,12 @@
 	</beans:bean>
 	
 	<beans:bean id="facebookOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
-		<beans:property name="scope" value="email"/>
+		<beans:property name="scope" value="public_profile email"/>
 		<beans:property name="redirectUri" value="${fb.redirectUri}"/>
 		<beans:qualifier value="facebookOAuth2Parameters"/>
 	</beans:bean>
 	
+	<!-- Google Social -->
     <beans:bean id="googleOAuth2Template"
         class="org.springframework.social.google.connect.GoogleOAuth2Template">
         <beans:constructor-arg value="${go.clientId}"/>
