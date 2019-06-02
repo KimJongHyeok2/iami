@@ -1,22 +1,17 @@
 package com.web.iami.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.sun.mail.iap.Response;
 import com.web.iami.domain.PortfolioDTO;
 import com.web.iami.service.PortfolioService;
 
@@ -54,6 +49,18 @@ public class MainController {
 		model.addAttribute("type", type);
 		model.addAttribute("page", page);
 		
+		return "main";
+	}
+	
+	@GetMapping("/notice")
+	public String notice(Model model) {
+		model.addAttribute("type", "noticeList");
+		return "main";
+	}
+	
+	@GetMapping("/notice/write")
+	public String noticeWrite(Model model) {
+		model.addAttribute("type", "noticeWrite");
 		return "main";
 	}
 	

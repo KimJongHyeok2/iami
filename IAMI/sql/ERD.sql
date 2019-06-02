@@ -160,3 +160,11 @@ CREATE SEQUENCE pot_seq;
 CREATE SEQUENCE com_seq;
 CREATE SEQUENCE rcom_seq;
 CREATE SEQUENCE vit_seq;
+
+SELECT * FROM members;
+
+SELECT * FROM portfolio;
+
+UPDATE members SET mem_no = 22 WHERE mem_no = 100;
+
+UPDATE members SET mem_auth = 'ROLE_ADMIN' WHERE mem_id = 'test13587';

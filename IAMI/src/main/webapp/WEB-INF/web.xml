@@ -69,7 +69,7 @@
         <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
     </listener>
      
-    <!-- Https Filter -->
+    <!-- HTTPS Filter -->
 <!--     <security-constraint>
         <web-resource-collection>
             <web-resource-name>my-secure-app</web-resource-name>

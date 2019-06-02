@@ -20,69 +20,71 @@ $(document).ready(function() {
 	$(".user").click(function() {
 		$("#user-drop").toggle();
 	});
-	$.ajax({
-		url: "${pageContext.request.contextPath}/common/visitor",
-		type: "GET",
-		cache: false,
-		beforeSend: function(xhr) {
-			xhr.setRequestHeader(header, token);
-		},
-		success: function(data, status) {
-			if(status == "success") {
-				if(data.status == "Ok") {
-					var visitCount = new Array();
-					var visitDate = new Array();
-					for(var i=0; i<data.count; i++) {
-						visitDate.push(data.list[i].vit_date);
-						visitCount.push(data.list[i].vit_count);
-					}
-					visitChart = c3.generate({
-						bindto: "#chart",
-						data: {
-							json: {
-								date: visitDate,
-								data1: visitCount,
-								data2: visitCount
+	if(${type == 'new'} || ${type == 'popular'}) {
+		$.ajax({
+			url: "${pageContext.request.contextPath}/common/visitor",
+			type: "GET",
+			cache: false,
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(data, status) {
+				if(status == "success") {
+					if(data.status == "Ok") {
+						var visitCount = new Array();
+						var visitDate = new Array();
+						for(var i=0; i<data.count; i++) {
+							visitDate.push(data.list[i].vit_date);
+							visitCount.push(data.list[i].vit_count);
+						}
+						visitChart = c3.generate({
+							bindto: "#chart",
+							data: {
+								json: {
+									date: visitDate,
+									data1: visitCount,
+									data2: visitCount
+								},
+								x: "date",
+								names: {
+									data1: "방문자(Bar)",
+									data2: "방문자(Line)"
+								},
+								types: {
+									data1: "bar",
+									data2: "line"
+								},
 							},
-							x: "date",
-							names: {
-								data1: "방문자(Bar)",
-								data2: "방문자(Line)"
+							grid: {
+								x: {
+									show: true
+								},
+								y: {
+									show: true
+								}
 							},
-							types: {
-								data1: "bar",
-								data2: "line"
-							},
-						},
-						grid: {
-							x: {
-								show: true
-							},
-							y: {
-								show: true
-							}
-						},
-						axis: {
-							x: {
-								tick: {
-									format: function(x) {
-										var dates = new Date(x);
-										var year = dates.getFullYear();
-										var month = dates.getMonth()+1;
-										month = (month + "").length == 1? ("0" + month):month;
-										var day = dates.getDate();
-										day = (day + "").length == 1? ("0" + day):day;
-										
-										return year + "-" + month + "-" + day;
+							axis: {
+								x: {
+									tick: {
+										format: function(x) {
+											var dates = new Date(x);
+											var year = dates.getFullYear();
+											var month = dates.getMonth()+1;
+											month = (month + "").length == 1? ("0" + month):month;
+											var day = dates.getDate();
+											day = (day + "").length == 1? ("0" + day):day;
+											
+											return year + "-" + month + "-" + day;
+										}
 									}
 								}
-							}
-						},
-					});
+							},
+						});
+					}
 				}
 			}
-		}
-	});
+		});
+	}
 });
 $(window).resize(function() {
 	resize();
@@ -94,10 +96,11 @@ function resize() {
 	$htmlHeight = $("html").height();
 	$headerHeight = $(".headerWrapper").height();
 	$navHeight = $(".navWrapper").height();
+	$noticeHeight = $(".noticeWrapper").height();
 	$chartHeight = $(".chartWrapper").height();
 	$footerHeight = $(".footerWrapper").height();
 	
-	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $chartHeight - $footerHeight - 71 + "px");
+	$(".container-fluid").css("min-height", $htmlHeight - $headerHeight - $navHeight - $noticeHeight - $chartHeight - $footerHeight - 81 + "px");
 }
 function userList(type) {
 	if(type == "write") {
@@ -112,6 +115,8 @@ function userList(type) {
 		} else {			
 			portfolioList(no);
 		}
+	} else if(type == "noticeList") {
+		location.href = "${pageContext.request.contextPath}/notice";
 	}
 }
 function list(type) {
@@ -359,12 +364,58 @@ function portfolioDateFormat(date) {
 			<c:when test="${type == 'myinfo'}">
 				<jsp:include page="myinfo/myinfo.jsp"/>
 			</c:when>
+			<c:when test="${type == 'noticeList'}">
+				<jsp:include page="notice/noticeList.jsp"/>
+			</c:when>
+			<c:when test="${type == 'noticeWrite'}">
+				<jsp:include page="notice/noticeWrite.jsp"/>
+			</c:when>
 			<c:otherwise>
 				<jsp:include page="portfolio/list.jsp"/>
 			</c:otherwise>
 		</c:choose>
 	</div>
 </div>
+<c:if test="${type == 'new' || type == 'popular'}">
+<div class="noticeWrapper">
+	<div class="noticeInner">
+		<div class="noticeInnerWrapper">
+		<div class="noticeTitle">
+			<h3>공지사항</h3>
+			<div class="w3-button" onclick="userList('noticeList');">더 보기</div>
+		</div>
+		<div class="noticeContent">
+			<ul class="noticeContentInner">
+				<li>
+					<div class="notice-inner">
+						<div class="notice-type">
+							<span class="normal">일반</span>
+						</div>
+						<div class="notice-subject-box">
+							<div class="subject">
+								제목입니다.
+							</div>
+							<div class="subImage">
+								<i class="fas fa-image"></i> <i class="fab fa-youtube"></i>
+							</div>
+						</div>
+						<div class="notice-regdate">
+							2019-06-01
+						</div>
+						<div class="notice-view">
+							조회 <span class="viewCount">1</span>
+						</div>
+					</div>
+					<div class="notice-inner m">
+						<span class="regdate m">2019-06-01</span> <span class="viewCount m">조회 <span class="count">1</span></span>
+					</div>
+				</li>
+			</ul>	
+		</div>
+		</div>
+	</div>
+</div>
+</c:if>
 <c:if test="${type == 'new' || type == 'popular'}">
 	<div class="chartWrapper">
 		<div class="chartInner">

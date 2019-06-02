@@ -25,9 +25,10 @@ public class RestCommonController {
 	@GetMapping("/visitor")
 	public RestVisitDTO visitor() {
 		TimeZone time = TimeZone.getTimeZone("Asia/Seoul");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		sdf.setTimeZone(time);
 		
 		Calendar startDay = Calendar.getInstance();
-		startDay.setTimeZone(time);
 		startDay.add(Calendar.DATE, -startDay.get(Calendar.DAY_OF_WEEK)+1);
 		
 		Calendar endDay = Calendar.getInstance();
@@ -36,8 +37,8 @@ public class RestCommonController {
 		endDay.add(Calendar.DATE, 7);
 		
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("startDay", new SimpleDateFormat("yyyy-MM-dd").format(startDay.getTime()));
-		map.put("endDay", new SimpleDateFormat("yyyy-MM-dd").format(endDay.getTime()));
+		map.put("startDay", sdf.format(startDay.getTime()));
+		map.put("endDay", sdf.format(endDay.getTime()));
 		
 		RestVisitDTO dto = new RestVisitDTO();
 		
