@@ -1,3 +1,4 @@
+
 /* Drop Tables */
 
 DROP TABLE recomments CASCADE CONSTRAINTS;
@@ -8,14 +9,6 @@ DROP TABLE recommendHistory CASCADE CONSTRAINTS;
 DROP TABLE portfolio CASCADE CONSTRAINTS;
 DROP TABLE members CASCADE CONSTRAINTS;
 DROP TABLE visitor CASCADE CONSTRAINTS;
-
-DROP SEQUENCE cnc_seq;
-DROP SEQUENCE key_seq;
-DROP SEQUENCE mem_seq;
-DROP SEQUENCE pot_seq;
-DROP SEQUENCE com_seq;
-DROP SEQUENCE rcom_seq;
-DROP SEQUENCE vit_seq;
 
 /* Create Tables */
 
@@ -33,7 +26,6 @@ CREATE TABLE comments
 	PRIMARY KEY (com_no)
 );
 
-
 CREATE TABLE customerNotice
 (
 	cnc_no number NOT NULL,
@@ -41,6 +33,10 @@ CREATE TABLE customerNotice
 	cnc_subject varchar2(100) NOT NULL,
 	cnc_content clob NOT NULL,
 	cnc_type number(10) DEFAULT 1,
+	cnc_hasImage number(2) DEFAULT 0,
+	cnc_hasVideo number(2) DEFAULT 0,
+	cnc_viewcount number DEFAULT 0,
+	cnc_status number DEFAULT 1,
 	cnc_regdate timestamp DEFAULT SYSDATE,
 	PRIMARY KEY (cnc_no)
 );
@@ -58,7 +54,7 @@ CREATE TABLE members
 	mem_id varchar2(30) NOT NULL UNIQUE,
 	mem_pw varchar2(100) NOT NULL,
 	mem_nickname varchar2(30) DEFAULT 'NONE',
-	mem_gender number(2) NOT NULL,
+	mem_gender number(2) DEFAULT 0,
 	mem_profile varchar2(300),
 	mem_birth date,
 	mem_email varchar2(100) NOT NULL,
@@ -88,6 +84,7 @@ CREATE TABLE portfolio
 	pot_regdate timestamp DEFAULT SYSDATE,
 	PRIMARY KEY (pot_no)
 );
+
 
 CREATE TABLE recommendHistory
 (
@@ -157,14 +154,6 @@ CREATE SEQUENCE cnc_seq;
 CREATE SEQUENCE key_seq;
 CREATE SEQUENCE mem_seq;
 CREATE SEQUENCE pot_seq;
+CREATE SEQUENCE pro_seq;
 CREATE SEQUENCE com_seq;
 CREATE SEQUENCE rcom_seq;
-CREATE SEQUENCE vit_seq;
-
-SELECT * FROM members;
-
-SELECT * FROM portfolio;
-
-UPDATE members SET mem_no = 22 WHERE mem_no = 100;
-
-UPDATE members SET mem_auth = 'ROLE_ADMIN' WHERE mem_id = 'test13587';

@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -111,6 +112,36 @@ public class RestUploadController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+	
+	// 공지사항 이미지 업로드
+	@PostMapping("/notice/image")
+	public ImageDTO noticeImage(HttpServletRequest request) {
+		
+		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload");
+		int maxPostSize = 10 * 1024 * 1024;
+		String encoding = "UTF-8";
+		FileRenamePolicy policy = new DefaultFileRenamePolicy();
+		ImageDTO dto = new ImageDTO();
+		
+		try {
+			MultipartRequest multi = new MultipartRequest(request, saveDirectory, maxPostSize, encoding, policy);
+			
+			
+			Enumeration<String> enums = multi.getFileNames();
+			while(enums.hasMoreElements()) {
+				String name = enums.nextElement();
+				String value = multi.getFilesystemName(name);
+				
+				dto.setUrl(request.getScheme() + "://" + request.getServerName() + request.getContextPath() + "/resources/upload/" + value);
+				dto.setName(value);
+				dto.setUploaded(true);
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		

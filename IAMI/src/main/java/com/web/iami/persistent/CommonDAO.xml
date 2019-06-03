@@ -13,4 +13,32 @@
 	<select id="selectWeekVisitCount" resultType="com.web.iami.domain.VisitDTO">
 		SELECT * FROM visitor WHERE vit_date BETWEEN TO_DATE(#{startDay}, 'YYYY-MM-DD') AND TO_DATE(#{endDay}, 'YYYY-MM-DD')
 	</select>
+	<select id="selectMainNotice" resultType="com.web.iami.domain.NoticeDTO">
+		<![CDATA[
+			SELECT * FROM (SELECT * FROM customerNotice WHERE cnc_status = 1 ORDER BY cnc_no DESC) WHERE rownum <= 5
+		]]>
+	</select>
+	<select id="selectNotice" resultType="com.web.iami.domain.NoticeDTO">
+		<![CDATA[
+			SELECT * FROM
+			(SELECT rownum rnum, n.* FROM (SELECT * FROM customerNotice WHERE cnc_status = 1 ORDER BY cnc_no DESC) n)
+			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+		]]>
+	</select>
+	<select id="selectNoticeCount" resultType="Integer">
+		SELECT count(cnc_no) FROM customerNotice WHERE cnc_status = 1
+	</select>
+	<select id="selectViewNotice" resultType="com.web.iami.domain.NoticeDTO">
+		<![CDATA[
+			SELECT c.*,
+				(SELECT min(cnc_no) FROM customerNotice WHERE cnc_no > #{param1}) next_cnc_no,
+				(SELECT max(cnc_no) FROM customerNotice WHERE cnc_no < #{param1}) prev_cnc_no,
+				(SELECT cnc_subject FROM customerNotice WHERE cnc_no = (SELECT min(cnc_no) FROM customerNotice WHERE cnc_no > #{param1})) next_cnc_subject,
+				(SELECT cnc_subject FROM customerNotice WHERE cnc_no = (SELECT max(cnc_no) FROM customerNotice WHERE cnc_no < #{param1})) prev_cnc_subject
+			FROM customerNotice c WHERE c.cnc_no = #{param1}
+		]]>
+	</select>
+	<update id="updateNoticeViewCount">
+		UPDATE customerNotice SET cnc_viewcount = cnc_viewcount + 1 WHERE cnc_no = #{param1}
+	</update>
 </mapper>

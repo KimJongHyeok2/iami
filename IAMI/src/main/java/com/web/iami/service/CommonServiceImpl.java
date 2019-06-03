@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import com.web.iami.domain.NoticeDTO;
 import com.web.iami.domain.VisitDTO;
 import com.web.iami.persistent.CommonDAO;
 
@@ -34,6 +35,31 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	public List<VisitDTO> selectWeekVisitCount(Map<String, String> map) throws Exception {
 		return dao.selectWeekVisitCount(map);
+	}
+
+	@Override
+	public List<NoticeDTO> selectMainNotice() throws Exception {
+		return dao.selectMainNotice();
+	}
+
+	@Override
+	public List<NoticeDTO> selectNotice(Map<String, Integer> map) throws Exception {
+		return dao.selectNotice(map);
+	}
+
+	@Override
+	public int selectNoticeCount() throws Exception {
+		return dao.selectNoticeCount();
+	}
+
+	@Override
+	public NoticeDTO selectViewNotice(int cnc_no) throws Exception {
+		return dao.selectViewNotice(cnc_no);
+	}
+
+	@Override
+	public int updateNoticeViewCount(int cnc_no) throws Exception {
+		return dao.updateNoticeViewCount(cnc_no);
 	}
 
 }

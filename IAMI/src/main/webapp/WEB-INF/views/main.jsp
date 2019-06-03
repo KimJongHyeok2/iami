@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
@@ -16,6 +17,7 @@ $(document).ready(function() {
 	var token = "${_csrf.token}";
 	
 	resize();
+	noticeDateFormat();
 	
 	$(".user").click(function() {
 		$("#user-drop").toggle();
@@ -88,9 +90,11 @@ $(document).ready(function() {
 });
 $(window).resize(function() {
 	resize();
-	visitChart.resize({
-		width: $(".chart").width()
-	});
+	if(${type == 'new'} || ${type == 'popular'}) {
+		visitChart.resize({
+			width: $(".chart").width()
+		});
+	}
 });
 function resize() {
 	$htmlHeight = $("html").height();
@@ -137,6 +141,21 @@ function dateFormat(date) {
 	day = (day + "").length == 1? ("0" + day):day;
 	
 	return year + "-" + month + "-" + day;
+}
+function noticeDateFormat() {
+	var noticeLength = "${fn:length(noticeList)}"; 
+	
+	for(var i=0; i<noticeLength; i++) {
+		var dates = new Date($("#notice-regdate-" + (i+1)).html().trim());
+		var year = dates.getFullYear();
+		var month = dates.getMonth()+1;
+		month = (month + "").length == 1? ("0" + month):month;
+		var day = dates.getDate();
+		day = (day + "").length == 1? ("0" + day):day;
+		
+		$("#notice-regdate-" + (i+1)).html(year + "-" + month + "-" + day);
+		$("#notice-regdate-m-" + (i+1)).html(year + "-" + month + "-" + day);
+	}
 }
 function openChart() {
 	visitChart.resize({
@@ -273,6 +292,9 @@ function portfolioDateFormat(date) {
 	
 	return year + "-" + month + "-" + day + " " + hour + ":" + minute;
 }
+function page(no) {
+	location.href= "${pageContext.request.contextPath}/notice/view/" + no;
+}
 </script>
 <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/image/main/icon.ico">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/main.css">
@@ -370,6 +392,9 @@ function portfolioDateFormat(date) {
 			<c:when test="${type == 'noticeWrite'}">
 				<jsp:include page="notice/noticeWrite.jsp"/>
 			</c:when>
+			<c:when test="${type == 'noticeView'}">
+				<jsp:include page="notice/noticeView.jsp"/>
+			</c:when>
 			<c:otherwise>
 				<jsp:include page="portfolio/list.jsp"/>
 			</c:otherwise>
@@ -386,30 +411,51 @@ function portfolioDateFormat(date) {
 		</div>
 		<div class="noticeContent">
 			<ul class="noticeContentInner">
-				<li>
-					<div class="notice-inner">
-						<div class="notice-type">
-							<span class="normal">일반</span>
-						</div>
-						<div class="notice-subject-box">
-							<div class="subject">
-								제목입니다.
-							</div>
-							<div class="subImage">
-								<i class="fas fa-image"></i> <i class="fab fa-youtube"></i>
-							</div>
-						</div>
-						<div class="notice-regdate">
-							2019-06-01
-						</div>
-						<div class="notice-view">
-							조회 <span class="viewCount">1</span>
-						</div>
-					</div>
-					<div class="notice-inner m">
-						<span class="regdate m">2019-06-01</span> <span class="viewCount m">조회 <span class="count">1</span></span>
-					</div>
-				</li>
+				<c:choose>
+					<c:when test="${not empty noticeList && fn:length(noticeList) != 0}">
+						<c:forEach var="i" items="${noticeList}" varStatus="index">
+							<li>
+								<div class="notice-inner">
+									<div class="notice-type">
+										<c:if test="${i.cnc_type == 1}">
+											<div class="normal">일반</div>
+										</c:if>
+										<c:if test="${i.cnc_type == 2}">
+											<div class="event">이벤트</div>
+										</c:if>
+									</div>
+									<div class="notice-subject-box">
+										<div class="subject" onclick="page(${i.cnc_no});">
+											${i.cnc_subject}
+										</div>
+										<div class="subImage">
+											<c:if test="${i.cnc_hasImage == 1}">
+												<i class="fas fa-image"></i>
+											</c:if>
+											<c:if test="${i.cnc_hasVideo == 1}">
+												<i class="fab fa-youtube"></i>
+											</c:if>
+										</div>
+									</div>
+									<div id="notice-regdate-${index.count}" class="notice-regdate">
+										${i.cnc_regdate}
+									</div>
+									<div class="notice-view">
+										조회 <span class="viewCount">${i.cnc_viewcount}</span>
+									</div>
+								</div>
+								<div class="notice-inner m">
+									<span id="notice-regdate-m-${index.count}" class="regdate m">${i.cnc_regdate}</span> <span class="viewCount m">조회 <span class="count">${i.cnc_viewcount}</span></span>
+								</div>
+							</li>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<li class="emptyNotice">
+							등록된 공지사항이 없습니다.
+						</li>
+					</c:otherwise>
+				</c:choose>
 			</ul>	
 		</div>
 		</div>

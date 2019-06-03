@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <script>
 $(document).ready(function() {
 	resize();
-	$("input[type='radio'][name='cnc_type']").click(function() {
+	$("input[type='radio'][name='type']").click(function() {
 		$(".noticeWrapper .noticeInner .notice-tab label").attr("class", "w3-button");
 		var value = $(this).val();
 		if(value == 1) {
@@ -22,84 +23,50 @@ function resize() {
 	
 	$(".container-fluid .noticeWrapper").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 61 + "px");
 }
-</script>
-<style>
-.noticeWrapper {
-	display: flex;
-	align-items: center;
-	margin: 10px 0;
-}
-.noticeWrapper .noticeInner {
-	flex-grow: 1;
-	max-width: 800px;
-}
-.noticeWrapper .noticeInner .noticeInner-wrapper {
+function writeValid(obj) {
+	var subject = obj["cnc_subject"].value;
+	var content = myEditor.getData();
+	var typeFlag = false;
 	
-}
-.noticeWrapper .noticeInner .notice-title {
-	font-size: 25pt;
-	font-weight: bold;
-	text-align: center;
-}
-.noticeWrapper .noticeInner .notice-title-sub {
-	color: gray;
-	text-align: center;
-}
-.noticeWrapper .noticeInner .notice-tab {
-	display: flex;
-	margin-top: 5px;
-}
-.noticeWrapper .noticeInner .notice-tab input[type="radio"] {
-	display: none;
-}
-.noticeWrapper .noticeInner .notice-tab label {
-	margin-right: 3px;
-	border: 1px solid rgba(17, 135, 207, 0.4);
-	border-radius: 5px;
-	color: rgba(17, 135, 207, 0.7);
-}
-.noticeWrapper .noticeInner .notice-tab label.activeNormal {
-	border: 1px solid #B7F0B1;
-	background-color: #B7F0B1;
-	color: white;
-}
-.noticeWrapper .noticeInner .notice-tab label.activeEvent {
-	border: 1px solid #F2CB61;
-	background-color: #F2CB61;
-	color: white;
-}
-.noticeWrapper .noticeInner .notice-content .notice-content-subject {
-	margin-bottom: 7.5px;
-}
-.noticeWrapper .noticeInner .notice-content .notice-content-subject input[type="text"] {
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #D5D5D5;
-}
-.noticeWrapper .noticeInner .notice-function {
-	margin-top: 5px;
-}
-.noticeWrapper .noticeInner .notice-function {
-	text-align: right;
-}
-.noticeWrapper .noticeInner .notice-function .btn-write {
-	border: 1px solid rgba(17, 135, 207, 0.4);
-	color: rgba(17, 135, 207, 0.7);
-}
-.ck-editor__editable[role='textbox'] {
-	min-height: 300px;
-}
-@media (max-width:800px) {
-	.noticeWrapper .noticeInner .noticeInner-wrapper {
-		margin: 0 10px;
+	if(content.indexOf('<figure class="image">') != -1) {
+		$("#cnc_hasImage").val(1);
+	} else {
+		$("#cnc_hasImage").val(0);
+	}
+	if(content.indexOf('<figure class="media">') != -1) {
+		$("#cnc_hasVideo").val(1);
+	} else {
+		$("#cnc_hasVideo").val(0);
+	}
+	
+	$(obj["type"]).each(function() {
+		if($(this).is(":checked")) {
+			typeFlag = true;
+			$("#cnc_type").val($(this).val());
+		}
+	});
+	
+	if(!typeFlag) {
+		alert("상단의 공지사항 타입을 선택해주세요.");
+		return false;
+	}
+	
+	if(subject.length < 5 || subject.length > 30) {
+		alert("제목은 5자 이상 30자 이하로 입력해주세요.");
+		return false;
+	}
+	if(content.length == 0) {
+		alert("내용을 입력해주세요.");
+		return false;
 	}
 }
-</style>
+</script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/noticeWrite.css">
 <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
 <div class="noticeWrapper">
 	<div class="noticeInner">
 		<div class="noticeInner-wrapper">
-			<form>
+			<form action="writeOk" method="post" onsubmit="return writeValid(this);">
 			<div class="notice-title">
 				공지사항 작성
 			</div>
@@ -108,25 +75,29 @@ function resize() {
 			</div>
 			<div class="notice-tab">
 				<label for="normal" id="label-normal" class="w3-button">일반</label>
-				<input type="radio" id="normal" name="cnc_type" value="1"/>
+				<input type="radio" id="normal" name="type" value="1"/>
 				<label for="event" id="label-event" class="w3-button last">이벤트</label>
-				<input type="radio" id="event" name="cnc_type" value="2"/>
+				<input type="radio" id="event" name="type" value="2"/>
+				<input type="hidden" id="cnc_type" name="cnc_type"/>
 			</div>
 			<div class="notice-content">
 				<div class="notice-content-subject">
 					<input type="text" id="cnc_subject" name="cnc_subject" placeholder="제목을 입력해주세요."/>
 				</div>
 				<div class="notice-content-content">
-					<textarea id="cnc_content"></textarea>
+					<textarea id="cnc_content" name="cnc_content"></textarea>
 				</div>
+				<input type="hidden" id="cnc_hasImage" name="cnc_hasImage"/>
+				<input type="hidden" id="cnc_hasVideo" name="cnc_hasVideo"/>
 			</div>
+			<s:csrfInput/>
 			<div class="notice-function">
 				<div class="w3-button btn-write" onclick="history.back();">
 					이전
 				</div>
-				<div class="w3-button btn-write">
+				<button type="submit" class="w3-button btn-write">
 					완료
-				</div>
+				</button>
 			</div>
 			</form>
 		</div>

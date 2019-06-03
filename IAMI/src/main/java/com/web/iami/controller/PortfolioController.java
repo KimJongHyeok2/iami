@@ -40,7 +40,8 @@ public class PortfolioController {
 		}
 		
 		if(dto == null) {
-			return "redirect:/";
+			model.addAttribute("type", "alreadyDelete");
+			return "confirm/fail";
 		} else {
 			model.addAttribute("portfolio", dto);
 		}
