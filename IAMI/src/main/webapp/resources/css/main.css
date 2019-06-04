@@ -177,9 +177,9 @@
 .noticeWrapper .noticeInner .noticeContentInner li .notice-type .normal {
 	width: 50px;
 	text-align: center;
-	border: 1px solid #B7F0B1;
+	border: 1px solid rgb(17, 135, 207);
 	border-radius: 5px;
-	background-color: #B7F0B1;
+	background-color: rgb(17, 135, 207);
 	color: white;
 }
 .noticeWrapper .noticeInner .noticeContentInner li .notice-type .event {
@@ -341,6 +341,17 @@
 		display: none;
 	}
 }
+@media (max-width:420px) {
+	.noticeWrapper .noticeInner .noticeContentInner li .notice-regdate {
+		display: none;
+	}
+	.noticeWrapper .noticeInner .noticeContentInner li .notice-subject-box .subject {
+		max-width: 200px;
+	}
+	.noticeWrapper .noticeInner .noticeContentInner .notice-inner.m {
+		display: flex;
+	}
+}
 @media (max-width:399px) {
 	.account {
 		display: none;
@@ -358,14 +369,8 @@
 		padding-right: 10px;
 	}
 }
-@media (max-width:370px) {
-	.noticeWrapper .noticeInner .noticeContentInner li .notice-regdate {
-		display: none;
-	}
+@media (max-width:310px) {
 	.noticeWrapper .noticeInner .noticeContentInner li .notice-subject-box .subject {
-		max-width: 200px;
-	}
-	.noticeWrapper .noticeInner .noticeContentInner .notice-inner.m {
-		display: flex;
+		max-width: 150px;
 	}
 }

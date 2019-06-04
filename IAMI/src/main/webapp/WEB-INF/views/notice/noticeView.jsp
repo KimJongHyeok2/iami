@@ -43,6 +43,16 @@ function noticeDateFormat() {
 function pageNav(no) {
 	location.href = "" + no;
 }
+function update(no) {
+	location.href = "${pageContext.request.contextPath}/notice/update?no=" + no;
+}
+function deletes(no) {
+	var confirms = confirm("정말로 삭제하시겠습니까?");
+	
+	if(confirms) {
+		location.href = "${pageContext.request.contextPath}/notice/deleteOk?no=" + no;	
+	}
+}
 </script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/noticeView.css">
 <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
@@ -82,7 +92,7 @@ function pageNav(no) {
 							${dto.cnc_regdate}
 						</div>
 						<div class="viewcount-m">
-							${dto.cnc_viewcount}
+							조회 ${dto.cnc_viewcount}
 						</div>
 					</div>				
 				</div>
@@ -91,10 +101,9 @@ function pageNav(no) {
 				${dto.cnc_content}
 			</div>
 			<div class="notice-content-function">
-				<button class="w3-button" onclick="location.href='${pageContext.request.contextPath}/notice'">목록</button>	
+				<button class="w3-button" onclick="location.href='${pageContext.request.contextPath}/notice'">목록</button>
 				<s:authorize access="hasRole('ROLE_ADMIN')">
-					<button class="w3-button" onclick="history.back();">수정</button>	
-					<button class="w3-button" onclick="history.back();">삭제</button>	
+					<button class="w3-button btn-update" onclick="update(${dto.cnc_no});">수정</button><button class="w3-button btn-delete" onclick="deletes(${dto.cnc_no});">삭제</button>	
 				</s:authorize>
 			</div>
 			<div class="notice-content-list-nav">

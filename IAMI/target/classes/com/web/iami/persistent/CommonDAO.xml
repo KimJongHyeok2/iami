@@ -18,15 +18,30 @@
 			SELECT * FROM (SELECT * FROM customerNotice WHERE cnc_status = 1 ORDER BY cnc_no DESC) WHERE rownum <= 5
 		]]>
 	</select>
-	<select id="selectNotice" resultType="com.web.iami.domain.NoticeDTO">
-		<![CDATA[
-			SELECT * FROM
-			(SELECT rownum rnum, n.* FROM (SELECT * FROM customerNotice WHERE cnc_status = 1 ORDER BY cnc_no DESC) n)
-			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
-		]]>
-	</select>
 	<select id="selectNoticeCount" resultType="Integer">
-		SELECT count(cnc_no) FROM customerNotice WHERE cnc_status = 1
+ 		<choose>
+			<when test='searchType == null and searchValue == null and noticeType.equals("all")'>
+				SELECT count(cnc_no) FROM customerNotice WHERE cnc_status = 1
+			</when>
+			<when test='searchType == null and searchValue == null and noticeType.equals("normal")'>
+				SELECT count(cnc_no) FROM customerNotice WHERE cnc_type = 1 AND cnc_status = 1
+			</when>
+			<when test='searchType == null and searchValue == null and noticeType.equals("event")'>
+				SELECT count(cnc_no) FROM customerNotice WHERE cnc_type = 2 AND cnc_status = 1
+			</when>
+			<when test='searchType == 1 and searchValue != null and noticeType.equals("all")'>
+				SELECT count(cnc_no) FROM customerNotice
+				WHERE cnc_status = 1 AND (cnc_subject like UPPER('%'||#{searchValue}||'%') OR cnc_subject like LOWER('%'||#{searchValue}||'%'))
+			</when>
+			<when test='searchType == 1 and searchValue != null and noticeType.equals("normal")'>
+				SELECT count(cnc_no) FROM customerNotice
+				WHERE (cnc_type = 1 AND cnc_status = 1) AND (cnc_subject like UPPER('%'||#{searchValue}||'%') OR cnc_subject like LOWER('%'||#{searchValue}||'%'))
+			</when>
+			<when test='searchType == 1 and searchValue != null and noticeType.equals("event")'>
+				SELECT count(cnc_no) FROM customerNotice
+				WHERE (cnc_type = 2 AND cnc_status = 1) AND (cnc_subject like UPPER('%'||#{searchValue}||'%') OR cnc_subject like LOWER('%'||#{searchValue}||'%'))
+			</when>
+		</choose>
 	</select>
 	<select id="selectViewNotice" resultType="com.web.iami.domain.NoticeDTO">
 		<![CDATA[
@@ -41,4 +56,50 @@
 	<update id="updateNoticeViewCount">
 		UPDATE customerNotice SET cnc_viewcount = cnc_viewcount + 1 WHERE cnc_no = #{param1}
 	</update>
+	<select id="selectNotice" resultType="com.web.iami.domain.NoticeDTO">
+		<choose>
+			<when test='searchType == null and searchValue == null and noticeType.equals("all")'>
+				<![CDATA[
+					SELECT * FROM
+						(SELECT rownum rnum, n.* FROM (SELECT * FROM customerNotice WHERE cnc_status = 1 ORDER BY cnc_no DESC) n)
+					WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+				]]>
+			</when>
+			<when test='searchType == null and searchValue == null and noticeType.equals("normal")'>
+				<![CDATA[
+					SELECT * FROM
+						(SELECT rownum rnum, n.* FROM (SELECT * FROM customerNotice WHERE cnc_type = 1 AND cnc_status = 1 ORDER BY cnc_no DESC) n)
+					WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+				]]>
+			</when>
+			<when test='searchType == null and searchValue == null and noticeType.equals("event")'>
+				<![CDATA[
+					SELECT * FROM
+						(SELECT rownum rnum, n.* FROM (SELECT * FROM customerNotice WHERE cnc_type = 2 AND cnc_status = 1 ORDER BY cnc_no DESC) n)
+					WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+				]]>
+			</when>
+			<when test='searchType == 1 and searchValue != null and noticeType.equals("all")'>
+				<![CDATA[
+					SELECT * FROM
+						(SELECT rownum rnum, n.* FROM (SELECT * FROM customerNotice WHERE cnc_status = 1 AND (cnc_subject like UPPER('%'||#{searchValue}||'%') OR cnc_subject like LOWER('%'||#{searchValue}||'%')) ORDER BY cnc_no DESC) n)
+					WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+				]]>
+			</when>
+			<when test='searchType == 1 and searchValue != null and noticeType.equals("normal")'>
+				<![CDATA[
+					SELECT * FROM
+						(SELECT rownum rnum, n.* FROM (SELECT * FROM customerNotice WHERE (cnc_type = 1 AND cnc_status = 1) AND (cnc_subject like UPPER('%'||#{searchValue}||'%') OR cnc_subject like LOWER('%'||#{searchValue}||'%')) ORDER BY cnc_no DESC) n)
+					WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+				]]>
+			</when>
+			<when test='searchType == 1 and searchValue != null and noticeType.equals("event")'>
+				<![CDATA[
+					SELECT * FROM
+						(SELECT rownum rnum, n.* FROM (SELECT * FROM customerNotice WHERE (cnc_type = 2 AND cnc_status = 1) AND (cnc_subject like UPPER('%'||#{searchValue}||'%') OR cnc_subject like LOWER('%'||#{searchValue}||'%')) ORDER BY cnc_no DESC) n)
+					WHERE rnum >= #{page} AND rnum < #{page} + #{row}
+				]]>
+			</when>
+		</choose>
+	</select>
 </mapper>

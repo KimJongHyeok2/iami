@@ -18,4 +18,14 @@ public class AdminServiceImpl implements AdminService {
 		return dao.insertNotice(dto);
 	}
 
+	@Override
+	public int updateNotice(NoticeDTO dto) throws Exception {
+		return dao.updateNotice(dto);
+	}
+
+	@Override
+	public int deleteNotice(int cnc_no) throws Exception {
+		return dao.deleteNotice(cnc_no);
+	}
+
 }

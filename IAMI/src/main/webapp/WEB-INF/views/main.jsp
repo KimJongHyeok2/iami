@@ -395,6 +395,9 @@ function page(no) {
 			<c:when test="${type == 'noticeView'}">
 				<jsp:include page="notice/noticeView.jsp"/>
 			</c:when>
+			<c:when test="${type == 'noticeUpdate'}">
+				<jsp:include page="notice/noticeUpdate.jsp"/>
+			</c:when>
 			<c:otherwise>
 				<jsp:include page="portfolio/list.jsp"/>
 			</c:otherwise>

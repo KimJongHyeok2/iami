@@ -67,8 +67,12 @@ public class MainController {
 		return "main";
 	}
 	
+	// 공지사항 리스트 페이지 이동
 	@GetMapping("/notice")
-	public String notice(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+	public String notice(@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "noticeType", defaultValue = "all") String noticeType,
+			String searchType, String searchValue,
+			Model model) {
 		
 		int noticeCount = 0;
 		int row = 10;
@@ -78,7 +82,11 @@ public class MainController {
 		int endPage = 0;
 		
 		try {
-			noticeCount = commonService.selectNoticeCount();
+			Map<String, String> searchMap = new HashMap<String, String>();
+			searchMap.put("noticeType", noticeType);
+			searchMap.put("searchType", searchType);
+			searchMap.put("searchValue", searchValue);
+			noticeCount = commonService.selectNoticeCount(searchMap);
 			
 			pageCount = noticeCount / row + (noticeCount%row==0? 0:1);
 			startPage = ((page-1) / pageBlock) * pageBlock + 1;
@@ -88,9 +96,13 @@ public class MainController {
 				endPage = pageCount;
 			}
 			
-			Map<String, Integer> map = new HashMap<String, Integer>();
-			map.put("page", (page-1)*row+1);
-			map.put("row", row);
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("page", String.valueOf((page-1)*row+1));
+			map.put("row", String.valueOf(row));
+			map.put("noticeType", noticeType);
+			map.put("searchType", searchType);
+			map.put("searchValue", searchValue);
+			
 			List<NoticeDTO> list = commonService.selectNotice(map);
 			
 			model.addAttribute("pageBlock", pageBlock);
@@ -103,6 +115,7 @@ public class MainController {
 			e.printStackTrace();
 		}
 		
+		model.addAttribute("noticeType", noticeType);
 		model.addAttribute("type", "noticeList");
 		return "main";
 	}
@@ -128,6 +141,7 @@ public class MainController {
 					int count = adminService.insertNotice(dto);
 					
 					if(count == 1) {
+						model.addAttribute("no", dto.getCnc_no());
 						return "confirm/success";
 					} else {
 						return "confirm/fail";
@@ -166,6 +180,85 @@ public class MainController {
 		}
 		
 		model.addAttribute("type", "noticeView");
+		return "main";
+	}
+	
+	// 공지사항 업데이트 페이지 이동
+	@GetMapping("/notice/update")
+	public String noticeUpdate(@RequestParam(value = "no", defaultValue = "0") int no, Model model) {
+		
+		if(no == 0) {
+			return "confirm/fail";
+		} else {
+			try {
+				NoticeDTO dto = commonService.selectViewNotice(no);
+				
+				if(dto == null) {
+					model.addAttribute("type", "alreadyDelete");
+					return "confirm/fail";
+				} else {
+					model.addAttribute("dto", dto);
+					model.addAttribute("type", "noticeUpdate");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return "main";
+	}
+	
+	// 공지사항 업데이트
+	@PostMapping("/notice/updateOk")
+	public String noticeUpdateOk(NoticeDTO dto, BindingResult result, Model model) {
+		
+		NoticeValidator validation = new NoticeValidator();
+		
+		if(validation.supports(dto.getClass())) {
+			validation.validate(dto, result);
+			
+			if(!result.hasErrors()) {
+				try {
+					int count = adminService.updateNotice(dto);
+					
+					if(count == 1) {
+						model.addAttribute("no", dto.getCnc_no());
+						model.addAttribute("type", "update");
+						return "confirm/success";
+					} else {
+						return "confirm/fail";
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					return "confirm/fail";
+				}
+			}
+		}
+		
+		return "main";
+	}
+	
+	// 공지사항 삭제
+	@GetMapping("/notice/deleteOk")
+	public String noticeDeleteOk(@RequestParam(value = "no", defaultValue = "0") int no, Model model) {
+		
+		if(no == 0) {
+			return "confirm/fail";
+		} else {
+			try {
+				int count = adminService.deleteNotice(no);
+				
+				if(count == 1) {
+					model.addAttribute("type", "delete");
+					return "confirm/success";
+				} else {
+					return "confirm/fail";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return "main";
 	}
 	

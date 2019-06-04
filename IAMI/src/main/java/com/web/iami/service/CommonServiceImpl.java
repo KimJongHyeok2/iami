@@ -41,15 +41,9 @@ public class CommonServiceImpl implements CommonService {
 	public List<NoticeDTO> selectMainNotice() throws Exception {
 		return dao.selectMainNotice();
 	}
-
 	@Override
-	public List<NoticeDTO> selectNotice(Map<String, Integer> map) throws Exception {
-		return dao.selectNotice(map);
-	}
-
-	@Override
-	public int selectNoticeCount() throws Exception {
-		return dao.selectNoticeCount();
+	public int selectNoticeCount(Map<String, String> map) throws Exception {
+		return dao.selectNoticeCount(map);
 	}
 
 	@Override
@@ -62,4 +56,9 @@ public class CommonServiceImpl implements CommonService {
 		return dao.updateNoticeViewCount(cnc_no);
 	}
 
+	@Override
+	public List<NoticeDTO> selectNotice(Map<String, String> map) throws Exception {
+		return dao.selectNotice(map);
+	}
+	
 }

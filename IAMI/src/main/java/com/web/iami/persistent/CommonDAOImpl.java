@@ -43,13 +43,8 @@ public class CommonDAOImpl implements CommonDAO {
 	}
 
 	@Override
-	public List<NoticeDTO> selectNotice(Map<String, Integer> map) throws Exception {
-		return sqlSession.selectList("common.selectNotice", map);
-	}
-
-	@Override
-	public int selectNoticeCount() throws Exception {
-		return sqlSession.selectOne("common.selectNoticeCount");
+	public int selectNoticeCount(Map<String, String> map) throws Exception {
+		return sqlSession.selectOne("common.selectNoticeCount", map);
 	}
 
 	@Override
@@ -60,6 +55,11 @@ public class CommonDAOImpl implements CommonDAO {
 	@Override
 	public int updateNoticeViewCount(int cnc_no) throws Exception {
 		return sqlSession.update("common.updateNoticeViewCount", cnc_no);
+	}
+
+	@Override
+	public List<NoticeDTO> selectNotice(Map<String, String> map) throws Exception {
+		return sqlSession.selectList("common.selectNotice", map);
 	}
 
 }

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="admin">
-	<insert id="insertNotice" parameterType="com.web.iami.domain.NoticeDTO">
+	<insert id="insertNotice" parameterType="com.web.iami.domain.NoticeDTO" useGeneratedKeys="true" keyColumn="cnc_no" keyProperty="cnc_no">
 		INSERT INTO customerNotice(cnc_no, mem_no, cnc_subject, cnc_content, cnc_type, cnc_hasImage, cnc_hasVideo) VALUES(cnc_seq.nextval, #{mem_no}, #{cnc_subject}, #{cnc_content}, #{cnc_type}, #{cnc_hasImage}, #{cnc_hasVideo})
 	</insert>
+	<update id="updateNotice">
+		UPDATE customerNotice SET cnc_subject = #{cnc_subject}, cnc_content = #{cnc_content}, cnc_type = #{cnc_type}, cnc_hasImage = #{cnc_hasImage}, cnc_hasVideo = #{cnc_hasVideo} WHERE cnc_no = #{cnc_no}
+	</update>
+	<update id="deleteNotice">
+		UPDATE customerNotice SET cnc_status = 0 WHERE cnc_no = #{param1}
+	</update>
 </mapper>

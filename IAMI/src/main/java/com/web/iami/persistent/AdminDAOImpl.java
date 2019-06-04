@@ -18,4 +18,14 @@ public class AdminDAOImpl implements AdminDAO {
 		return sqlSession.insert("admin.insertNotice", dto);
 	}
 
+	@Override
+	public int updateNotice(NoticeDTO dto) throws Exception {
+		return sqlSession.update("admin.updateNotice", dto);
+	}
+
+	@Override
+	public int deleteNotice(int cnc_no) throws Exception {
+		return sqlSession.update("admin.deleteNotice", cnc_no);
+	}
+
 }

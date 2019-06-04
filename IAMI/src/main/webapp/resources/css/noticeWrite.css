@@ -34,8 +34,8 @@
 	color: rgba(17, 135, 207, 0.7);
 }
 .noticeWrapper .noticeInner .notice-tab label.activeNormal {
-	border: 1px solid #B7F0B1;
-	background-color: #B7F0B1;
+	border: 1px solid rgb(17, 135, 207);
+	background-color: rgb(17, 135, 207);
 	color: white;
 }
 .noticeWrapper .noticeInner .notice-tab label.activeEvent {

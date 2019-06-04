@@ -34,9 +34,9 @@
 	width: 50px;
 	margin: auto;
 	text-align: center;
-	border: 1px solid #B7F0B1;
+	border: 1px solid rgb(17, 135, 207);
 	border-radius: 5px;
-	background-color: #B7F0B1;
+	background-color: rgb(17, 135, 207);
 	color: white;
 }
 .noticeWrapper .noticeInner .notice-content-header .notice-content-header-inner .type .event {
@@ -98,6 +98,9 @@
 .noticeWrapper .noticeInner .notice-content-function button {
 	border: 1px solid rgba(17, 135, 207, 0.4);
 	color: rgba(17, 135, 207, 0.7);
+}
+.noticeWrapper .noticeInner .notice-content-function .btn-delete {
+	border-left: none;	
 }
 .noticeWrapper .noticeInner .notice-content-list-nav {
 	margin-top: 5px;

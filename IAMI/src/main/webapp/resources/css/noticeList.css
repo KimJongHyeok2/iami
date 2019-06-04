@@ -27,6 +27,16 @@
 	border-radius: 5px;
 	color: rgba(17, 135, 207, 0.7);
 }
+.noticeWrapper .noticeInner .notice-tab div.normalActive {
+	border: 1px solid rgb(17, 135, 207);
+	background-color: rgb(17, 135, 207);
+	color: white;
+}
+.noticeWrapper .noticeInner .notice-tab div.eventActive {
+	border: 1px solid #F2CB61;
+	background-color: #F2CB61;
+	color: white;
+}
 .noticeWrapper .noticeInner .notice-tab .last {
 	margin-right: 0;
 }
@@ -50,9 +60,9 @@
 .noticeWrapper .noticeInner .notice-content .notice-content-inner .type .normal {
 	width: 50px;
 	text-align: center;
-	border: 1px solid #B7F0B1;
+	border: 1px solid rgb(17, 135, 207);
 	border-radius: 5px;
-	background-color: #B7F0B1;
+	background-color: rgb(17, 135, 207);
 	color: white;
 }
 .noticeWrapper .noticeInner .notice-content .notice-content-inner .type .event {
@@ -205,14 +215,15 @@
 }
 .noticeWrapper .noticeInner .notice-search .search-box .btn-search {
 	padding: 10px;
+	text-align: center;
 	border: 1px solid rgba(17, 135, 207, 0.4);
 	border-left: none;
 	color: rgba(17, 135, 207, 0.7);
 }
 @media (max-width:800px) {
  	.noticeWrapper .noticeInner .notice-content .notice-content-inner .subject {
-		flex-grow: unset;
-		width: 400px;
+		width: auto;
+		max-width: 400px;
 	}
 	.noticeWrapper .noticeInner .notice-content .notice-content-inner .notice-content-title .subject {
 		flex-grow: unset;
@@ -237,15 +248,13 @@
 }
 @media (max-width:700px) {
  	.noticeWrapper .noticeInner .notice-content .notice-content-inner .subject {
-		flex-grow: unset;
-		width: 200px;
+		width: auto;
+		max-width: 200px;
 	}
 	.noticeWrapper .noticeInner .notice-content .notice-content-inner .notice-content-title .subject {
-		flex-grow: unset;
 		width: 200px;
 	}
 	.noticeWrapper .noticeInner .notice-content .notice-content-inner .notice-content-list .subject-box {
-		flex-grow: unset;
 		width: 200px;
 	}
 	.noticeWrapper .noticeInner .notice-content .notice-content-inner .notice-content-list .subject-box .subImage {
@@ -284,7 +293,7 @@
 		display: flex;
 	}
  	.noticeWrapper .noticeInner .notice-content .notice-content-inner .subject {
-		flex-grow: 1;
+		width: auto;
 	}
 	.noticeWrapper .noticeInner .notice-content .notice-content-inner .notice-content-title .subject {
 		flex-grow: 1;

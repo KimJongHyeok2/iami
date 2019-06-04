@@ -36,7 +36,38 @@ function view(no) {
 	location.href = "notice/view/" + no;
 }
 function page(page) {
-	location.href = "?page=" + page;
+	location.href = "?page=" + page + "&noticeType=${noticeType}";
+}
+function noticeType_list_nav(type) {
+	location.href = "?page=1&noticeType=" + type;
+}
+function search() {
+	var searchValue = $("#notice-search-input").val();
+	var searchType = $("#notice-search-select option:selected").val();
+	
+	if(searchValue == null || searchValue.length == 0) {
+		alert("검색할 단어를 입력해주세요.");
+		return false;
+	}
+	
+	searchValue = urlEncode(searchValue);
+	
+	location.href = "?noticeType=${noticeType}&searchType=" + searchType + "&searchValue=" + searchValue;	
+}
+function searchOn() {
+	if(event.keyCode == 13) {
+		search();
+	}
+}
+function urlEncode(str) {
+    str = (str + '').toString();
+    return encodeURIComponent(str)
+        .replace(/!/g, '%21')
+        .replace(/'/g, '%27')
+        .replace(/\(/g, '%28')
+        .replace(/\)/g, '%29')
+        .replace(/\*/g, '%2A')
+        .replace(/%20/g, '+');
 }
 </script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/noticeList.css">
@@ -50,9 +81,9 @@ function page(page) {
 			<span class="site-name">IAMI</span>의 새로운 소식을 전해드립니다.
 		</div>
 		<div class="notice-tab">
-			<div class="w3-button">전체</div>
-			<div class="w3-button">일반</div>
-			<div class="w3-button last">이벤트</div>
+			<div class="w3-button ${empty noticeType || noticeType == 'all'? 'normalActive':''}" onclick="noticeType_list_nav('all');">전체</div>
+			<div class="w3-button ${noticeType == 'normal'? 'normalActive':''}" onclick="noticeType_list_nav('normal');">일반</div>
+			<div class="w3-button last ${noticeType == 'event'? 'eventActive':''}" onclick="noticeType_list_nav('event');">이벤트</div>
 		</div>
 		<div class="notice-content">
 			<ul class="notice-content-inner">
@@ -153,10 +184,10 @@ function page(page) {
 		</div>
 		<div class="notice-search">
 			<div class="search-box">
-				<select>
-					<option>제목</option>
+				<select id="notice-search-select">
+					<option value="1">제목</option>
 				</select>
-				<input id="notice-search" type="text"/><div class="w3-button btn-search">검색</div>
+				<input id="notice-search-input" type="text" onkeyup="searchOn();"/><div class="w3-button btn-search" onclick="search();">검색</div>
 			</div>
 		</div>
 	</div>
