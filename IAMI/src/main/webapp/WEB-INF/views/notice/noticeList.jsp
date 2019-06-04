@@ -5,11 +5,11 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <script>
 $(document).ready(function() {
-	resize();
+	resize_noticeList();
 	noticeDateFormat();
 });
-$(window).resize(resize);
-function resize() {
+$(window).resize(resize_noticeList);
+function resize_noticeList() {
 	$htmlHeight = $("html").height();
 	$headerHeight = $(".headerWrapper").height();
 	$navHeight = $(".navWrapper").height();
@@ -21,7 +21,7 @@ function noticeDateFormat() {
 	var noticeLength = "${fn:length(list)}"; 
 	
 	for(var i=0; i<noticeLength; i++) {
-		var dates = new Date($("#notice-regdate-" + (i+1)).html().trim());
+		var dates = new Date($("#notice-regdate-" + (i+1)).html().trim().replace(/-/g, "/").replace(".0", ""));
 		var year = dates.getFullYear();
 		var month = dates.getMonth()+1;
 		month = (month + "").length == 1? ("0" + month):month;

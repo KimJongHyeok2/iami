@@ -16,13 +16,12 @@ $(document).ready(function() {
 	var header = "${_csrf.headerName}";
 	var token = "${_csrf.token}";
 	
-	resize();
-	noticeDateFormat();
-	
 	$(".user").click(function() {
 		$("#user-drop").toggle();
 	});
-	if(${type == 'new'} || ${type == 'popular'}) {
+	if("${type}" == "new" || "${type}" == "popular") {
+		resize_main();
+		noticeDateFormat();
 		$.ajax({
 			url: "${pageContext.request.contextPath}/common/visitor",
 			type: "GET",
@@ -89,14 +88,14 @@ $(document).ready(function() {
 	}
 });
 $(window).resize(function() {
-	resize();
-	if(${type == 'new'} || ${type == 'popular'}) {
+	if("${type}" == "new" || "${type}" == "popular") {
+		resize_main();
 		visitChart.resize({
 			width: $(".chart").width()
 		});
 	}
 });
-function resize() {
+function resize_main() {
 	$htmlHeight = $("html").height();
 	$headerHeight = $(".headerWrapper").height();
 	$navHeight = $(".navWrapper").height();
@@ -146,7 +145,7 @@ function noticeDateFormat() {
 	var noticeLength = "${fn:length(noticeList)}"; 
 	
 	for(var i=0; i<noticeLength; i++) {
-		var dates = new Date($("#notice-regdate-" + (i+1)).html().trim());
+		var dates = new Date($("#notice-regdate-" + (i+1)).html().trim().replace(/-/g, "/").replace(".0", ""));
 		var year = dates.getFullYear();
 		var month = dates.getMonth()+1;
 		month = (month + "").length == 1? ("0" + month):month;

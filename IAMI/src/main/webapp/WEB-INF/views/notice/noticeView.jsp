@@ -26,7 +26,7 @@ function resize() {
 	$(".container-fluid .noticeWrapper").css("min-height", $htmlHeight - $headerHeight - $navHeight - $footerHeight - 61 + "px");
 }
 function noticeDateFormat() {
-	var dates = new Date($("#notice-regdate").html().trim());
+	var dates = new Date($("#notice-regdate").html().trim().replace(/-/g, "/").replace(".0", ""));
 	var year = dates.getFullYear();
 	var month = dates.getMonth()+1;
 	month = (month + "").length == 1? ("0" + month):month;

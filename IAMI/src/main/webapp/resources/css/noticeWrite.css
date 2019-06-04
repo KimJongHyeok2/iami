@@ -8,9 +8,6 @@
 	flex-grow: 1;
 	max-width: 800px;
 }
-.noticeWrapper .noticeInner .noticeInner-wrapper {
-	
-}
 .noticeWrapper .noticeInner .notice-title {
 	font-size: 25pt;
 	font-weight: bold;

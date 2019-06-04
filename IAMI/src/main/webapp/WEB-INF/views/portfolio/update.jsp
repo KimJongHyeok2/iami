@@ -11,7 +11,7 @@ var $currContent = 1;
 var $width = 20;
 var $thumb = "";
 $(document).ready(function() {
-	resize();
+	resize_update();
 	// 날짜 선택 오픈소스 flatpickr Set
 	$(".dateSelector").flatpickr({ 
 		dateFormat: "Y-m-d",
@@ -25,7 +25,7 @@ $(window).resize(function()	{
 	resize_html();
 	resize_next_res();
 });
-function resize() {
+function resize_update() {
 	var $htmlHeight = $("html").height();
 	var $headerHeight = $(".header").height();
 	var $footerHeight = $(".footerWrapper").height();

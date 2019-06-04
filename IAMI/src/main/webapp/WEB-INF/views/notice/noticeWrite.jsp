@@ -3,7 +3,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <script>
 $(document).ready(function() {
-	resize();
+	resize_noticeWrite();
 	$("input[type='radio'][name='type']").click(function() {
 		$(".noticeWrapper .noticeInner .notice-tab label").attr("class", "w3-button");
 		var value = $(this).val();
@@ -14,8 +14,8 @@ $(document).ready(function() {
 		}
 	});
 });
-$(window).resize(resize);
-function resize() {
+$(window).resize(resize_noticeWrite);
+function resize_noticeWrite() {
 	$htmlHeight = $("html").height();
 	$headerHeight = $(".headerWrapper").height();
 	$navHeight = $(".navWrapper").height();
