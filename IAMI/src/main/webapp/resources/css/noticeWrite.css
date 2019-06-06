@@ -61,7 +61,7 @@
 .ck-editor__editable[role='textbox'] {
 	min-height: 300px;
 }
-@media (max-width:800px) {
+@media (max-width:850px) {
 	.noticeWrapper .noticeInner .noticeInner-wrapper {
 		margin: 0 10px;
 	}

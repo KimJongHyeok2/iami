@@ -12,7 +12,7 @@
 	location="classpath:db.properties"/>
 
 	<security:http use-expressions="true" authentication-manager-ref="normal">
-		<!-- <security:intercept-url pattern="/" requires-channel="https" access="permitAll"/> -->
+		<security:intercept-url pattern="/" requires-channel="https" access="permitAll"/>
 		<security:form-login login-page="/login"
 		username-parameter="mem_id"
 		password-parameter="mem_pw"

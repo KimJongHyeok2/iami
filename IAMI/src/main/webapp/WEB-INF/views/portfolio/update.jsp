@@ -10,6 +10,7 @@
 var $currContent = 1;
 var $width = 20;
 var $thumb = "";
+var $files = new Array();
 $(document).ready(function() {
 	resize_update();
 	// 날짜 선택 오픈소스 flatpickr Set
@@ -19,6 +20,9 @@ $(document).ready(function() {
 	// CKEditor5 Set
 	$(".ck-editor__editable[role='textbox']").on("keyup", function() {
 		myEditor.setData("");
+	});
+	$("#file_environment").find(".dev-card").find("input[type='hidden']").each(function() {
+		$files.push($(this).val());
 	});
 });
 $(window).resize(function()	{
@@ -417,8 +421,16 @@ function addEnvironment(obj, type) {
 		
 	});
 	if(!$emptyFlag) {
-		$("#" + type + "_environment .container .row").html("<div class='empty col-12'>등록이 필요합니다.</div>");
+		if(type == "api") {
+			$("#" + type + "_environment .container .row").html("<div class='empty col-12'>등록이 필요합니다.(선택)</div>");			
+		} else if(type == "file") {
+			$files = new Array();
+			$("#" + type + "_environment .container .row").html("<div class='empty col-12'>등록이 필요합니다.(선택)</div>");
+		} else {
+			$("#" + type + "_environment .container .row").html("<div class='empty col-12'>등록이 필요합니다.</div>");						
+		}
 	}
+	
 	resize_next_res();
 	$("#" + type + "-modal").css("display", "none");
 }
@@ -502,6 +514,71 @@ function addGitUrl(obj) {
 		$html += "</div>";
 		$(obj).parent("div").parent("div").find(".row").append($html);
 	}
+}
+//첨부파일 추가
+function addFile(obj) {
+	var fileName = obj.files[0].name;
+	var fileSize = obj.files[0].size;
+	var maxSize = 10 * 1024 * 1024;
+	
+	if(fileSize > maxSize){
+		alert("10MB 이하의 파일만 허용됩니다.");
+		return false;
+	}
+	
+	var formData = new FormData();
+	formData.append("file", obj.files[0]);
+	
+	var header = "${_csrf.headerName}";
+	var token = "${_csrf.token}";
+	
+	var count = $("#file").parent("div").parent("div").find(".row").find(".card-box").length;
+	
+	if(count >= 3 || $files.length >= 3) {
+		alert("더 이상 등록할 수 없습니다.");
+		return false;
+	}
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/upload/file",
+		type: "POST",
+		cache: false,
+		data: formData,
+		processData: false,
+		contentType: false,
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(data, status) {
+			if(status == "success") {
+				if(data != "Fail") {
+					$files.push(data);
+					var html = "";
+					var ext = data.substr(data.lastIndexOf(".")+1, data.length);
+					
+					html += "<div class='card-box margin-card " + (count >= 3? 'margin-top':'') + " col-sm-12 col-md-3'>";
+						html += "<div class='dev-card' onclick='cardSelected(this);'>";
+							html += "<div class='dev-card-text api'>";
+								if($.inArray(ext.toLowerCase(), ["jpg", "jpeg", "jpe", "png", "git"]) >= 0) {									
+									html += "<i class='far fa-image'></i>";
+								} else {
+									html += "<i class='far fa-file'></i>";
+								}
+								html += " " + data;
+							html += "<input type='hidden' value='" + data + "' />";
+							html += "</div>";
+							html += "<i class='fas fa-check'></i>";
+						html += "</div>";
+					html += "</div>";
+					
+					$("#file").parent("div").parent("div").find(".row").append(html);
+				} else {
+					alert("알 수 없는 오류입니다.");
+				}
+			}
+		}
+	});
+
 }
 //스텝1 유효성 검사
 function step1Valid() {
@@ -632,7 +709,8 @@ function writeOk() {
 				"pot_environment" : $environment,
 				"pot_thumbnail" : $thumb,
 				"pot_video" : $video,
-				"pot_source" : $source
+				"pot_source" : $source,
+				"files" : JSON.stringify($files).slice(1).slice(0, -1).replace(/\"/g, "")
 			},
 			beforeSend: function(xhr) {
 				xhr.setRequestHeader(header, token);
@@ -760,6 +838,7 @@ function writeOk() {
 					</div>
 					<div id="pot_source" class="environment">
 						${portfolio.pot_source}
+						<div style="margin-bottom: 5px;"></div>
 					</div>
 				</div>
 			</div>
@@ -1153,6 +1232,29 @@ function writeOk() {
 			<div class="w3-container w3-light-grey w3-padding">
 				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#git-modal').css('display', 'none');">닫기</button>
 				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'git');">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="file-modal" class="w3-modal">
+	<div class="w3-modal-content w3-card-4 w3-animate-bottom">
+		<div class="w3-container">
+			<h2>첨부파일</h2>
+		</div>
+		<div class="container">
+			<div class="container-inner">
+				<div class="api-input">
+					<label for="file" class="file-upload-btn"><i class="fas fa-file-upload fa-2x"></i></label>
+					<input type="file" id="file" onchange="addFile(this);"/>
+<!-- 					<button class="w3-button w3-right w3-white w3-border" onclick="addGitUrl($('#git-url'));"><i class="fas fa-search"></i></button> -->
+				</div>
+				<hr>
+				<div class="row">
+				</div>
+			</div>
+			<div class="w3-container w3-light-grey w3-padding">
+				<button class="w3-button w3-right w3-white w3-border margin-left" onclick="$('#file-modal').css('display', 'none');">닫기</button>
+				<button class="w3-button w3-right w3-white w3-border" onclick="addEnvironment(this, 'file');">확인</button>
 			</div>
 		</div>
 	</div>

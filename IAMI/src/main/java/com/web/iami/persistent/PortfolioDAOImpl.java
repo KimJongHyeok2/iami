@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.web.iami.domain.CommentDTO;
+import com.web.iami.domain.FileDTO;
 import com.web.iami.domain.PortfolioDTO;
 import com.web.iami.domain.ReCommentDTO;
 
@@ -116,6 +117,21 @@ public class PortfolioDAOImpl implements PortfolioDAO {
 	@Override
 	public int deletePortfolio(int pot_no) throws Exception {
 		return sqlSession.update("portfolio.deletePortfolio", pot_no);
+	}
+
+	@Override
+	public int insertPortfolioFiles(FileDTO dto) throws Exception {
+		return sqlSession.insert("portfolio.insertPortfolioFiles", dto);
+	}
+
+	@Override
+	public List<FileDTO> selectPortfolioFiles(int pot_no) throws Exception {
+		return sqlSession.selectList("portfolio.selectPortfolioFiles", pot_no);
+	}
+
+	@Override
+	public int deletePortfolioFiles(int pot_no) throws Exception {
+		return sqlSession.delete("portfolio.deletePortfolioFiles", pot_no);
 	}
 	
 }

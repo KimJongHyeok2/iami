@@ -6,12 +6,16 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.web.iami.domain.CommentDTO;
+import com.web.iami.domain.FileDTO;
 import com.web.iami.domain.PortfolioDTO;
 import com.web.iami.domain.ReCommentDTO;
 import com.web.iami.persistent.PortfolioDAO;
 
+@Transactional(isolation=Isolation.READ_COMMITTED)
 @Service("PortfolioService")
 public class PortfolioServiceImpl implements PortfolioService {
 
@@ -116,6 +120,21 @@ public class PortfolioServiceImpl implements PortfolioService {
 	@Override
 	public int deletePortfolio(int pot_no) throws Exception {
 		return dao.deletePortfolio(pot_no);
+	}
+
+	@Override
+	public int insertPortfolioFiles(FileDTO dto) throws Exception {
+		return dao.insertPortfolioFiles(dto);
+	}
+
+	@Override
+	public List<FileDTO> selectPortfolioFiles(int pot_no) throws Exception {
+		return dao.selectPortfolioFiles(pot_no);
+	}
+
+	@Override
+	public int deletePortfolioFiles(int pot_no) throws Exception {
+		return dao.deletePortfolioFiles(pot_no);
 	}
 
 }

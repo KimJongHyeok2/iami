@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="portfolio">
-	<insert id="insertPortfolio" parameterType="com.web.iami.domain.PortfolioDTO">
+	<insert id="insertPortfolio" parameterType="com.web.iami.domain.PortfolioDTO" useGeneratedKeys="true" keyProperty="pot_no" keyColumn="pot_no">
 		INSERT INTO portfolio(pot_no, mem_no, pot_subject, pot_description, pot_summary, pot_startdate, pot_enddate, pot_environment, pot_thumbnail, pot_video, pot_source)
 		VALUES(pot_seq.nextval, #{mem_no}, #{pot_subject}, #{pot_description}, #{pot_summary}, TO_DATE(#{pot_startdate}, 'YYYY-MM-DD'), TO_DATE(#{pot_enddate}, 'YYYY-MM-DD'), #{pot_environment}, #{pot_thumbnail}, #{pot_video}, #{pot_source})
 	</insert>
@@ -81,4 +81,13 @@
 	<update id="deletePortfolio">
 		UPDATE portfolio SET pot_status = 0 WHERE pot_no = #{param1} 
 	</update>
+	<insert id="insertPortfolioFiles" parameterType="com.web.iami.domain.FileDTO">
+		INSERT INTO files(file_no, pot_no, file_name) VALUES(file_seq.nextval, #{pot_no}, #{file_name})
+	</insert>
+	<select id="selectPortfolioFiles" resultType="com.web.iami.domain.FileDTO">
+		SELECT * FROM files WHERE pot_no = #{param1}
+	</select>
+	<delete id="deletePortfolioFiles">
+		DELETE FROM files WHERE pot_no = #{param1}
+	</delete>
 </mapper>

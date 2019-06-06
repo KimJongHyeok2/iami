@@ -3,12 +3,15 @@ package com.web.iami.service;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.web.iami.domain.EmailAccessDTO;
 import com.web.iami.domain.MemberDTO;
 import com.web.iami.domain.SocialMemberDTO;
 import com.web.iami.persistent.RegisterDAO;
 
+@Transactional(isolation=Isolation.READ_COMMITTED)
 @Service("RegisterService")
 public class RegisterServiceImpl implements RegisterService {
 

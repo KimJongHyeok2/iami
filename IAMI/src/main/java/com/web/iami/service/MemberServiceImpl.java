@@ -5,11 +5,14 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.web.iami.domain.EmailAccessDTO;
 import com.web.iami.domain.MemberDTO;
 import com.web.iami.persistent.MemberDAO;
 
+@Transactional(isolation=Isolation.READ_COMMITTED)
 @Service("MemberService")
 public class MemberServiceImpl implements MemberService {
 

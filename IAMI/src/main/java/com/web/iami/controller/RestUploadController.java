@@ -128,6 +128,12 @@ public class RestUploadController {
 		FileRenamePolicy policy = new DefaultFileRenamePolicy();
 		ImageDTO dto = new ImageDTO();
 		
+		File file = new File(saveDirectory);
+		
+		if(!file.isDirectory()) {
+			file.mkdirs();
+		}
+		
 		try {
 			MultipartRequest multi = new MultipartRequest(request, saveDirectory, maxPostSize, encoding, policy);
 			
@@ -146,6 +152,38 @@ public class RestUploadController {
 		}
 		
 		return dto;
+	}
+	
+	// 포트폴리오 첨부파일
+	@PostMapping("/file")
+	public String file(HttpServletRequest request) {
+		
+		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/file");
+		int maxPostSize = 10 * 1024 * 1024;
+		String encoding = "UTF-8";
+		FileRenamePolicy policy = new DefaultFileRenamePolicy();
+		
+		File file = new File(saveDirectory);
+		
+		if(!file.isDirectory()) {
+			file.mkdirs();
+		}
+		
+		try {
+			MultipartRequest multi = new MultipartRequest(request, saveDirectory, maxPostSize, encoding, policy);
+			
+			Enumeration<String> enums = multi.getFileNames();
+			while(enums.hasMoreElements()) {
+				String name = enums.nextElement();
+				String value = multi.getFilesystemName(name);
+	
+				return value;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return "Fail";
 	}
 	
 }

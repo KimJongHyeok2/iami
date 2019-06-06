@@ -224,9 +224,23 @@
 	padding: 5px;
 	border: 1px solid #D5D5D5;
 }
+.w3-modal .container .container-inner .api-input input[type="file"] {
+	display: none;	
+}
 .w3-modal .container .container-inner .api-input button {
 	border: 1px solid #D5D5D5 !important;
 	border-left: none !important;
+}
+.w3-modal .container .container-inner .api-input .file-upload-btn {
+	flex-grow: 1;
+	padding: 20px 0;
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	color: rgba(17, 135, 207, 0.4);
+	cursor: pointer;
+}
+.w3-modal .container .container-inner .api-input .file-upload-btn:hover {
+	border-color: rgba(17, 135, 207, 0.4);
 }
 .w3-modal .container .container-inner .row {
 	max-width: 100% !important;
@@ -279,7 +293,7 @@
 	padding: 0;
 	color: rgba(17, 135, 207, 0.4);
 }
-.container .dev-card .fa-link, .fa-github-square {
+.container .dev-card .fa-link, .fa-github-square, .fa-image, .fa-file {
 	color: rgba(17, 135, 207, 0.4);
 }
 .ck-editor__editable[role='textbox'] {

@@ -84,7 +84,6 @@ public class LoginController {
 		// Facebook Login URL 생성
 		OAuth2Operations oauthOperations = connectionFactory.getOAuthOperations();
 		String facebookUrl = oauthOperations.buildAuthenticateUrl(GrantType.AUTHORIZATION_CODE, facebookOAuth2Parameters);
-		System.out.println(facebookUrl);
 		model.addAttribute("facebook_url", facebookUrl);
 		
 		return "login/login";
@@ -244,7 +243,7 @@ public class LoginController {
 	// 페이스북 로그인 Callback
 	@GetMapping("/facebookCallback")
 	public String facebookCallback(String code, Model model) {
-		
+
 		String redirectUri = facebookOAuth2Parameters.getRedirectUri();
 
 		OAuth2Operations oauthOperations = connectionFactory.getOAuthOperations();

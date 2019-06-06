@@ -3,7 +3,10 @@ package com.web.iami.persistent;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.web.iami.domain.CommentDTO;
+import com.web.iami.domain.FileDTO;
 import com.web.iami.domain.PortfolioDTO;
 import com.web.iami.domain.ReCommentDTO;
 
@@ -28,4 +31,7 @@ public interface PortfolioDAO {
 	public List<PortfolioDTO> selectMemberPortfolio(int mem_no) throws Exception;
 	public int updatePortfolio(PortfolioDTO dto) throws Exception;
 	public int deletePortfolio(int pot_no) throws Exception;
+	public int insertPortfolioFiles(FileDTO dto) throws Exception;
+	public List<FileDTO> selectPortfolioFiles(int pot_no) throws Exception;
+	public int deletePortfolioFiles(int pot_no) throws Exception;
 }

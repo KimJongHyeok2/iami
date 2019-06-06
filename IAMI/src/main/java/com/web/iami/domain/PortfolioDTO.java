@@ -1,6 +1,7 @@
 package com.web.iami.domain;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class PortfolioDTO {
 
@@ -19,6 +20,10 @@ public class PortfolioDTO {
 	private int pot_status; // 포트폴리오 상태
 	private Timestamp pot_regdate; // 포트폴리오 업로드 일시
 	
+	// 첨부파일
+	private String[] files;
+	private List<FileDTO> filesDTO;
+	
 	// 해당 포트폴리오 작성 회원정보 (Join)
 	private String mem_nickname; // 회원 닉네임
 	private String mem_id; // 회원 아이디
@@ -35,8 +40,9 @@ public class PortfolioDTO {
 
 	public PortfolioDTO(int pot_no, int mem_no, String pot_subject, String pot_description, String pot_summary,
 			String pot_startdate, String pot_enddate, String pot_environment, String pot_thumbnail, String pot_video,
-			String pot_source, int pot_recommend, int pot_status, Timestamp pot_regdate, String mem_nickname,
-			String mem_id, String mem_profile, String mem_email, int commentCount, int rnum) {
+			String pot_source, int pot_recommend, int pot_status, Timestamp pot_regdate, String[] files,
+			List<FileDTO> filesDTO, String mem_nickname, String mem_id, String mem_profile, String mem_email,
+			int commentCount, int rnum) {
 		this.pot_no = pot_no;
 		this.mem_no = mem_no;
 		this.pot_subject = pot_subject;
@@ -51,6 +57,8 @@ public class PortfolioDTO {
 		this.pot_recommend = pot_recommend;
 		this.pot_status = pot_status;
 		this.pot_regdate = pot_regdate;
+		this.files = files;
+		this.filesDTO = filesDTO;
 		this.mem_nickname = mem_nickname;
 		this.mem_id = mem_id;
 		this.mem_profile = mem_profile;
@@ -169,6 +177,22 @@ public class PortfolioDTO {
 
 	public void setPot_regdate(Timestamp pot_regdate) {
 		this.pot_regdate = pot_regdate;
+	}
+
+	public String[] getFiles() {
+		return files;
+	}
+
+	public void setFiles(String[] files) {
+		this.files = files;
+	}
+
+	public List<FileDTO> getFilesDTO() {
+		return filesDTO;
+	}
+
+	public void setFilesDTO(List<FileDTO> filesDTO) {
+		this.filesDTO = filesDTO;
 	}
 
 	public String getMem_nickname() {

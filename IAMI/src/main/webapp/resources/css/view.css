@@ -1,6 +1,7 @@
 @charset "UTF-8";
 .viewWrapper {
 	margin: 0 10px;
+	z-index: 1;
 }
 hr {
 	margin: 16px 0;
@@ -9,11 +10,49 @@ hr {
 	margin-top: 10px;
 }
 .dev-list {
+	position: relative;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-	overflow: hidden;
 }
+.dev-list .file-list {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.dev-list .file-list .file-list-inner {
+	position: relative;
+	padding: 10px;
+	border: 1px solid rgba(17, 135, 207, 0.4);
+	color: rgba(17, 135, 207, 0.7);
+}
+.dev-list .file-list .file-list-inner-content {
+	display: none;
+	position: absolute;
+	top: 50px;
+	right: 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	background-color: white;
+	z-index: 1;
+}
+.dev-list .file-list .file-list-inner-content li {
+	width: 200px;
+	padding: 5px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	cursor: pointer;
+	color: gray;
+}
+.dev-list .file-list .file-list-inner-content li:hover {
+	color: rgba(17, 135, 207, 0.7);
+}
+/* .dev-list .file-list:hover {
+	text-decoration: underline;
+} */
 .dev-list h5 {
 	font-weight: normal;
 }

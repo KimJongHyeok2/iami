@@ -59,7 +59,7 @@
 	overflow: hidden;
 	background-color: white;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-	z-index: 1;
+	z-index: 2;
 	cursor: default;
 }
 .headerWrapper .headerInner .user ul li {
@@ -336,7 +336,7 @@
 		max-width: 200px;
 	}
 }
-@media (max-width:455px) {
+@media (max-width:470px) {
 	.noticeWrapper .noticeInner .noticeContentInner li .notice-view {
 		display: none;
 	}

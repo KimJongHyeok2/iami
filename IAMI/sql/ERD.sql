@@ -1,10 +1,10 @@
-
 /* Drop Tables */
 
 DROP TABLE recomments CASCADE CONSTRAINTS;
 DROP TABLE comments CASCADE CONSTRAINTS;
 DROP TABLE customerNotice CASCADE CONSTRAINTS;
 DROP TABLE emailAccessKeys CASCADE CONSTRAINTS;
+DROP TABLE files CASCADE CONSTRAINTS;
 DROP TABLE recommendHistory CASCADE CONSTRAINTS;
 DROP TABLE portfolio CASCADE CONSTRAINTS;
 DROP TABLE members CASCADE CONSTRAINTS;
@@ -48,6 +48,15 @@ CREATE TABLE emailAccessKeys
 	PRIMARY KEY (key_no)
 );
 
+CREATE TABLE files
+(
+	file_no number NOT NULL,
+	pot_no number NOT NULL,
+	file_name varchar2(300) NOT NULL,
+	file_regdate timestamp DEFAULT SYSDATE,
+	PRIMARY KEY (file_no)
+);
+
 CREATE TABLE members
 (
 	mem_no number NOT NULL,
@@ -85,7 +94,6 @@ CREATE TABLE portfolio
 	PRIMARY KEY (pot_no)
 );
 
-
 CREATE TABLE recommendHistory
 (
 	rec_no number NOT NULL,
@@ -118,6 +126,7 @@ CREATE TABLE visitor
 	PRIMARY KEY (vit_no)
 );
 
+
 /* Create Foreign Keys */
 
 ALTER TABLE recomments
@@ -140,6 +149,11 @@ ALTER TABLE comments
 	REFERENCES portfolio (pot_no)
 ;
 
+ALTER TABLE files
+	ADD FOREIGN KEY (pot_no)
+	REFERENCES portfolio (pot_no)
+;
+
 ALTER TABLE recommendHistory
 	ADD FOREIGN KEY (pot_no)
 	REFERENCES portfolio (pot_no)
@@ -157,3 +171,6 @@ CREATE SEQUENCE pot_seq;
 CREATE SEQUENCE pro_seq;
 CREATE SEQUENCE com_seq;
 CREATE SEQUENCE rcom_seq;
+CREATE SEQUENCE file_seq;
+
+SELECT * FROM FILES;

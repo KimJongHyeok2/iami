@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/security/tags" %>
 <script>
 var header = "${_csrf.headerName}";
@@ -18,6 +19,9 @@ $(document).ready(function() {
 
 	dateFormat();
 	commentList();
+	fileNameReplace();
+	$("#file_environment_title").remove();
+	$("#file_environment").remove();
 	$("#description").html($("#description").html().trim().replace(/\n/g, "<br>"));
 	$("#summary").html($("#summary").html().trim().replace(/\n/g, "<br>"));
 });
@@ -739,6 +743,27 @@ function recommend() {
 		}
 	});
 }
+function fileNameReplace() {
+	var fileLength = "${fn:length(portfolio.filesDTO)}";
+	
+	if(fileLength != 0) {
+		for(var i=0; i<fileLength; i++) {
+			var fileName = $("#file-" + (i+1)).html().trim();
+			var ext = fileName.substr(fileName.lastIndexOf(".")+1, fileName.length);
+			
+			if($.inArray(ext.toLowerCase(), ["jpg", "jpeg", "jpe", "png", "git"]) >= 0) {
+				fileName = "<i class='far fa-image'></i> " + fileName;
+			} else {
+				fileName = "<i class='far fa-file'></i> " + fileName;
+			}
+			
+			$("#file-" + (i+1)).html(fileName);
+		}
+	}
+} 
+function downloads(fileName) {
+	location.href= "${pageContext.request.contextPath}/portfolio/download?fileName=" + fileName;
+}
 </script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/view.css">
 <script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
@@ -752,6 +777,18 @@ function recommend() {
 	<hr>
 	<ul class="dev-list">
 		<li><h5>개발기간</h5></li>
+		<c:if test="${not empty portfolio.filesDTO && fn:length(portfolio.filesDTO) != 0}">
+			<li class="file-list">
+				<div class="w3-button file-list-inner" onclick="$('#file-list-content').toggle();">
+					첨부파일(${fn:length(portfolio.filesDTO)})
+				</div>
+				<ul id="file-list-content" class="file-list-inner-content w3-animate-zoom">
+					<c:forEach var="i" items="${portfolio.filesDTO}" varStatus="index">
+						<li id="file-${index.count}" onclick="downloads('${i.file_name}');">${i.file_name}</li>
+					</c:forEach>
+				</ul>
+			</li>
+		</c:if>
 		<li>
 			<ul class="dev-list-content">
 				<li class="start">

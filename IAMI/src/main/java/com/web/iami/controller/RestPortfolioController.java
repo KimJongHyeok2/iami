@@ -1,5 +1,6 @@
 package com.web.iami.controller;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.iami.domain.CommentDTO;
+import com.web.iami.domain.FileDTO;
 import com.web.iami.domain.MemberDTO;
 import com.web.iami.domain.PortfolioDTO;
 import com.web.iami.domain.ReCommentDTO;
@@ -50,6 +52,12 @@ public class RestPortfolioController {
 					int count = portfolioService.insertPortfolio(dto);
 					
 					if(count == 1) {
+						FileDTO files = new FileDTO();
+						files.setPot_no(dto.getPot_no());
+						for(int i=0; i<dto.getFiles().length; i++) {							
+							files.setFile_name(dto.getFiles()[i]);
+							portfolioService.insertPortfolioFiles(files);
+						}
 						return "Ok";
 					}
 				} catch (Exception e) {
@@ -387,6 +395,15 @@ public class RestPortfolioController {
 					int count = portfolioService.updatePortfolio(dto);
 					
 					if(count == 1) {
+						// 기존의 포트폴리오 File 테이블의 데이터 삭제
+						portfolioService.deletePortfolioFiles(dto.getPot_no());
+						FileDTO files = new FileDTO();
+						files.setPot_no(dto.getPot_no());
+						for(int i=0; i<dto.getFiles().length; i++) {
+							files.setFile_name(dto.getFiles()[i]);
+							// File 새로 추가
+							portfolioService.insertPortfolioFiles(files);
+						}
 						return "Ok";
 					}
 				} catch (Exception e) {
