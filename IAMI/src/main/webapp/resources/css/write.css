@@ -59,6 +59,7 @@
 .contentWrapper .contentInner {
 	position: relative;
 	max-width: 800px;
+	height: 100%;
 	margin: auto;
 }
 .contentWrapper .contentInner .content {

@@ -22,6 +22,7 @@ $(document).ready(function() {
 	fileNameReplace();
 	$("#file_environment_title").remove();
 	$("#file_environment").remove();
+	$("#api_environment .row").find(".empty").parent(".row").parent(".container").parent("#api_environment").remove();
 	$("#description").html($("#description").html().trim().replace(/\n/g, "<br>"));
 	$("#summary").html($("#summary").html().trim().replace(/\n/g, "<br>"));
 });
@@ -117,12 +118,12 @@ function commentList(page) {
 								tempHTML += "<div class='comment-profile'>";
 								if(data.list[i].com_type == 2) {
 									if(data.list[i].mem_profile != null) {
-										if(parseInt("${portfolio.mem_no}") == data.list[i].mem_no) {
-											tempHTML += "<span class='badge writer'>작성자</span>";
-										}
 										tempHTML += "<img class='profile' src='${pageContext.request.contextPath}/resources/upload/" + data.list[i].mem_profile + "'/>";
 									} else {
 										tempHTML += "<img class='profile-none' src='${pageContext.request.contextPath}/resources/image/main/user.png'/>";
+									}
+									if(parseInt("${portfolio.mem_no}") == data.list[i].mem_no) {
+										tempHTML += "<span class='badge writer'>작성자</span>";
 									}
 								} else {
 									tempHTML += "<span class='badge'>비회원</span>";

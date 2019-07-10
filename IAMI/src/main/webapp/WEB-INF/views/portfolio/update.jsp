@@ -586,7 +586,7 @@ function step1Valid() {
 	var $description = $("#pot_description").val();
 	
 	if($subject.length < 5 || $subject.length > 20) {
-		alert("제목은 5자 이상 10자 이하로 입력해주세요.");
+		alert("제목은 5자 이상 20자 이하로 입력해주세요.");
 		return false;
 	}
 	if($description.length < 10) {
@@ -834,11 +834,10 @@ function writeOk() {
 				</div>
 				<div id="five" class="content">
 					<div class="title">
-						<h5>Demo와 GitHub URL을 추가해주세요.</h5>
+						<h5>Demo와 GitHub URL 또는 첨부파일을 추가해주세요.</h5>
 					</div>
 					<div id="pot_source" class="environment">
 						${portfolio.pot_source}
-						<div style="margin-bottom: 5px;"></div>
 					</div>
 				</div>
 			</div>

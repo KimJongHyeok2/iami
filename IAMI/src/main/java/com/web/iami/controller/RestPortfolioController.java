@@ -1,6 +1,5 @@
 package com.web.iami.controller;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -206,7 +205,10 @@ public class RestPortfolioController {
 					if(password.equals(dto.getCom_pw())) {
 						int count = portfolioService.deletePortfolioComment(dto.getCom_no());
 						if(count == 1) {
-							return "Ok";
+							count = portfolioService.deletePortfolioReComments(dto.getCom_no());
+							if(count == 1) {
+								return "Ok";
+							}
 						}
 					} else {
 						return "Wrong";
@@ -214,7 +216,10 @@ public class RestPortfolioController {
 				} else if(dto.getCom_type() == 2) {
 					int count = portfolioService.deletePortfolioComment(dto.getCom_no());
 					if(count == 1) {
-						return "Ok";
+						count = portfolioService.deletePortfolioReComments(dto.getCom_no());
+						if(count == 1) {
+							return "Ok";
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -302,7 +307,7 @@ public class RestPortfolioController {
 				} else if(dto.getRcom_type() == 2) {
 					int count = portfolioService.deletePortfolioReComment(dto.getRcom_no());
 					if(count == 1) {
-						return "Ok";
+						return "Ok";	
 					}
 				}
 			} catch (Exception e) {

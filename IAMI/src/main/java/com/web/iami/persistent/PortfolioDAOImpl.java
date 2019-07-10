@@ -133,5 +133,10 @@ public class PortfolioDAOImpl implements PortfolioDAO {
 	public int deletePortfolioFiles(int pot_no) throws Exception {
 		return sqlSession.delete("portfolio.deletePortfolioFiles", pot_no);
 	}
+
+	@Override
+	public int deletePortfolioReComments(int com_no) throws Exception {
+		return sqlSession.update("portfolio.deletePortfolioReComments", com_no);
+	}
 	
 }

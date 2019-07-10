@@ -2,8 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>
-$(window).resize(resize);
-function resize() {
+$(document).ready(function() {
+	resize_myinfo();
+});
+$(window).resize_myinfo(resize);
+function resize_myinfo() {
 	$htmlHeight = $("html").height();
 	$headerHeight = $(".headerWrapper").height();
 	$navHeight = $(".navWrapper").height();

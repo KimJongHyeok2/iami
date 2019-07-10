@@ -137,4 +137,9 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return dao.deletePortfolioFiles(pot_no);
 	}
 
+	@Override
+	public int deletePortfolioReComments(int com_no) throws Exception {
+		return dao.deletePortfolioReComments(com_no);
+	}
+
 }

@@ -32,4 +32,5 @@ public interface PortfolioService {
 	public int insertPortfolioFiles(FileDTO dto) throws Exception;
 	public List<FileDTO> selectPortfolioFiles(int pot_no) throws Exception;
 	public int deletePortfolioFiles(int pot_no) throws Exception;
+	public int deletePortfolioReComments(int com_no) throws Exception;
 }

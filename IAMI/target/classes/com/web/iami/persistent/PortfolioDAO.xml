@@ -23,7 +23,7 @@
 		<![CDATA[
 			SELECT * FROM
 				(SELECT rownum rnum, c.*, 
-					(SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname, (SELECT mem_profile FROM members WHERE mem_no = c.mem_no) mem_profile FROM (SELECT * FROM comments WHERE pot_no = #{no} ORDER BY com_no DESC) c)
+					(SELECT mem_id FROM members WHERE mem_no = c.mem_no) mem_id, (SELECT mem_nickname FROM members WHERE mem_no = c.mem_no) mem_nickname, (SELECT mem_profile FROM members WHERE mem_no = c.mem_no) mem_profile FROM (SELECT * FROM comments WHERE pot_no = #{no} AND com_status = 1 ORDER BY com_no DESC) c)
 			WHERE rnum >= #{page} AND rnum < #{page} + #{row}
 		]]>
 	</select>
@@ -90,4 +90,7 @@
 	<delete id="deletePortfolioFiles">
 		DELETE FROM files WHERE pot_no = #{param1}
 	</delete>
+	<update id="deletePortfolioReComments">
+		UPDATE recomments SET rcom_status = 0 WHERE com_no = #{param1}
+	</update>
 </mapper>
