@@ -205,10 +205,8 @@ public class RestPortfolioController {
 					if(password.equals(dto.getCom_pw())) {
 						int count = portfolioService.deletePortfolioComment(dto.getCom_no());
 						if(count == 1) {
-							count = portfolioService.deletePortfolioReComments(dto.getCom_no());
-							if(count == 1) {
-								return "Ok";
-							}
+							portfolioService.deletePortfolioReComments(dto.getCom_no());
+							return "Ok";
 						}
 					} else {
 						return "Wrong";
@@ -216,10 +214,8 @@ public class RestPortfolioController {
 				} else if(dto.getCom_type() == 2) {
 					int count = portfolioService.deletePortfolioComment(dto.getCom_no());
 					if(count == 1) {
-						count = portfolioService.deletePortfolioReComments(dto.getCom_no());
-						if(count == 1) {
-							return "Ok";
-						}
+						portfolioService.deletePortfolioReComments(dto.getCom_no());
+						return "Ok";
 					}
 				}
 			} catch (Exception e) {

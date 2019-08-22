@@ -1287,6 +1287,17 @@ function writeOk() {
 							<i class="fas fa-check"></i>
 						</div>
 					</div>
+					<div class="card-box margin-card col-sm-12 col-md-3">
+						<div class="dev-card" onclick="cardSelected(this);">
+							<div class="dev-card-img">
+								<img src="${pageContext.request.contextPath}/resources/image/write/mysql.png"/>
+							</div>
+							<div class="dev-card-text">
+								MySQL
+							</div>
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="w3-container w3-light-grey w3-padding">

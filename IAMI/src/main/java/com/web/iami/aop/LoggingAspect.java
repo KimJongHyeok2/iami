@@ -2,7 +2,7 @@ package com.web.iami.aop;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;import java.util.Date;
+import java.util.Calendar;
 import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
