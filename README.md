@@ -12,6 +12,14 @@
   <li>MyBatis</li>
   <li>Oracle 11g Express Edition</li>
 </ul>
+<h3>사용기술 / API</h3>
+<ul>
+  <li>Spring Security</li>
+  <li>CKEditor 5</li>
+  <li>Naver Login</li>
+  <li>Google Login</li>
+  <li>Facebook Login</li>
+</ul>
 <h3>동영상(Youtube) / Demo</h3>
 <a href="https://youtu.be/KlxC_NZEcA4">동영상 바로가기</a><br>
 <a href="https://iamiportfolio.com/">Demo 바로가기</a>
